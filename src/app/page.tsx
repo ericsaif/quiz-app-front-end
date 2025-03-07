@@ -15,16 +15,15 @@ export default function Home() {
         />
         <ol>
           <li>
-            Get started by editing <code>src/app/page.tsx</code>.
+            WOW this is my first Next.js app <code>that&apos;s cool</code>.
           </li>
-          <li>Save and see your changes instantly.</li>
+          <li>it&apos;s better than blazor</li>
         </ol>
 
         <div className={styles.ctas}>
           <a
             className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
+            href="about"
             rel="noopener noreferrer"
           >
             <Image
@@ -34,7 +33,7 @@ export default function Home() {
               width={20}
               height={20}
             />
-            Deploy now
+            О Нас
           </a>
           <a
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
