@@ -1,7 +1,0 @@
-export interface EngTestDetails {
-    id: string;
-    user: User | null;
-    purchase: Purchase | null;
-    attempt: Attempt | null;
-    engTestQuestions: EngTestQuestions | null;
-}
