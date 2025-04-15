@@ -8,7 +8,6 @@ export interface IRQ extends Question {
     questionMiniE4: string | null;
     optionsMiniE5: string[];
     optionsMiniE6: string[];
-    iRA: IRA | null;
     iRAId: number;
     timer: string;
 }

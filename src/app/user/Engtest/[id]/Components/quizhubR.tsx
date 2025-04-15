@@ -2,7 +2,7 @@
 
 import useSignalR from "@/app/hooks/useSignalR"
 import { useEffect, useCallback } from "react"
-import { Question } from "./QuestionsModels/question";
+import { Question } from "../../../../../../Models/QuestionsModels/question";
 
 interface QuizHubHook {
     submitAnswer: (SM: string, args: MethodArgs) => Promise<void>; 
