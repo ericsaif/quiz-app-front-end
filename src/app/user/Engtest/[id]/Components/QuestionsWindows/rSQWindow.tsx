@@ -1,12 +1,20 @@
-import { RSQ } from "../../../../../../../Models/QuestionsModels/rSQ"
+import { RSQ, MethodArgs } from "./commonImports"
 
-const rSQWindow = ({question}:{question: RSQ}) =>{
+
+const rSQWindow = (props:{question: RSQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
+        event.preventDefault()
+      }
     return(
-        <div>
-            <p>
-                {question.questionBody}
-            </p>
-        </div>
+
+        <form onSubmit={handleSubmit}>
+            <div>
+                <p>
+                    {props.question.questionBody}
+                </p>
+            </div>
+        </form>
+        
     )
 }
 

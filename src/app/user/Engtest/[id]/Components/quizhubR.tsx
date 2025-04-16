@@ -3,15 +3,8 @@
 import useSignalR from "@/app/hooks/useSignalR"
 import { useEffect, useCallback } from "react"
 import { Question } from "../../../../../../Models/QuestionsModels/question";
-
-interface QuizHubHook {
-    submitAnswer: (SM: string, args: MethodArgs) => Promise<void>; 
-    startConnection: () => Promise<void>; // Function to initiate connection
-}
-
-interface MethodArgs {
-    [key: string]: unknown;
-  }
+import { QuizHubHook } from "../../../../../../Models/QuizHubModels/QuizHubHook";
+import { MethodArgs } from "../../../../../../Models/QuizHubModels/MethodArgs";
 
 const useQuizHubR = (hubUrl: string, setQuestionCallback: React.Dispatch<React.SetStateAction<Question | null>>) : QuizHubHook => { // Get URL from env
     const { connection, isConnected, startConnection } = useSignalR(hubUrl);

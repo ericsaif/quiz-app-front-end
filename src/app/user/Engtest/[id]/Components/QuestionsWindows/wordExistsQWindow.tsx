@@ -1,12 +1,20 @@
-import { WordExistsQ } from "../../../../../../../Models/QuestionsModels/wordExistsQ"
+import { WordExistsQ, MethodArgs } from "./commonImports"
 
-const wordExistsQWindow = ({question}:{question: WordExistsQ}) =>{
+
+const wordExistsQWindow = (props:{question: WordExistsQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
+        event.preventDefault()
+      }
     return(
-        <div>
-            <p>
-                {question.questionBody}
-            </p>
-        </div>
+
+        <form onSubmit={handleSubmit}>
+            <div>
+                <p>
+                    {props.question.questionBody}
+                </p>
+            </div>
+        </form>
+        
     )
 }
 

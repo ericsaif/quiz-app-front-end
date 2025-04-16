@@ -1,12 +1,20 @@
-import { ILQ } from "../../../../../../../Models/QuestionsModels/ILQ/IlQ"
+import { ILQ, MethodArgs } from "./commonImports"
 
-const IlQWindow = ({question}:{question: ILQ}) =>{
+
+const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
+        event.preventDefault()
+      }
     return(
-        <div>
-            <p>
-                {question.questionBody}
-            </p>
-        </div>
+
+        <form onSubmit={handleSubmit}>
+            <div>
+                <p>
+                    {props.question.questionBody}
+                </p>
+            </div>
+        </form>
+        
     )
 }
 

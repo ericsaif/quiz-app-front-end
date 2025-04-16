@@ -1,12 +1,20 @@
-import { LASQ } from "../../../../../../../Models/QuestionsModels/lASQ"
+import { LASQ, MethodArgs } from "./commonImports"
 
-const lASQWindow = ({question}:{question: LASQ}) =>{
+
+const lASQWindow = (props:{question: LASQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
+        event.preventDefault()
+      }
     return(
-        <div>
-            <p>
-                {question.questionBody}
-            </p>
-        </div>
+
+        <form onSubmit={handleSubmit}>
+            <div>
+                <p>
+                    {props.question.questionBody}
+                </p>
+            </div>
+        </form>
+        
     )
 }
 

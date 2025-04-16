@@ -24,32 +24,25 @@ const EngTestWindow = (props: ETWP) => {
       );
     else
       switch (CurrentQ.qPOId) {
-        case 1:( setWindow(<QuestionsWindows.RACQWindow question={CurrentQ as RACQ }/>) );break;
-        case 2:( setWindow(<QuestionsWindows.DictationQWindow question={CurrentQ as DictationQ }/>) );break;
-        case 3:( setWindow(<QuestionsWindows.RAQWindow question={CurrentQ as RAQ }/>) );break;
-        case 4:( setWindow(<QuestionsWindows.DescribePicQWindow question={CurrentQ as DescribePicQ }/>) );break;
-        case 5:( setWindow(<QuestionsWindows.CTestWindow question={CurrentQ as CTestQ }/>) );break;
-        case 6:( setWindow(<QuestionsWindows.RSQWindow question={CurrentQ as RSQ }/>) );break;
-        case 7:( setWindow(<QuestionsWindows.WordExistsQWindow question={CurrentQ as WordExistsQ }/>) );break;
-        case 8:( setWindow(<QuestionsWindows.DescribePicWAQWindow question={CurrentQ as DescribePicWAudioQ }/>) );break;
-        case 9:( setWindow(<QuestionsWindows.LASQWindow question={CurrentQ as LASQ }/>) );break;
-        case 10:( setWindow(<QuestionsWindows.EssayQWindow question={CurrentQ as EssayQ }/>) );break;
-        case 11:( setWindow(<QuestionsWindows.IRQWindow question={CurrentQ as IRQ }/>) );break;
-        case 12:( setWindow(<QuestionsWindows.ILQWindow question={CurrentQ as ILQ }/>) );break;
-        case 13:( setWindow(<QuestionsWindows.InterviewQWindow question={CurrentQ as InterviewQ }/>) );break;
+        case 1:( setWindow(<QuestionsWindows.RACQWindow question={CurrentQ as RACQ } submitAnswer={submitAnswer}/>) );break;
+        case 2:( setWindow(<QuestionsWindows.DictationQWindow question={CurrentQ as DictationQ } submitAnswer={submitAnswer}/>) );break;
+        case 3:( setWindow(<QuestionsWindows.RAQWindow question={CurrentQ as RAQ } submitAnswer={submitAnswer}/>) );break;
+        case 4:( setWindow(<QuestionsWindows.DescribePicQWindow question={CurrentQ as DescribePicQ } submitAnswer={submitAnswer}/>) );break;
+        case 5:( setWindow(<QuestionsWindows.CTestWindow question={CurrentQ as CTestQ } submitAnswer={submitAnswer}/>) );break;
+        case 6:( setWindow(<QuestionsWindows.RSQWindow question={CurrentQ as RSQ } submitAnswer={submitAnswer}/>) );break;
+        case 7:( setWindow(<QuestionsWindows.WordExistsQWindow question={CurrentQ as WordExistsQ } submitAnswer={submitAnswer}/>) );break;
+        case 8:( setWindow(<QuestionsWindows.DescribePicWAQWindow question={CurrentQ as DescribePicWAudioQ } submitAnswer={submitAnswer}/>) );break;
+        case 9:( setWindow(<QuestionsWindows.LASQWindow question={CurrentQ as LASQ } submitAnswer={submitAnswer}/>) );break;
+        case 10:( setWindow(<QuestionsWindows.EssayQWindow question={CurrentQ as EssayQ } submitAnswer={submitAnswer}/>) );break;
+        case 11:( setWindow(<QuestionsWindows.IRQWindow question={CurrentQ as IRQ } submitAnswer={submitAnswer}/>) );break;
+        case 12:( setWindow(<QuestionsWindows.ILQWindow question={CurrentQ as ILQ } submitAnswer={submitAnswer}/>) );break;
+        case 13:( setWindow(<QuestionsWindows.InterviewQWindow question={CurrentQ as InterviewQ } submitAnswer={submitAnswer}/>) );break;
       }
   }, [CurrentQ, submitAnswer, startConnection]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-    event.preventDefault()
-  }
-
   return (
     <div>
-        <form onSubmit={handleSubmit}>
-            {windowContent}
-            
-        </form>
+      {windowContent}
     </div>
   );
 };

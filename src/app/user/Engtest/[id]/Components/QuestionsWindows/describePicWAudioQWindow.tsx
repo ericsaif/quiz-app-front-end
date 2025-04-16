@@ -1,13 +1,34 @@
-import { DescribePicWAudioQ } from "../../../../../../../Models/QuestionsModels/describePicWAudioQ"
+import Image from "next/image"
+import { DescribePicWAudioQ, MethodArgs } from "./commonImports"
+import { Button } from "@headlessui/react"
 
-const describePicWAudioQWindow = ({question}:{question: DescribePicWAudioQ}) =>{
-    return(
-        <div>
-            <p>
-                {question.questionBody}
-            </p>
-        </div>
-    )
+
+const describePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+        const pic_link = props.question.s3PathToPic ?? ""
+        const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
+            event.preventDefault()
+            const newM: MethodArgs = {
+                "AudioData": AudioData,
+                "QPOId":props.question.qPOId
+            }
+            props.submitAnswer("SubmitPicDescriptionAsync",  newM)
+          }
+        const OnStartRecording = (event:  React.MouseEvent<HTMLButtonElement>) =>{
+                
+            const { value } = event.currentTarget
+        }
+        return(
+            
+            <>
+                <Image src={pic_link} alt="" className="describe_pic"/>
+                <form onSubmit={handleSubmit}>
+                    <Button type="button" onClick={OnStartRecording}></Button>
+
+                    <Button type="submit"></Button>
+                </form>
+            </>
+            
+        )
 }
 
 export default describePicWAudioQWindow

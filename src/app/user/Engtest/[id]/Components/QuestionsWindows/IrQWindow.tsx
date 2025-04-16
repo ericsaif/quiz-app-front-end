@@ -1,12 +1,20 @@
-import { IRQ } from "../../../../../../../Models/QuestionsModels/IRQ/IrQ"
+import { IRQ, MethodArgs } from "./commonImports"
 
-const IrQWindow = ({question}:{question: IRQ}) =>{
+
+const IrQWindow = (props:{question: IRQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
+        event.preventDefault()
+      }
     return(
-        <div>
-            <p>
-                {question.questionBody}
-            </p>
-        </div>
+
+        <form onSubmit={handleSubmit}>
+            <div>
+                <p>
+                    {props.question.questionBody}
+                </p>
+            </div>
+        </form>
+        
     )
 }
 

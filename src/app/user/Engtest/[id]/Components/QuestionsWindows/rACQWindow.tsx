@@ -1,12 +1,20 @@
-import { RACQ } from "../../../../../../../Models/QuestionsModels/rACQ"
+import { RACQ, MethodArgs } from "./commonImports"
 
-const rACQWindow = ({question}:{question: RACQ}) =>{
+const 
+rACQWindow = (props:{question: RACQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
+        event.preventDefault()
+      }
     return(
-        <div>
-            <p>
-                {question.questionBody}
-            </p>
-        </div>
+
+        <form onSubmit={handleSubmit}>
+            <div>
+                <p>
+                    {props.question.questionBody}
+                </p>
+            </div>
+        </form>
+        
     )
 }
 

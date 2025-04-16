@@ -1,12 +1,19 @@
-import { InterviewQ } from "../../../../../../../Models/QuestionsModels/interviewQ"
+import { InterviewQ, MethodArgs } from "./commonImports"
 
-const interviewQWindow = ({question}:{question: InterviewQ}) =>{
+const interviewQWindow = (props:{question: InterviewQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
+        event.preventDefault()
+      }
     return(
-        <div>
-            <p>
-                {question.questionBody}
-            </p>
-        </div>
+
+        <form onSubmit={handleSubmit}>
+            <div>
+                <p>
+                    {props.question.questionBody}
+                </p>
+            </div>
+        </form>
+        
     )
 }
 
