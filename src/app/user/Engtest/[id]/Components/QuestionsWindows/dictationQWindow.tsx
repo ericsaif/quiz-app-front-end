@@ -1,22 +1,29 @@
 import { Button } from "@headlessui/react"
 import { DictationQ, MethodArgs } from "./commonImports"
+import { useRef } from "react"
 
 
-const dictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+const DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault()
     }
-    const onPlayAudio = (event: React.MouseEvent<HTMLButtonElement>) =>{
-        
-    }
+    let play_times =0
+    const audioRef = useRef<HTMLAudioElement>(null);
+      
+    const playAudio = (audioLink : string ) => {
+        if (audioRef.current && play_times < props.question.listenTries) {
+            audioRef.current.src = audioLink;
+            audioRef.current.play();
+            play_times++
+        }
+    };
+    
     return(
         <>
-        <Button></Button>
+        {/* add an icon for the listen button */}
+        <Button onClick={() => playAudio(props.question.s3PathToAudio)}>Listen </Button>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <p>
-                        {props.question.questionBody}
-                    </p>
                 </div>
                 <Button type="submit"></Button>
 
@@ -25,4 +32,4 @@ const dictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string
     )
 }
 
-export default dictationQWindow
+export default DictationQWindow

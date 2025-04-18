@@ -1,20 +1,39 @@
+import { useState } from "react"
 import { EssayQ, MethodArgs } from "./commonImports"
 
-const essayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    const [essay, setEssay] = useState<string>("")
+    const Topic = props.question.questionBody
+    const QPOId = props.question.qPOId
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault()
-      }
-    return(
+        const newM : MethodArgs = {
+            "Essay": essay,
+            "Topic": Topic,
+            "QPOId": QPOId
+        }
+        props.submitAnswer("SubmitEssayAsync", newM)
+    }
 
-        <form onSubmit={handleSubmit}>
+    const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{
+        const { value } = event.target
+        setEssay(value)
+    }
+    return(
+        <>
             <div>
                 <p>
-                    {props.question.questionBody}
+                    {Topic}
                 </p>
             </div>
-        </form>
+            <form onSubmit={handleSubmit}>
+                <textarea className="user-essay" name="user-essay" id="" onChange={HandleInputChange}></textarea>
+            </form>
+        
+        </>
         
     )
 }
 
-export default essayQWindow
+export default EssayQWindow

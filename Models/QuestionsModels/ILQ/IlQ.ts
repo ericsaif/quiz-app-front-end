@@ -4,9 +4,9 @@ import { Question } from "../question";
 
 export interface ILQ extends Question {
     s3pathsToAudioAnswers: string[];
-    givenDialogoptions: GivenDialogoptions | null;
+    givenDialogoptions: GivenDialogoptions;
     givenDialogoptionsId: number;
-    correctDialogOptions: CorrectDialogOptions | null;
+    correctDialogOptions: CorrectDialogOptions;
     correctDialogOptionsId: number;
     summaryTimer: string;
 }

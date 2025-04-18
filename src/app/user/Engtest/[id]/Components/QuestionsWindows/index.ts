@@ -9,5 +9,5 @@ export { default as DescribePicWAQWindow } from "./describePicWAudioQWindow";
 export { default as LASQWindow } from "./lASQWindow";
 export { default as EssayQWindow } from "./essayQWindow";
 export { default as IRQWindow } from "./IrQWindow";
-export { default as ILQWindow } from "./IlQWindow";
+export { default as ILQWindow } from "./ILQWindow/IlQWindow";
 export { default as InterviewQWindow } from "./interviewQWindow";
