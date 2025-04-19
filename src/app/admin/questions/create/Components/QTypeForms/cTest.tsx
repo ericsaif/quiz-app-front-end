@@ -44,7 +44,7 @@ const CTest = (props:{QPOId: number}) =>{
         }
         const newCtestQ: CreateCTestQ = {
             questionBody: QBody,
-            QPOId: props.QPOId,
+            QPOId:props.QPOId,
             CTestA: newCTestA
         }
         POST_Question(newCtestQ, "CTest")
@@ -60,9 +60,10 @@ const CTest = (props:{QPOId: number}) =>{
     } 
 
     return(
-        <form onSubmit={HandleFormSubmit}>
+        <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
             <Label htmlFor="questionBody">Вопрос:</Label>
             <Input id="questionBody" type="text" onChange={HandleInputChange}></Input> 
+            <Label htmlFor="NumWords">Вопрос:</Label>
             <Input id="NumWords" type="number" onChange={HandleNumInputChange}></Input> 
             
             <span>

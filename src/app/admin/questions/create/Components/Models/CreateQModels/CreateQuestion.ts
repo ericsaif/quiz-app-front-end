@@ -1,4 +1,4 @@
 export interface CreateQuestion{
-    QPOId: number,
+    QPOId:number,
     questionBody: string;
 }
