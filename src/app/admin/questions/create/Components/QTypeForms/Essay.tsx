@@ -1,4 +1,4 @@
-import { Button, Input, Label } from "@headlessui/react"
+import { Button, Input } from "@headlessui/react"
 import { useState } from "react"
 import POST_Question from "../Hooks/postQuestion"
 import { CreateEssay } from "../Models/CreateQModels/createEssay"
@@ -22,7 +22,7 @@ const Essay = (props:{QPOId: number}) =>{
 
     return(
         <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
-            <Label htmlFor="Topic">Тема:</Label>
+            <label htmlFor="Topic">Тема:</label>
             <Input id="Topic" type="text" onChange={HandleInputChange}></Input> 
             
             <span>

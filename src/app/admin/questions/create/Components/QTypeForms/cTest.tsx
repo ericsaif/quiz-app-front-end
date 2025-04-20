@@ -1,5 +1,7 @@
+"use client"
+
 import React, { useEffect, useState } from "react"
-import { Button, Input, Label } from "@headlessui/react"
+import { Button, Input } from "@headlessui/react"
 import POST_Question from "../Hooks/postQuestion"
 import { CreateCTestQ } from "../Models/CreateQModels/CreateCtestQ/CreateCTestQ"
 import { CreateCTestA } from "../Models/CreateQModels/CreateCtestQ/CreateCTestA"
@@ -12,16 +14,15 @@ const CTest = (props:{QPOId: number}) =>{
 
     useEffect(()=>{
         const inputs:React.ReactNode[] =[]
-        let i: number
-        for(i=0; i< num_words_w_blanks; i++){
+        for(let i=0; i< num_words_w_blanks; i++){
             inputs.push(
                 <>
-                    <Input id="rightAnswer-${i}" key={"rightAnswer-${i}"} type="text" onChange={(e)=>{HandleRAChange(i,e)}}></Input>
+                    <Input id={`rightAnswer-${i}`} key={`rightAnswer-${i}`} type="text" onChange={(e)=>{HandleRAChange(i,e)}}></Input>
                 </>
             )
         }
         setCTestA((inputs))
-    },[num_words_w_blanks, CTestA])
+    },[num_words_w_blanks])
 
     const HandleRAChange = (index:number, event:React.ChangeEvent<HTMLInputElement>) =>{
         const newValue  = event.target.value
@@ -61,9 +62,9 @@ const CTest = (props:{QPOId: number}) =>{
 
     return(
         <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
-            <Label htmlFor="questionBody">Вопрос:</Label>
+            <label htmlFor="questionBody">Вопрос:</label>
             <Input id="questionBody" type="text" onChange={HandleInputChange}></Input> 
-            <Label htmlFor="NumWords">Вопрос:</Label>
+            <label htmlFor="NumWords">Вопрос:</label>
             <Input id="NumWords" type="number" onChange={HandleNumInputChange}></Input> 
             
             <span>

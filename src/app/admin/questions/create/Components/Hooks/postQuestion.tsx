@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect } from "react"
 import { CreateQuestion } from "../Models/CreateQModels/CreateQuestion";
 

@@ -1,3 +1,3 @@
 import { CreateQuestion } from "./CreateQuestion";
 
-export type CreateRSDTO = CreateQuestion
+export type CreateRS = CreateQuestion

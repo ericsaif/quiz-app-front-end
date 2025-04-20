@@ -1,4 +1,6 @@
-import { Button, Input, Label } from "@headlessui/react"
+"use client"
+
+import { Button, Input } from "@headlessui/react"
 import { useState } from "react"
 import POST_Question from "../Hooks/postQuestion"
 import { CreateDictation } from "../Models/CreateQModels/CreateDictationQ/createDictationQ"
@@ -35,9 +37,9 @@ const Dictation = (props:{QPOId: number}) =>{
 
     return(
         <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
-            <Label htmlFor="pathToPic">Вопрос:</Label>
+            <label htmlFor="pathToPic">Вопрос:</label>
             <Input id="pathToAudio" type="text" onChange={HandleInputChange}></Input> 
-            <Label htmlFor="dictA">Ответ:</Label>
+            <label htmlFor="dictA">Ответ:</label>
             <Input id="dictA" onChange={HandleAInputChange}></Input>
             
             <span>

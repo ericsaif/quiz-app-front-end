@@ -1,4 +1,6 @@
-import { Button, Input, Label } from "@headlessui/react"
+"use client"
+
+import { Button, Input } from "@headlessui/react"
 import { useState } from "react"
 import POST_Question from "../../Hooks/postQuestion"
 import { CreateILQ } from "../../Models/CreateQModels/CreateILQ/createILQ"
@@ -16,7 +18,7 @@ const ILQ = (props:{QPOId: number}) =>{
         for(let i =0; i<5; i++){
             inputs.push(
                 <>
-                    {i}: <Input id={`s3-audio-path-${i}`} type="text" key={i} onChange={(e)=>{HandleS3Change(e.target.value, i)}}></Input>
+                    {i}: <Input id={`s3-audio-path-${i}`} type="text" key={`s3-audio-path-${i}`} onChange={(e)=>{HandleS3Change(e.target.value, i)}}></Input>
                 </>
             )
         }
@@ -28,17 +30,17 @@ const ILQ = (props:{QPOId: number}) =>{
             for (let i = 0; i < 25; i++) {
                 if(i % 5 == 0)
                     inputs.push(
-                        <Label htmlFor={`dialog-option-${i}`}>
+                        <label htmlFor={`dialog-option-${i}`}>
                             <span>
                                 Введите возможные ответы для: {
                                     i ==0 ? <>Начала диалога</> : <>Продолжения диалога номер: {i}</> 
                                 }
                             </span>
-                            </Label>
+                            </label>
                     )
                 inputs.push(
                     <>
-                        {i}: <Input id={`dialog-option-${i}`} type="text" key={i} onChange={(e)=>{HandleGivenOptionschange(e.target.value, i)}}></Input>
+                        {i}: <Input id={`dialog-option-${i}`} type="text" key={`dialog-option-${i}`} onChange={(e)=>{HandleGivenOptionschange(e.target.value, i)}}></Input>
                     </>
                 );
             }
@@ -50,9 +52,9 @@ const ILQ = (props:{QPOId: number}) =>{
         const inputs: React.ReactNode[] = [] 
         for (let i = 0; i < 5; i++){
             const options: React.ReactNode[] = []
-            for(let j=i*5; j<25; j++ ){
+            for(let j=i*5; j<(i*5)+5; j++ ){
                 options.push(
-                    <option key={`option-${j}`} value={j}>
+                    <option key={`correct-option-${j}`} value={j}>
                         Опция: {j}
                     </option>
                 )
@@ -60,11 +62,11 @@ const ILQ = (props:{QPOId: number}) =>{
             
             inputs.push(
                 <>
-                    <Label htmlFor={`selectCorrectOptions-${i}`}>
-                        Выберите номер правильного ответа для: {
+                    <label htmlFor={`selectCorrectOptions-${i}`}>
+                        Выберите номер правильного ответа для - {
                                     i ==0 ? <>Начала диалога</> : <>Продолжения диалога номер: {i}</> 
                                 }
-                    </Label>
+                    </label>
                     <select name="selectCorrectOptions" id={`selectCorrectOptions-${i}`} onChange={(e) => HandleCorrectOptionschange(e.target.value, i)}>
                     {
                         options
@@ -130,17 +132,17 @@ const ILQ = (props:{QPOId: number}) =>{
     return(
         <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
 
-            <Label htmlFor="S3PathsInputs">Вставьте локацию аудио файлов в облачном хранилище: </Label>
+            <label htmlFor="S3PathsInputs">Вставьте локацию аудио файлов в облачном хранилище: </label>
             <div id="S3PathsInputs">
                 {ShowS3PathsInputs()}
             </div>    
 
-            <Label htmlFor="Inputs">Вставьте возможные ответы: </Label>
+            <label htmlFor="Inputs">Вставьте возможные ответы: </label>
             <div id="Inputs">
                 {ShowInputs()}
             </div>         
 
-            <Label htmlFor="CorrectInputs">Выберите номера правильных ответов для каждой опции</Label>
+            <label htmlFor="CorrectInputs">Выберите номера правильных ответов для каждой опции</label>
             <div id="CorrectInputs">
                 {ShowCorrectInputs()}
             </div>                 

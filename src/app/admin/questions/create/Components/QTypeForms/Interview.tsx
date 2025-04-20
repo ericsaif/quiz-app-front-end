@@ -1,4 +1,4 @@
-import { Button, Input, Label } from "@headlessui/react"
+import { Button, Input } from "@headlessui/react"
 import { useState } from "react"
 import POST_Question from "../Hooks/postQuestion"
 import { CreateInterviewQ } from "../Models/CreateQModels/createInterviewQ"
@@ -22,7 +22,7 @@ const Interview = (props:{QPOId: number}) =>{
 
     return(
         <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
-            <Label htmlFor="pathToPic">Вопрос:</Label>
+            <label htmlFor="pathToPic">Вопрос:</label>
             <Input id="pathToAudio" type="text" onChange={HandleInputChange}></Input> 
             
             <span>

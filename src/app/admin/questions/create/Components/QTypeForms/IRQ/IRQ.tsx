@@ -1,18 +1,25 @@
-import { Button, Input, Label } from "@headlessui/react"
-import { useState } from "react"
-import POST_Question from "../Hooks/postQuestion"
-import { CreateIRQ } from "../Models/CreateQModels/CreateIRQ/createIRQ"
-import { MiniE1 } from "../Models/CreateQModels/CreateIRQ/miniE1"
-import { CreateIRA } from "../Models/CreateQModels/CreateIRQ/createIRA"
+"use client"
+
+import { Button  } from "@headlessui/react"
+import React, { useState } from "react"
+import POST_Question from "../../Hooks/postQuestion"
+import { CreateIRQ } from "../../Models/CreateQModels/CreateIRQ/createIRQ"
+import { MiniE1 } from "../../Models/CreateQModels/CreateIRQ/miniE1"
+import { CreateIRA } from "../../Models/CreateQModels/CreateIRQ/createIRA"
+import ShowIRQ from "./showIRQ"
+import ShowIRA from "./showIRA"
 
 const IRQ = (props:{QPOId: number}) =>{
     const [questionBody, setquestionBody] = useState<string>("")
+    const [allMiniE1Options, setallMiniE1Options] = useState<string[]>(Array(50).fill(''))
+    
     const [questionMiniE3, setquestionMiniE3] = useState<string>("")
     const [questionMiniE4, setquestionMiniE4] = useState<string>("")
+
     const [optionsMiniE2, setOptionsMiniE2] = useState<string[]>([]);
     const [optionsMiniE5, setOptionsMiniE5] = useState<string[]>([]);
     const [optionsMiniE6, setOptionsMiniE6] = useState<string[]>([]);
-    const [allMiniE1Options, setallMiniE1Options] = useState<string[]>(Array(50).fill(''));
+
     const [ correctOptionsMiniE1, setcorrectOptionsMiniE1 ] = useState<number[]>(Array(10).fill(-1))
     const [ correctOptionMiniE2, setcorrectOptionMiniE2 ] = useState<number>(-1)
     const [ correctHighlightMiniE3, setcorrectHighlightMiniE3 ] = useState<string>("")
@@ -57,15 +64,31 @@ const IRQ = (props:{QPOId: number}) =>{
         POST_Question(newIRQ, "CTest")
         
     }
-    const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
-        const { value } = event.target
-        setquestionBody(value)
-    }   
+    
+
+    
 
     return(
         <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
-            <Label htmlFor="questionBody">Текст:</Label>
-            <Input id="questionBody" type="text" onChange={HandleInputChange}></Input> 
+            <ShowIRQ 
+                setallMiniE1Options={setallMiniE1Options}
+                setOptionsMiniE2={setOptionsMiniE2}
+                setquestionMiniE3={setquestionMiniE3}
+                setquestionMiniE4={setquestionMiniE4}
+                setOptionsMiniE5={setOptionsMiniE5}
+                setOptionsMiniE6={setOptionsMiniE6}
+                setquestionBody={setquestionBody}
+            />
+
+            <ShowIRA 
+                setcorrectOptionsMiniE1 = {setcorrectOptionsMiniE1}
+                setcorrectOptionMiniE2 = {setcorrectOptionMiniE2}
+                setcorrectHighlightMiniE3 = {setcorrectHighlightMiniE3}
+                setcorrectHighlightMiniE4 = {setcorrectHighlightMiniE4}
+                setcorrectOptionMiniE5 = {setcorrectOptionMiniE5}
+                setcorrectOptionMiniE6 = {setcorrectOptionMiniE6}
+            />
+            
             
             <span>
                 Напишите тему эссе

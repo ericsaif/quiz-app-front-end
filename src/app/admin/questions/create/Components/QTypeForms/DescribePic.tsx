@@ -1,10 +1,10 @@
-import { Button, Input, Label } from "@headlessui/react"
+import { Button, Input } from "@headlessui/react"
 import { useState } from "react"
 import { CreateDescribePic } from "../Models/CreateQModels/createDescribePic"
 import POST_Question from "../Hooks/postQuestion"
 
-const DescribePic = (props:{QPOId: number}) =>{
-    const [WAudio, setWAudio] = useState<boolean>(true)
+const DescribePic = () =>{
+    const [waudio, setWAudio] = useState<boolean>(true)
     const [PathToPic, setPathToPic] = useState<string>("")
 
     
@@ -12,8 +12,8 @@ const DescribePic = (props:{QPOId: number}) =>{
         event.preventDefault()
         const newDescribePic: CreateDescribePic ={
             s3PathToPic: PathToPic,
-            waudio: WAudio,
-            QPOId: props.QPOId,
+            waudio,
+            QPOId: waudio ? 8 : 4,
             questionBody: "-"
         }
         POST_Question(newDescribePic, "CTest")
@@ -39,9 +39,9 @@ const DescribePic = (props:{QPOId: number}) =>{
 
     return(
         <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
-            <Label htmlFor="pathToPic">Вопрос:</Label>
+            <label htmlFor="pathToPic">Вопрос:</label>
             <Input id="pathToPic" type="text" onChange={HandleInputChange}></Input> 
-            <Label htmlFor="waudio">Вопрос:</Label>
+            <label htmlFor="waudio">Вопрос:</label>
 
             <select id="waudio" onChange={(e)=>{HandleNumInputChange(e.target.value)}}>
                     <option value="1">Аудио</option>
