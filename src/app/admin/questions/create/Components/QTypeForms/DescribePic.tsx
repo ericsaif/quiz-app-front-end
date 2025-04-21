@@ -39,9 +39,9 @@ const DescribePic = () =>{
 
     return(
         <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
-            <label htmlFor="pathToPic">Вопрос:</label>
+            <label htmlFor="pathToPic">Локация:</label>
             <Input id="pathToPic" type="text" onChange={HandleInputChange}></Input> 
-            <label htmlFor="waudio">Вопрос:</label>
+            <label htmlFor="waudio">С аудио или без:</label>
 
             <select id="waudio" onChange={(e)=>{HandleNumInputChange(e.target.value)}}>
                     <option value="1">Аудио</option>

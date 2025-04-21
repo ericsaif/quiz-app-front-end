@@ -12,6 +12,7 @@ const POST_Question = (question: CreateQuestion, QType:string) => {
                     headers: {
                         "Content-Type": "application/json", // Specify JSON content
                     },
+                    credentials: 'include',
                     body: JSON.stringify(question), // Convert the question object to JSON
                 });
 

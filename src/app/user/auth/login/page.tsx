@@ -1,54 +1,85 @@
-import { Button } from "@headlessui/react";
-import Image from "next/image";
+// pages/login.tsx (Pages Router) or app/login/page.tsx (App Router) - Simplified example
+"use client"; // If using App Router and client-side logic
 
-export default function LogIn(){
-    return(
-//         <!--
-//   This example requires updating your template:
+import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // or 'next/router' for Pages Router
 
-//   ```
-//   <html class="h-full bg-white">
-//   <body class="h-full">
-//   ```
-// -->
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <Image className="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company"/>
-        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
-    </div>
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setrememberMe] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      // Make the API call to your ASP.NET Core backend login endpoint
+      const response = await fetch('http://localhost:5192/api/auth/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, rememberMe }),
+      });
+
+      if (response.ok) {
+        // Backend should have set the HTTP-only cookie in the response headers
+        // Redirect to the appropriate page after successful login
+        router.push('/dashboard'); // Or redirect based on user role if returned
+      } else {
+        const errorData = await response.json(); // Assuming backend sends error JSON
+        setError(errorData.message || 'Login failed.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An error occurred during login.');
+    }
+  };
+
+  return (
+    <div>
+      <h1>Login</h1>
+      <form onSubmit={handleSubmit}>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <div>
-            <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">Email address</label>
-            <div className="mt-2">
-            <input defaultValue={"example@gmail.com"} type="email" name="email" id="email" autoComplete="email" required className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
-            </div>
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            placeholder='youremail@gmail.com'
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-
         <div>
-            <div className="flex items-center justify-between">
-            <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">Password</label>
-            <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
-            </div>
-            </div>
-            <div className="mt-2">
-            <input defaultValue={"strongPassword"} type="password" name="password" id="password" autoComplete="current-password" required className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
-            </div>
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            placeholder='yourpassword'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
-
         <div>
-            <Button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</Button>
+          <label htmlFor="rememberMe">Remember Me:</label>
+          <input
+            type="checkbox"
+            id="rememberMe"
+            checked={rememberMe}
+            placeholder=''
+            onChange={(e) => setrememberMe(e.target.checked)}
+            // required
+          />
         </div>
-        </form>
-
-        <p className="mt-10 text-center text-sm/6 text-gray-500">
-        Not a member?
-        <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
-        </p>
+        <button type="submit">Login</button>
+      </form>
     </div>
-    </div>
-
-    );
+  );
 }

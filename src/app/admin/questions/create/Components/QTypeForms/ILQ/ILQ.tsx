@@ -30,7 +30,7 @@ const ILQ = (props:{QPOId: number}) =>{
             for (let i = 0; i < 25; i++) {
                 if(i % 5 == 0)
                     inputs.push(
-                        <label htmlFor={`dialog-option-${i}`}>
+                        <label htmlFor={`dialog-option-${i}`} key={`dialog-option-label-${i}`}>
                             <span>
                                 Введите возможные ответы для: {
                                     i ==0 ? <>Начала диалога</> : <>Продолжения диалога номер: {i}</> 
@@ -62,12 +62,12 @@ const ILQ = (props:{QPOId: number}) =>{
             
             inputs.push(
                 <>
-                    <label htmlFor={`selectCorrectOptions-${i}`}>
+                    <label htmlFor={`selectCorrectOptions-${i}`} key={`selectCorrectOptions-${i}`}>
                         Выберите номер правильного ответа для - {
                                     i ==0 ? <>Начала диалога</> : <>Продолжения диалога номер: {i}</> 
                                 }
                     </label>
-                    <select name="selectCorrectOptions" id={`selectCorrectOptions-${i}`} onChange={(e) => HandleCorrectOptionschange(e.target.value, i)}>
+                    <select key={`correct-dialog-option-${i}`} name="selectCorrectOptions" id={`selectCorrectOptions-${i}`} onChange={(e) => HandleCorrectOptionschange(e.target.value, i)}>
                     {
                         options
                     }

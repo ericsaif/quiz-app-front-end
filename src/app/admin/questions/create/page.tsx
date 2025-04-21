@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react"
 import * as QTYPES from "./Components/QTypeForms/index"
 
 const CreateQ = () =>{
-    const [QType, setQType] = useState<number>(-1)
+    const [QType, setQType] = useState<number>(1)
     const [QForm, setQForm] = useState<React.ReactNode>()
 
     useEffect(()=>{
