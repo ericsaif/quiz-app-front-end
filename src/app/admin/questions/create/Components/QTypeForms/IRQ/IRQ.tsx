@@ -8,6 +8,7 @@ import { MiniE1 } from "../../Models/CreateQModels/CreateIRQ/miniE1"
 import { CreateIRA } from "../../Models/CreateQModels/CreateIRQ/createIRA"
 import ShowIRQ from "./showIRQ"
 import ShowIRA from "./showIRA"
+import useModal from "../../Hooks/useModal"
 
 const IRQ = (props:{QPOId: number}) =>{
     const [questionBody, setquestionBody] = useState<string>("")
@@ -26,6 +27,57 @@ const IRQ = (props:{QPOId: number}) =>{
     const [ correctHighlightMiniE4, setcorrectHighlightMiniE4 ] = useState<string>("")
     const [ correctOptionMiniE5, setcorrectOptionMiniE5 ] = useState<number>(-1)
     const [ correctOptionMiniE6, setcorrectOptionMiniE6 ] = useState<number>(-1)
+
+
+    const text1: React.ReactNode =(
+        <>
+            <span>
+                <h6>1. Текст </h6>
+                <p>Впишите текст с пробелами, Вместо пробелов впишите - [BLANK] </p>
+
+                <h6>2. Впишите возможные ответы для mini excercise No 1: </h6>
+                <p> Вставляете ответы, которые пользователь можеть выбрать вместо пробелов для каждого пробела </p>
+
+                <h6>3. Впишите возможные ответы для mini excercise No 2: </h6>
+                <p> Вставляете ответы, которые пользователь можеть выбрать </p>
+
+                <h6>4. Впишите возможные ответы для mini excercise No 3: </h6>
+                <p> Впишите вопрос на который пользователь должен будет ответить с Highlight </p>
+
+                <h6>5. Впишите возможные ответы для mini excercise No 4: </h6>
+                <p> Впишите вопрос на который пользователь должен будет ответить с Highlight </p>
+
+                <h6>6. Впишите возможные ответы для mini excercise No 5: </h6>
+                <p> Вставляете ответы, которые пользователь можеть выбрать </p>
+
+                <h6>7. Впишите возможные ответы для mini excercise No 6: </h6>
+                <p> Вставляете ответы, которые пользователь можеть выбрать </p>
+            </span>
+        </>
+    )
+
+    const text2: React.ReactNode =(
+        <>
+            <span>
+                <h6>1. Mini Excercise No: 1 </h6>
+                <p> У каждого возможного выбора, который вы дали выше есть свой номер </p>
+                <p> Для каждого вопроса выберите номер правильного выбора </p>
+
+                <h6>2. С Mini Excercise No: 2, 5, 6 </h6>
+                <p> Сделайте то же самое что и с Mini Excercise No: 1 </p>
+
+                <h6>3. С Mini Excercise No: 3 и 4  </h6>
+                <p> Впишите Highlight, который пользователь должен был выбрать </p>
+            </span>
+        </>
+    )
+
+    const modalid = "Interactive Reading"
+    const modalidIRA = "Interactive Reading Answer"
+
+    const modal = useModal({text:text1, id: modalid})
+
+    const modalIRA = useModal({text: text2, id: modalidIRA})
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
@@ -69,33 +121,47 @@ const IRQ = (props:{QPOId: number}) =>{
     
 
     return(
-        <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
-            <ShowIRQ 
-                setallMiniE1Options={setallMiniE1Options}
-                setOptionsMiniE2={setOptionsMiniE2}
-                setquestionMiniE3={setquestionMiniE3}
-                setquestionMiniE4={setquestionMiniE4}
-                setOptionsMiniE5={setOptionsMiniE5}
-                setOptionsMiniE6={setOptionsMiniE6}
-                setquestionBody={setquestionBody}
-            />
+        <React.Fragment>
+            <form className="p-0 m-0" onSubmit={HandleFormSubmit}>
+                <div className="container-fluid p-3">
+                    <div className="row q-container mb-5">
+                        <div className="hstack">
+                            <h1 className="mx-5">Interactive Reading Вопросы и текст </h1>
+                            {modal}
+                        </div>                        
+                        <ShowIRQ 
+                                setallMiniE1Options={setallMiniE1Options}
+                                setOptionsMiniE2={setOptionsMiniE2}
+                                setquestionMiniE3={setquestionMiniE3}
+                                setquestionMiniE4={setquestionMiniE4}
+                                setOptionsMiniE5={setOptionsMiniE5}
+                                setOptionsMiniE6={setOptionsMiniE6}
+                                setquestionBody={setquestionBody}
+                            />
+                    </div>
 
-            <ShowIRA 
-                setcorrectOptionsMiniE1 = {setcorrectOptionsMiniE1}
-                setcorrectOptionMiniE2 = {setcorrectOptionMiniE2}
-                setcorrectHighlightMiniE3 = {setcorrectHighlightMiniE3}
-                setcorrectHighlightMiniE4 = {setcorrectHighlightMiniE4}
-                setcorrectOptionMiniE5 = {setcorrectOptionMiniE5}
-                setcorrectOptionMiniE6 = {setcorrectOptionMiniE6}
-            />
-            
-            
-            <span>
-                Напишите тему эссе
-            </span>
-            
-            <Button type="submit"> Создать </Button>
-        </form>
+                    <div className="row q-container container-fluid mt-5 mr-0">
+                        <div className="hstack">
+                            <h1 className="mx-5">Interactive Reading ответы</h1>
+                            {modalIRA}
+                        </div>
+                        <ShowIRA 
+                            setcorrectOptionsMiniE1 = {setcorrectOptionsMiniE1}
+                            setcorrectOptionMiniE2 = {setcorrectOptionMiniE2}
+                            setcorrectHighlightMiniE3 = {setcorrectHighlightMiniE3}
+                            setcorrectHighlightMiniE4 = {setcorrectHighlightMiniE4}
+                            setcorrectOptionMiniE5 = {setcorrectOptionMiniE5}
+                            setcorrectOptionMiniE6 = {setcorrectOptionMiniE6}
+                            />
+                    </div>
+
+                    <div className="row mt-4 align-self-center">
+                        <Button className={`btn btn-primary align-self-center col-6`} type="submit"> Создать </Button>
+                    </div>    
+                </div>
+
+            </form>
+        </React.Fragment>
     )
 }
 

@@ -1,4 +1,8 @@
-import { Input } from "@headlessui/react"
+import React from "react";
+import useMiniE1 from "./hooks/useMiniE1";
+import useMiniE2 from "./hooks/useMiniE2";
+import useMiniE5 from "./hooks/useMiniE5";
+import useMiniE6 from "./hooks/useMiniE6";
 
 const ShowIRQ = (props: {
     setquestionBody: React.Dispatch<React.SetStateAction<string>>,
@@ -19,132 +23,67 @@ const ShowIRQ = (props: {
         setOptionsMiniE6 
     } = props;
 
-    const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { value } = event.target;
         setquestionBody(value);
     };
 
-    const MiniE1HandleChange = (value: string, index: number) => {
-        setallMiniE1Options(prevOptions => {
-            const newOptions = [...prevOptions];
-            newOptions[index] = value;
-            return newOptions;
-        });
-    };
+    const ShowMiniE1Options = useMiniE1({setallMiniE1Options})
+    const ShowMiniE2Options = useMiniE2({setOptionsMiniE2})
+    const ShowOptionsMiniE5 = useMiniE5({setOptionsMiniE5})
+    const ShowOptionsMiniE6 = useMiniE6({setOptionsMiniE6})
+    
 
-    const MiniE2HandleChange = (value: string, index: number) => {
-        setOptionsMiniE2(prevOptions => {
-            const newOptions = [...prevOptions];
-            newOptions[index] = value;
-            return newOptions;
-        });
-    };
-
-    const HandleMiniE3InputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const HandleMiniE3InputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { value } = event.target;
         setquestionMiniE3(value);
     };
 
-    const HandleMiniE4InputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const HandleMiniE4InputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { value } = event.target;
         setquestionMiniE4(value);
     };
 
-    const HandleOptionsMiniE5Change = (value: string, index: number) => {
-        setOptionsMiniE5(prevValues => {
-            const newValues = [...prevValues];
-            newValues[index] = value;
-            return newValues;
-        });
-    };
-
-    const HandleOptionsMiniE6Change = (value: string, index: number) => {
-        setOptionsMiniE6(prevValues => {
-            const newValues = [...prevValues];
-            newValues[index] = value;
-            return newValues;
-        });
-    };
-
-    const ShowMiniE1Options = () => {
-        const inputs: React.ReactNode[] = [];
-        for (let i = 0; i < 50; i++) {
-            if (i % 5 === 0)
-                inputs.push(
-                    <label key={`label-for-miniE1-${i}`} htmlFor={`miniE1-options-${i}`}>Впишите возможные ответы для вопроса номер: {i}</label>
-                );
-            inputs.push(
-                <>
-                    {i}: <Input key={`option-${i}`} id={`option-${i}`} type="text" onChange={(e) => MiniE1HandleChange(e.target.value, i)}></Input>
-                </>
-            );
-        }
-
-        return inputs;
-    };
-
-    const ShowMiniE2Options = () => {
-        const inputs: React.ReactNode[] = [];
-        for (let i = 0; i < 5; i++) {
-            inputs.push(
-                <Input key={`option-${i}`} id={`option-${i}`} type="text" onChange={(e) => MiniE2HandleChange(e.target.value, i)}></Input>
-            );
-        }
-
-        return inputs;
-    };
-
-    const ShowOptionsMiniE5 = () => {
-        const inputs: React.ReactNode[] = [];
-        for (let i = 0; i < 5; i++) {
-            inputs.push(
-                <Input key={`Options-MiniE5-no-${i}`} id={`Options-MiniE5-no-${i}`} onChange={(e) => HandleOptionsMiniE5Change(e.target.value, i)}></Input>
-            );
-        }
-        return inputs;
-    };
-
-    const ShowOptionsMiniE6 = () => {
-        const inputs: React.ReactNode[] = [];
-        for (let i = 0; i < 5; i++) {
-            inputs.push(
-                <Input key={`Options-MiniE6-no-${i}`} id={`Options-MiniE6-no-${i}`} onChange={(e) => HandleOptionsMiniE6Change(e.target.value, i)}></Input>
-            );
-        }
-        return inputs;
-    };
-
     return (
-        <div id="Create-Questions-Container">
-            <label htmlFor="questionBody">Текст:</label>
-            <Input id="questionBody" type="text" onChange={HandleInputChange}></Input>
+        <React.Fragment key={`showIRQ-fragment`}>
+            <div id="Create-Questions-Container" className="container m-0 ">
+                <div className="row  pr-4">
+                    <div className="col-6 align-self-start vstack">
+                        <label htmlFor="questionBody">Текст:</label>
+                        <textarea id="questionBody" style={{width: "600px", height: "200px"}} onChange={HandleInputChange}></textarea>
 
-            <label htmlFor="MiniE1Inputs">Впишите возможные ответы для mini excercise No 1: </label>
-            <div id="MiniE1Inputs">
-                {ShowMiniE1Options()}
+                        <label htmlFor="MiniE2Inputs">Впишите возможные ответы для mini excercise No 2: </label>
+                        <div id="MiniE2Inputs">
+                            {ShowMiniE2Options}
+                        </div>
+
+                        <label htmlFor="MiniE3">Впишите вопрос для mini excercise No 3: </label>
+                        <textarea style={{width: "600px"}} id="MiniE3" onChange={HandleMiniE3InputChange}></textarea>  
+
+                        <label htmlFor="MiniE4">Впишите вопрос для mini excercise No 4: </label>
+                        <textarea style={{width: "600px"}} id="MiniE4" onChange={HandleMiniE4InputChange}></textarea> 
+
+                        <label htmlFor="MiniE5Inputs">Впишите возможные ответы для mini excercise No 5: </label>
+                        <div id="MiniE5Inputs">
+                            {ShowOptionsMiniE5}
+                        </div>
+
+                        <label htmlFor="MiniE6Inputs">Впишите возможные ответы для mini excercise No 6: </label>
+                        <div id="MiniE6Inputs">
+                            {ShowOptionsMiniE6}
+                        </div>
+                    </div>
+
+                    <div className="col-6 align-self-end">
+                        <label className="q-label" htmlFor="MiniE1Inputs">Впишите возможные ответы для mini excercise No 1: </label>
+                        <div id="MiniE1Inputs" className="vstack">
+                            {ShowMiniE1Options}
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
-            <label htmlFor="MiniE2Inputs">Впишите возможные ответы для mini excercise No 2: </label>
-            <div id="MiniE2Inputs">
-                {ShowMiniE2Options()}
-            </div>
-
-            <label htmlFor="MiniE3">Впишите вопрос для mini excercise No 3: </label>
-            <Input id="MiniE3" type="text" onChange={HandleMiniE3InputChange}></Input> 
-
-            <label htmlFor="MiniE4">Впишите вопрос для mini excercise No 4: </label>
-            <Input id="MiniE4" type="text" onChange={HandleMiniE4InputChange}></Input> 
-
-            <label htmlFor="MiniE5Inputs">Впишите возможные ответы для mini excercise No 5: </label>
-            <div id="MiniE5Inputs">
-                {ShowOptionsMiniE5()}
-            </div>
-
-            <label htmlFor="MiniE6Inputs">Впишите возможные ответы для mini excercise No 6: </label>
-            <div id="MiniE6Inputs">
-                {ShowOptionsMiniE6()}
-            </div>
-        </div>
+        </React.Fragment>
     )
 }
 

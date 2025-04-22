@@ -1,10 +1,21 @@
-import { Button, Input } from "@headlessui/react"
-import { useState } from "react"
+import { Button } from "@headlessui/react"
+import React, { useState } from "react"
 import POST_Question from "../Hooks/postQuestion"
 import { CreateEssay } from "../Models/CreateQModels/createEssay"
+import useModal from "../Hooks/useModal"
 
 const Essay = (props:{QPOId: number}) =>{
     const [Topic, setTopic] = useState<string>("")
+
+    const text: React.ReactNode = (
+        <span>
+            Впишите тему эссе в поле - Тема
+        </span>
+    )
+
+    const id = "Essay"
+
+    const modal = useModal({text, id})
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
@@ -15,22 +26,23 @@ const Essay = (props:{QPOId: number}) =>{
         POST_Question(newEssay, "CTest")
         
     }
-    const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
+    const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
         const { value } = event.target
         setTopic(value)
     }   
 
     return(
-        <form className="CreateQuestionForm" onSubmit={HandleFormSubmit}>
-            <label htmlFor="Topic">Тема:</label>
-            <Input id="Topic" type="text" onChange={HandleInputChange}></Input> 
-            
-            <span>
-                Напишите тему эссе
-            </span>
-            
-            <Button type="submit"> Создать </Button>
-        </form>
+        <React.Fragment>
+            <div className="m-2">
+                {modal}
+            </div>
+            <form className="q-container vstack gap-2 mx-2" style={{width: "30%"}} onSubmit={HandleFormSubmit}>
+                <label htmlFor="Topic">Тема:</label>
+                <textarea style={{width: "300px", height: "200px"}} id="Topic"  onChange={HandleInputChange}></textarea> 
+                
+                <Button className={`btn btn-primary`} style={{width: "30%"}} type="submit"> Создать </Button>
+            </form>
+        </React.Fragment>
     )
 }
 

@@ -41,6 +41,34 @@ input[type="number"]{
   border: 1px solid #0a0a0a;
   width: 120px;
   height: auto;
+  padding: .25rem;
+}
+
+input[type="password"],
+input[type="email"]{
+  padding: .25rem;
+}
+
+.q-container {
+  border: 1px solid #343a40;
+  padding: .25rem ;
+  margin-top: .25rem;
+  margin-bottom: .25rem;
+  width: 100%;
+}
+
+.auth-container {
+  border: 1px solid #343a40 ;
+  border-radius: 7px;
+  padding: .25rem ;
+  margin-top: .25rem;
+  margin-bottom: .25rem;
+  width: 100%;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+label{
+  margin-top: .5rem;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'; // or 'next/router' for Pages Router
+import { Button } from '@headlessui/react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -41,45 +42,47 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            placeholder='youremail@gmail.com'
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            placeholder='yourpassword'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="rememberMe">Remember Me:</label>
-          <input
-            type="checkbox"
-            id="rememberMe"
-            checked={rememberMe}
-            placeholder=''
-            onChange={(e) => setrememberMe(e.target.checked)}
-            // required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <div className="d-flex align-items-center" style={{minHeight: "100vh"}}>
+      <div className='container auth-container w-50' >
+        <h1>Login</h1>
+        <form className='container-fluid d-flex vstack' onSubmit={handleSubmit}>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+          <div className='vstack'>
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              placeholder='youremail@gmail.com'
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className='vstack'>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              placeholder='yourpassword'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div >
+            <label className='mx-1' htmlFor="rememberMe">Remember Me:</label>
+            <input
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              placeholder=''
+              onChange={(e) => setrememberMe(e.target.checked)}
+              // required
+            />
+          </div>
+          <Button className={`btn btn-primary align-self-center w-100 my-2`} type="submit">Login</Button>
+        </form>
+      </div>
     </div>
   );
 }
