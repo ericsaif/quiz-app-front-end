@@ -1,6 +1,6 @@
 import { Button, Input } from "@headlessui/react"
 import React, { useState } from "react"
-import POST_Question from "../Hooks/postQuestion"
+import usePOST_Question from "../Hooks/postQuestion"
 import { CreateLAS } from "../Models/CreateQModels/createLAS"
 
 import useModal from "../Hooks/useModal"
@@ -10,6 +10,13 @@ const LAS = (props:{QPOId: number}) =>{
     const [transcribedAudio, settranscribedAudio] = useState<string>("")
     const [s3PathToAudioFile, sets3PathToAudioFile] = useState<string>("")
 
+    const newLAS: CreateLAS ={
+        QPOId:props.QPOId,
+        questionBody: "-",
+        s3PathToAudioFile,
+        transcribedAudio
+    }
+
      const text: React.ReactNode = (
             <span>
                 <p>Вставьте локацию аудиофайла с облачного хранилища</p>
@@ -17,19 +24,19 @@ const LAS = (props:{QPOId: number}) =>{
             </span>
         )
     
-        const id = "Listen and Speak"
+        const qtype = "Listen and Speak"
     
-        const modal = useModal({text, id})
+        const modal = useModal({text, id:qtype})
+
+        const { triggerPost, loading, error, data} = usePOST_Question(newLAS, qtype)
+
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        const newLAS: CreateLAS ={
-            questionBody: "-",
-            QPOId:props.QPOId,
-            s3PathToAudioFile,
-            transcribedAudio
-        }
-        POST_Question(newLAS, id)
+        
+        triggerPost()
+        settranscribedAudio("")
+        sets3PathToAudioFile("")
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -50,13 +57,21 @@ const LAS = (props:{QPOId: number}) =>{
 
             <form className="q-container w-50 vstack gap-2 mx-2 align-self-center" onSubmit={HandleFormSubmit}>
                 <label htmlFor="s3AudioPath">Вставьте локацию аудио файла в облачном хранилище:</label>
-                <Input id="s3AudioPath" style={{width: "300px"}} type="text" onChange={HandleInputChange}></Input> 
+                <Input value={s3PathToAudioFile} required id="s3AudioPath" style={{width: "300px"}} type="text" onChange={HandleInputChange}></Input> 
 
                 <label htmlFor="Transcription">Впишите транскрипцию аудио:</label>
-                <textarea id="Transcription" style={{width: "300px", height: "200px"}} onChange={HandleTranscriptionInputChange}></textarea>             
+                <textarea value={transcribedAudio} required id="Transcription" style={{width: "300px", height: "200px"}} onChange={HandleTranscriptionInputChange}></textarea>             
 
-                <Button className={`btn btn-primary`} style={{width: "30%"}} type="submit"> Создать </Button>
+                <Button className={`btn btn-primary`} disabled={loading} style={{width: "30%"}} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
             </form>
+
+
+            <div className="">
+                <p>
+                    {error? error : ""}
+                    {data?.success? data.message : ""}
+                </p>
+            </div>
         </React.Fragment>
         
     )

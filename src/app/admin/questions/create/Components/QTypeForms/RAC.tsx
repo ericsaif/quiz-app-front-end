@@ -1,6 +1,6 @@
 import { Button, Input } from "@headlessui/react"
 import React, { useState } from "react"
-import POST_Question from "../Hooks/postQuestion"
+import usePOST_Question from "../Hooks/postQuestion"
 import { CreateRAC } from "../Models/CreateQModels/CreateRAC/createRAC"
 import { CreateRACA } from "../Models/CreateQModels/CreateRAC/createRACA"
 import useModal from "../Hooks/useModal"
@@ -8,6 +8,15 @@ import useModal from "../Hooks/useModal"
 const RAC = (props:{QPOId: number}) =>{
     const [questionBody, setquestionBody] = useState<string>("")
     const [answer, setanswer] = useState<string>("")
+
+    const createRACA: CreateRACA ={
+        answer
+    }
+    const newRAC: CreateRAC ={
+        QPOId:props.QPOId,
+        questionBody,
+        CreateRACADTO:createRACA
+    }
 
     const text: React.ReactNode = (
         <span>
@@ -29,21 +38,20 @@ const RAC = (props:{QPOId: number}) =>{
         </span>
     )
 
-    const id = "Read And Complete"
+    const qtype = "Read And Complete"
 
-    const modal = useModal({text, id})
+    const modal = useModal({text, id: qtype, btn_color: "dark"})
+
+    const { triggerPost, loading, error, data} = usePOST_Question(newRAC, qtype)
+
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        const createRACA: CreateRACA ={
-            answer
-        }
-        const newRAC: CreateRAC ={
-            questionBody,
-            QPOId:props.QPOId,
-            createRACA
-        }
-        POST_Question(newRAC, id)
+        
+        triggerPost()
+
+        setquestionBody("")
+        setanswer("")
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
@@ -65,14 +73,20 @@ const RAC = (props:{QPOId: number}) =>{
             <form className="q-container w-50 vstack gap-2 mx-2 align-self-center" onSubmit={HandleFormSubmit}>
 
                 <label htmlFor="RACText">ТЕКСТ:</label>
-                <textarea id="RACText" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea>    
+                <textarea value={questionBody} required id="RACText" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea>    
 
                 <label htmlFor="RACAnswer">ОТВЕТ:</label>
-                <Input id="RACAnswer" type="text" onChange={HandleAnswerInputChange}></Input> 
+                <Input value={answer} required id="RACAnswer" type="text" onChange={HandleAnswerInputChange}></Input> 
                         
 
-                <Button className={`btn btn-primary`} style={{width: "30%"}} type="submit"> Создать </Button>
+                <Button disabled={loading} className={`btn btn-primary`} style={{width: "30%"}} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
             </form>
+            <div className="">
+                <p>
+                    {error? error : ""}
+                    {data?.success? data.message : ""}
+                </p>
+            </div>
         </React.Fragment>
 
     )

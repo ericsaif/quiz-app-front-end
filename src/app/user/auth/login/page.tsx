@@ -5,20 +5,22 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation'; // or 'next/router' for Pages Router
 import { Button } from '@headlessui/react';
 
+import { BACKEND_BASE_URL } from '../../../../../constants/api';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setrememberMe] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>("");
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => { 
     e.preventDefault();
     setError(null);
 
     try {
       // Make the API call to your ASP.NET Core backend login endpoint
-      const response = await fetch('http://localhost:5192/api/auth/login', {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {

@@ -3,10 +3,11 @@ import React from "react";
 import { SetStateAction } from "react";
 
 const useInputs = (props:{
-    setAlloptions: React.Dispatch<SetStateAction<string[]>>
+    setAlloptions: React.Dispatch<SetStateAction<string[]>>,
+    allOptions:string[]
 }) =>{
 
-    const { setAlloptions } = props
+    const { setAlloptions, allOptions } = props
 
     const HandleGivenOptionschange = (value: string, index: number) =>{
         setAlloptions(prevOptions=>{
@@ -28,6 +29,8 @@ const useInputs = (props:{
                     </p>
                     <Input
                         placeholder=" "
+                        value={allOptions[i]}
+                        required
                         id={`dialog-option-${i}`}
                         type="text"
                         key={`dialog-option-${i}`}

@@ -68,7 +68,7 @@ export async function middleware(request: NextRequest) {
 
    // Redirect authenticated users from login/signup pages
     if (authCookie && (pathname === '/user/auth/login' || pathname === '/user/auth//signup')) {
-        return NextResponse.redirect(new URL('/dashboard', request.url)); // Redirect to user dashboard
+        return NextResponse.redirect(new URL('/admin/dashboard', request.url)); // Redirect to user dashboard
     }
 
 

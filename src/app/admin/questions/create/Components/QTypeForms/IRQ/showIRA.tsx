@@ -148,11 +148,11 @@ const ShowIRA = (props:{
                         </div>
                         <div className="vstack">
                             <label htmlFor="CorrectOptionsMiniE3"> Правильный Highlight Mini Exercise No: 3 </label>
-                            <textarea id="CorrectOptionsMiniE3" onChange={HandleCorrectMiniE3InputChange}></textarea> 
+                            <textarea required id="CorrectOptionsMiniE3" onChange={HandleCorrectMiniE3InputChange}></textarea> 
                         </div>
                         <div className="vstack">
                             <label htmlFor="CorrectOptionsMiniE4">Правильный Highlight Mini Exercise No: 4</label>
-                            <textarea id="CorrectOptionsMiniE4" onChange={HandleCorrectMiniE4InputChange}></textarea> 
+                            <textarea required id="CorrectOptionsMiniE4" onChange={HandleCorrectMiniE4InputChange}></textarea> 
                         </div>
 
                         <label htmlFor="CorrectOptionsMiniE5">  Выберите номер правильного ответа для Mini Exercise No: 5 </label>

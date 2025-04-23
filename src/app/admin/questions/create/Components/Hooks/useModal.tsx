@@ -2,17 +2,18 @@ import React from "react"
 
 const useModal = (props:{
     text: React.ReactNode,
-    id: string
+    id: string,
+    btn_color :string
 }) =>{
-    const { text, id } = props
+    const { text, id, btn_color = "dark"  } = props
 
     const normalizeId = (id:string) => id.replace(/\s+/g, '-').toLowerCase();
     const normalizedId = normalizeId(id);
 
     return(
         <React.Fragment key={`useModal-${normalizedId}`}>
-            <button type="button" className="btn btn-dark" data-bs-toggle="modal" data-bs-target={`#modal-id-${normalizedId}`}>
-                Обьяснение
+            <button type="button" className={`btn btn-${btn_color}`} data-bs-toggle="modal" data-bs-target={`#modal-id-${normalizedId}`}>
+                <i className="bi bi-question-circle"></i>
             </button>
 
             <div className="modal fade" id={`modal-id-${normalizedId}`} tabIndex={-1} aria-labelledby="modalLabel" aria-hidden="true">

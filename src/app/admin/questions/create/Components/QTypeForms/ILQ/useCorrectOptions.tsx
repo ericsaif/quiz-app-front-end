@@ -1,10 +1,13 @@
 import React, { SetStateAction } from "react";
 
 const useCorrectInputs = (props:{
-    setCorrectOptions: React.Dispatch<SetStateAction<number[]>>
+    setCorrectOptions: React.Dispatch<SetStateAction<number[]>>,
+    correctOptions: number[],
+    Dialog: string, 
+    setDialog:React.Dispatch<SetStateAction<string>>
 }) =>{
 
-    const { setCorrectOptions } = props
+    const { setCorrectOptions, correctOptions, Dialog, setDialog } = props
 
     const HandleCorrectOptionschange = (value: string, index: number) =>{
         setCorrectOptions(prevOptions =>{
@@ -30,21 +33,33 @@ const useCorrectInputs = (props:{
         }
         
         inputs.push(
-            <React.Fragment key={`react-fragment-select-correct-options-${i}`}>
+            
+            <div key={`fragment-selectCorrectOptions-${i}`}>
                 <label className="p-1 mt-2" htmlFor={`selectCorrectOptions-${i}`} key={`selectCorrectOptions-${i}`}>
-                    Выберите номер правильного ответа для - {
-                                i ==0 ? <>Начала диалога</> : <>Продолжения диалога номер: {i}</> 
-                            }
+                Выберите номер правильного ответа для - {
+                            i ==0 ? <>Начала диалога</> : <>Продолжения диалога номер: {i}</> 
+                        }
                 </label>
-                <select className="vstack" key={`correct-dialog-option-${i}`} name="selectCorrectOptions" id={`selectCorrectOptions-${i}`} onChange={(e) => HandleCorrectOptionschange(e.target.value, i)}>
+                <select value={correctOptions[i]} className="vstack" key={`correct-dialog-option-${i}`} name="selectCorrectOptions" id={`selectCorrectOptions-${i}`} onChange={(e) => HandleCorrectOptionschange(e.target.value, i)}>
                 {
                     options
                 }
                 </select>
-            </React.Fragment>
+            </div>
         )
     }
-    return inputs
+    return (
+        <React.Fragment key={`react-fragment-select-correct-options-and-Dialog-ILQ`}>
+            <div>
+                {inputs}
+            </div>
+            <div className="vstack mt-3">
+                <label htmlFor="ILQ-Dialog">Диалог</label>
+                <textarea style={{width: "500px", height: "300px"}} name="ILQ-Dialog" id="ILQ-Dialog" placeholder="correct-dailog" value={Dialog} onChange={(e) =>setDialog(e.target.value)}></textarea>
+            </div>
+        </React.Fragment>
+
+    )
 }
 
 export default useCorrectInputs

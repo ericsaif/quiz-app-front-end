@@ -1,30 +1,35 @@
 import { Button } from "@headlessui/react"
 import React, { useState } from "react"
-import POST_Question from "../Hooks/postQuestion"
+import usePOST_Question from "../Hooks/postQuestion"
 import { CreateRA } from "../Models/CreateQModels/createRA"
 import useModal from "../Hooks/useModal"
 
 const RA = (props:{QPOId: number}) =>{
     const [questionBody, setquestionBody] = useState<string>("")
 
+    const newRA: CreateRA ={
+        QPOId:props.QPOId,
+        questionBody,
+    }
+
     const text: React.ReactNode = (
             <span>
                 <p>Введите в поле ТЕКСТ - текст, который нужно произнести вслух:</p>
-                <p>Далее впишите транскрипцию текста с аудио</p>
             </span>
         )
 
-    const id = "Read Aloud"
+    const qtype = "Read Aloud"
 
-    const modal = useModal({text, id})
+    const modal = useModal({text, id: qtype})
+
+    const { triggerPost, loading, error, data} = usePOST_Question(newRA, qtype)
+
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        const newRA: CreateRA ={
-            questionBody,
-            QPOId:props.QPOId,
-        }
-        POST_Question(newRA, id)
+        
+        triggerPost()
+        setquestionBody("")
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
@@ -40,10 +45,16 @@ const RA = (props:{QPOId: number}) =>{
             <form className="q-container w-50 vstack gap-2 mx-2 align-self-center" onSubmit={HandleFormSubmit}>
 
                 <label htmlFor="RAText">ТЕКСТ: </label>
-                <textarea id="RAText" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea>           
+                <textarea value={questionBody} required id="RAText" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea>           
 
-                <Button className={`btn btn-primary`} style={{width: "30%"}} type="submit"> Создать </Button>
+                <Button className={`btn btn-primary`} disabled={loading} style={{width: "30%"}} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
             </form>
+            <div className="">
+                <p>
+                    {error? error : ""}
+                    {data?.success? data.message : ""}
+                </p>
+            </div>
         </React.Fragment>
     )
 }

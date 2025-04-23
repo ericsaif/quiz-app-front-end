@@ -21,7 +21,7 @@ const useMiniE1 = (props:{
             <React.Fragment key={`option-minie1-no-${i}`}>
                 <div className="vstack">
                     <p>{i+1}:</p>
-                    <Input placeholder=" "  id={`option-${i}`} type="text" onChange={(e) => MiniE1HandleChange(e.target.value, i)}></Input>
+                    <Input required placeholder=" "  id={`option-${i}`} type="text" onChange={(e) => MiniE1HandleChange(e.target.value, i)}></Input>
                 </div>
             </React.Fragment>
         );

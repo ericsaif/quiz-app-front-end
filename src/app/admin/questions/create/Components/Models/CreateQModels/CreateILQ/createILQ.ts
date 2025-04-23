@@ -4,6 +4,6 @@ import { GivenDialogoptions } from "./givenDialogoptions";
 
 export interface CreateILQ extends CreateQuestion {
     s3pathsToAudioAnswers: string[];
-    givenDialogoptionsDTO: GivenDialogoptions | null;
-    correctDialogOptionsDTO: CorrectDialogOptions | null;
+    GivenDialogoptionsDTO: GivenDialogoptions | null;
+    CorrectDialogOptionsDTO: CorrectDialogOptions | null;
 }

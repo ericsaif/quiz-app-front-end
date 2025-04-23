@@ -20,7 +20,7 @@ const useMiniE6 = (props:{
                 <p>
                     {i+1}:
                 </p>
-                <Input type="text" key={`Options-MiniE6-no-${i}`} id={`Options-MiniE6-no-${i}`} onChange={(e) => HandleOptionsMiniE6Change(e.target.value, i)}></Input>
+                <Input required type="text" key={`Options-MiniE6-no-${i}`} id={`Options-MiniE6-no-${i}`} onChange={(e) => HandleOptionsMiniE6Change(e.target.value, i)}></Input>
 
             </div>
         );

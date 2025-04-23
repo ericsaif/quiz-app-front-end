@@ -10,7 +10,7 @@ const Dashboard= ()=>{
     const purchasesData = useP_data();
     const attemptsData = useAttempts();
     return(
-        <div className="h-stack">
+        <div className="vstack d-flex align-items-center" style={{height: "100vh"}}>
             <h1>Dashboard</h1>
             <div id="MetricsContainer" className="v-stack">
                 <label htmlFor="purchases_graph">Покупки: </label>
@@ -23,12 +23,12 @@ const Dashboard= ()=>{
                 </div>
             </div>
 
-            <div id="links" className="v-stack">
+            <div id="links" className="p-2 align-self-center v-stack d-grid gap-2">
                 <div id="createQuestions">
-                    <Link href={"/admin/questions/create"}> Создать новый вопрос</Link>
+                    <Link className="btn btn-primary" href={"/admin/questions/create"}> Создать новый вопрос</Link>
                 </div>
                 <div id="allQuestions">
-                    <Link href={"/admin/questions"}> Все вопросы </Link>
+                    <Link className="btn btn-secondary" href={"/admin/questions"}> Все вопросы </Link>
                 </div>
             </div>
         </div>

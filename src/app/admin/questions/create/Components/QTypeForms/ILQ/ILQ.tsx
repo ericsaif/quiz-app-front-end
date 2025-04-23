@@ -1,8 +1,8 @@
 "use client"
 
 import { Button } from "@headlessui/react"
-import React, { useState } from "react"
-import POST_Question from "../../Hooks/postQuestion"
+import React, { useEffect, useState } from "react"
+import usePOST_Question from "../../Hooks/postQuestion"
 import { CreateILQ } from "../../Models/CreateQModels/CreateILQ/createILQ"
 import { GivenDialogoptions } from "../../Models/CreateQModels/CreateILQ/givenDialogoptions"
 import { CorrectDialogOptions } from "../../Models/CreateQModels/CreateILQ/correctDialogOptions"
@@ -13,12 +13,47 @@ import useModal from "../../Hooks/useModal"
 
 const ILQ = (props:{QPOId: number}) =>{
     const [allOptions, setAlloptions] = useState<string[]>(Array(25).fill(''))
-    const [s3pathsToAudioAnswers, sets3pathsToAudioAnswers] = useState<string[]>(Array(5).fill(''))
-    const [correctOptions, setCorrectOptions] = useState<number[]>(Array(5).fill(-1))
+    const [s3pathsToAudioAnswers, sets3pathsToAudioAnswers] = useState<string[]>(Array(5).fill('')) 
 
-    const ShowS3PathsInputs = useS3PathsInputs({sets3pathsToAudioAnswers})
-    const ShowInputs = useInputs({setAlloptions})
-    const ShowCorrectInputs = useCorrectInputs({setCorrectOptions})
+    const [correctOptions, setCorrectOptions] = useState<number[]>([])
+    const [Dialog, setDialog] = useState<string>("")
+
+    useEffect(()=>{
+        const setCO = () => {
+            for(let y =0; y<5; y++){
+                correctOptions[y] = y*5
+            }
+        }
+    
+        setCO()
+    },[])
+
+    const givenDialogoptions: GivenDialogoptions ={
+        optionsDialogStart: allOptions.slice(0,5),
+        optionsDialogContinuation1: allOptions.slice(5,10),
+        optionsDialogContinuation2: allOptions.slice(11,15),
+        optionsDialogContinuation3: allOptions.slice(15,20),
+        optionsDialogContinuation4: allOptions.slice(20,25),
+    }
+    const correctDialogOptions: CorrectDialogOptions ={
+        correctOptions:correctOptions,
+        Dialog
+    }
+    const newILQ: CreateILQ ={
+        QPOId: props.QPOId,
+        s3pathsToAudioAnswers: s3pathsToAudioAnswers,
+        questionBody: "-",
+        GivenDialogoptionsDTO: givenDialogoptions,
+        CorrectDialogOptionsDTO: correctDialogOptions
+    }
+
+    const ShowS3PathsInputs = useS3PathsInputs({sets3pathsToAudioAnswers, s3pathsToAudioAnswers})
+    const ShowInputs = useInputs({setAlloptions, allOptions})
+    const ShowCorrectInputs = useCorrectInputs({setCorrectOptions, correctOptions, Dialog, setDialog})
+
+    const qtype = "Interactive listening"
+
+    const { triggerPost, loading, error, data } = usePOST_Question(newILQ, qtype);
 
     const text: React.ReactNode = (
         <>
@@ -32,36 +67,29 @@ const ILQ = (props:{QPOId: number}) =>{
 
                 <p>3. Выберите номера правильных ответов для каждого вопроса </p>
                 <p>Выбираете из выпадающего листа - номер правильного ответа </p>
+
+                <p>4. Диалог </p>
+                <p>В поле Диалог впишите весь диалог текстом </p>
             </span>
         </>
     )
-    const modalid = "Interactive listening"
 
     const modal:React.ReactNode = useModal(
-        {text, id: modalid}
+        {text, id: qtype}
     )
 
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        const givenDOptions: GivenDialogoptions ={
-            optionsDialogStart: allOptions.slice(0,5),
-            optionsDialogContinuation1: allOptions.slice(5,10),
-            optionsDialogContinuation2: allOptions.slice(11,15),
-            optionsDialogContinuation3: allOptions.slice(15,20),
-            optionsDialogContinuation4: allOptions.slice(20,25),
+        
+        triggerPost()
+
+        setAlloptions(Array(25).fill(''))
+        sets3pathsToAudioAnswers(Array(5).fill(''))
+        setDialog('')
+        for(let y =0; y<5; y++){
+            correctOptions[y] = y*5
         }
-        const correctDOptions: CorrectDialogOptions ={
-            correctOptions:correctOptions
-        }
-        const newILQ: CreateILQ ={
-            s3pathsToAudioAnswers: s3pathsToAudioAnswers,
-            QPOId: props.QPOId,
-            questionBody: "-",
-            givenDialogoptionsDTO: givenDOptions,
-            correctDialogOptionsDTO: correctDOptions
-        }
-        POST_Question(newILQ, "ILQ")
         
     }
 
@@ -94,9 +122,15 @@ const ILQ = (props:{QPOId: number}) =>{
 
             <div className="row items-justify-center">
                 <div className="col-5 align-self-center">
-                    <Button className={`btn btn-primary`} type="submit"> Создать </Button>
+                    <Button disabled={loading} className={`btn btn-primary`} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
                 </div>    
             </div>                
+            <div className="row">
+                <p>
+                    {error? error : ""}
+                    {data?.success? data.message : ""}
+                </p>
+            </div>
 
             </form>
         </React.Fragment>

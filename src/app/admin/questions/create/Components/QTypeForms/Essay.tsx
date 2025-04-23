@@ -1,11 +1,16 @@
 import { Button } from "@headlessui/react"
 import React, { useState } from "react"
-import POST_Question from "../Hooks/postQuestion"
+import usePOST_Question from "../Hooks/postQuestion"
 import { CreateEssay } from "../Models/CreateQModels/createEssay"
 import useModal from "../Hooks/useModal"
 
 const Essay = (props:{QPOId: number}) =>{
     const [Topic, setTopic] = useState<string>("")
+
+    const newEssay: CreateEssay ={
+        QPOId: props.QPOId,
+        questionBody: Topic,
+    }
 
     const text: React.ReactNode = (
         <span>
@@ -13,18 +18,18 @@ const Essay = (props:{QPOId: number}) =>{
         </span>
     )
 
-    const id = "Essay"
+    const qtype = "Essay"
 
-    const modal = useModal({text, id})
+    const modal = useModal({text, id: qtype})
+
+    const { triggerPost, loading, error, data} = usePOST_Question(newEssay, qtype)
+    
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        const newEssay: CreateEssay ={
-            QPOId: props.QPOId,
-            questionBody: Topic,
-        }
-        POST_Question(newEssay, "CTest")
         
+        triggerPost()
+        setTopic("")
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
         const { value } = event.target
@@ -38,10 +43,16 @@ const Essay = (props:{QPOId: number}) =>{
             </div>
             <form className="q-container vstack gap-2 mx-2" style={{width: "30%"}} onSubmit={HandleFormSubmit}>
                 <label htmlFor="Topic">Тема:</label>
-                <textarea style={{width: "300px", height: "200px"}} id="Topic"  onChange={HandleInputChange}></textarea> 
+                <textarea value={Topic} required style={{width: "300px", height: "200px"}} id="Topic"  onChange={HandleInputChange}></textarea> 
                 
-                <Button className={`btn btn-primary`} style={{width: "30%"}} type="submit"> Создать </Button>
+                <Button disabled={loading} className={`btn btn-primary`} style={{width: "50%"}} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
             </form>
+            <div className="">
+                <p>
+                    {error? error : ""}
+                    {data?.success? data.message : ""}
+                </p>
+            </div>
         </React.Fragment>
     )
 }

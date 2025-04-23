@@ -19,7 +19,7 @@ const useMiniE2 = (props:{
                 <p>
                     {i+1}: 
                 </p>
-                <Input key={`option-${i}`} id={`option-${i}`} type="text" onChange={(e) => MiniE2HandleChange(e.target.value, i)}></Input>
+                <Input required key={`option-${i}`} id={`option-${i}`} type="text" onChange={(e) => MiniE2HandleChange(e.target.value, i)}></Input>
             </div>
         );
     }

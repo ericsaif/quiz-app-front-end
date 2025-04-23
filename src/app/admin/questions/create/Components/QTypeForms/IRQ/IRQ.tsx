@@ -1,8 +1,8 @@
 "use client"
 
 import { Button  } from "@headlessui/react"
-import React, { useState } from "react"
-import POST_Question from "../../Hooks/postQuestion"
+import React, { useEffect, useState } from "react"
+import usePOST_Question from "../../Hooks/postQuestion"
 import { CreateIRQ } from "../../Models/CreateQModels/CreateIRQ/createIRQ"
 import { MiniE1 } from "../../Models/CreateQModels/CreateIRQ/miniE1"
 import { CreateIRA } from "../../Models/CreateQModels/CreateIRQ/createIRA"
@@ -21,12 +21,54 @@ const IRQ = (props:{QPOId: number}) =>{
     const [optionsMiniE5, setOptionsMiniE5] = useState<string[]>([]);
     const [optionsMiniE6, setOptionsMiniE6] = useState<string[]>([]);
 
-    const [ correctOptionsMiniE1, setcorrectOptionsMiniE1 ] = useState<number[]>(Array(10).fill(-1))
-    const [ correctOptionMiniE2, setcorrectOptionMiniE2 ] = useState<number>(-1)
+    const [ correctOptionsMiniE1, setcorrectOptionsMiniE1 ] = useState<number[]>([])
+    const [ correctOptionMiniE2, setcorrectOptionMiniE2 ] = useState<number>(0)
     const [ correctHighlightMiniE3, setcorrectHighlightMiniE3 ] = useState<string>("")
     const [ correctHighlightMiniE4, setcorrectHighlightMiniE4 ] = useState<string>("")
-    const [ correctOptionMiniE5, setcorrectOptionMiniE5 ] = useState<number>(-1)
-    const [ correctOptionMiniE6, setcorrectOptionMiniE6 ] = useState<number>(-1)
+    const [ correctOptionMiniE5, setcorrectOptionMiniE5 ] = useState<number>(0)
+    const [ correctOptionMiniE6, setcorrectOptionMiniE6 ] = useState<number>(0)
+
+    useEffect(()=>{
+        const setMiniE1 = () =>{
+            for(let i =0; i< 10; i++)
+                correctOptionsMiniE1[i] = i*5
+        }
+    
+        setMiniE1()
+    },[])
+
+    const newMiniE1: MiniE1 = {
+        options0: allMiniE1Options.slice(0, 5),
+        options1: allMiniE1Options.slice(5, 10),
+        options2: allMiniE1Options.slice(10, 15),
+        options3: allMiniE1Options.slice(15, 20),
+        options4: allMiniE1Options.slice(20, 25),
+        options5: allMiniE1Options.slice(25, 30),
+        options6: allMiniE1Options.slice(30, 35),
+        options7: allMiniE1Options.slice(35, 40),
+        options8: allMiniE1Options.slice(40, 45),
+        options9: allMiniE1Options.slice(45, 50),
+    }
+
+    const newIRA: CreateIRA ={
+        correctOptionsMiniE1,
+        correctOptionMiniE2,
+        correctHighlightMiniE3,
+        correctHighlightMiniE4,
+        correctOptionMiniE5,
+        correctOptionMiniE6,
+    }
+    const newIRQ: CreateIRQ ={
+        QPOId: props.QPOId,
+        questionBody,
+        createIRA: newIRA,
+        MiniE1DTO: newMiniE1,
+        optionsMiniE2, 
+        questionMiniE3, 
+        questionMiniE4, 
+        optionsMiniE5, 
+        optionsMiniE6
+    }
 
 
     const text1: React.ReactNode =(
@@ -72,51 +114,41 @@ const IRQ = (props:{QPOId: number}) =>{
         </>
     )
 
-    const modalid = "Interactive Reading"
+    const qtype = "Interactive Reading"
     const modalidIRA = "Interactive Reading Answer"
 
-    const modal = useModal({text:text1, id: modalid})
+    const modal = useModal({text:text1, id: qtype})
 
     const modalIRA = useModal({text: text2, id: modalidIRA})
+
+    const { triggerPost, loading, error, data } = usePOST_Question(newIRQ, qtype);
+    
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        const newMiniE1: MiniE1 = {
-            options0: allMiniE1Options.slice(0, 5),
-            options1: allMiniE1Options.slice(5, 10),
-            options2: allMiniE1Options.slice(10, 15),
-            options3: allMiniE1Options.slice(15, 20),
-            options4: allMiniE1Options.slice(20, 25),
-            options5: allMiniE1Options.slice(25, 30),
-            options6: allMiniE1Options.slice(30, 35),
-            options7: allMiniE1Options.slice(35, 40),
-            options8: allMiniE1Options.slice(40, 45),
-            options9: allMiniE1Options.slice(45, 50),
-        }
-
-        const newIRA: CreateIRA ={
-            correctOptionsMiniE1,
-            correctOptionMiniE2,
-            correctHighlightMiniE3,
-            correctHighlightMiniE4,
-            correctOptionMiniE5,
-            correctOptionMiniE6,
-        }
-        const newIRQ: CreateIRQ ={
-            QPOId: props.QPOId,
-            questionBody,
-            createIRA: newIRA,
-            miniE1: newMiniE1,
-            optionsMiniE2, 
-            questionMiniE3, 
-            questionMiniE4, 
-            optionsMiniE5, 
-            optionsMiniE6
-        }
-        POST_Question(newIRQ, "CTest")
         
+        triggerPost()
     }
     
+    useEffect(() => {
+        if (data) {
+          // Check if the 'data' indicates success (based on your PostResponse type)
+          if (data.success) {
+            alert(`Вопрос типа: Interactive Reading был успешно создан`); // Your existing alert
+            // --- ADD PAGE RELOAD HERE ---
+            window.location.reload(); // Use standard JS reload
+            // OR if you have imported useRouter:
+            // router.reload(); // Use Next.js router reload
+      
+          } else {
+            // Handle API indicating failure even with 2xx status
+            alert(`Ошибка при создании вопроса типа: Interactive Reading: ${data.message || 'Сервер сообщил об ошибке'}`);
+          }
+        } else if (error) {
+          // Handle network or other errors
+          alert(`Ошибка при создании вопроса типа: Interactive Reading: ${error}`);
+        }
+      }, [data, error]);
 
     
 
@@ -137,6 +169,7 @@ const IRQ = (props:{QPOId: number}) =>{
                                 setOptionsMiniE5={setOptionsMiniE5}
                                 setOptionsMiniE6={setOptionsMiniE6}
                                 setquestionBody={setquestionBody}
+                                
                             />
                     </div>
 
@@ -156,10 +189,16 @@ const IRQ = (props:{QPOId: number}) =>{
                     </div>
 
                     <div className="row mt-4 align-self-center">
-                        <Button className={`btn btn-primary align-self-center col-6`} type="submit"> Создать </Button>
+                        <Button className={`btn btn-primary align-self-center col-6`} type="submit" disabled={loading}> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
                     </div>    
                 </div>
 
+                <div className="row">
+                <p>
+                    {error? error : ""}
+                    {data?.success? data.message : ""}
+                </p>
+            </div>
             </form>
         </React.Fragment>
     )

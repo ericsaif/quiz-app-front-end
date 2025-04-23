@@ -1,12 +1,19 @@
 import { Button, Input } from "@headlessui/react"
 import React, { useState } from "react"
 import { CreateDescribePic } from "../Models/CreateQModels/createDescribePic"
-import POST_Question from "../Hooks/postQuestion"
+import usePOST_Question from "../Hooks/postQuestion"
 import useModal from "../Hooks/useModal"
 
 const DescribePic = () =>{
     const [waudio, setWAudio] = useState<boolean>(true)
     const [PathToPic, setPathToPic] = useState<string>("")
+
+    const newDescribePic: CreateDescribePic ={
+        QPOId: 4,
+        s3PathToPic: PathToPic,
+        waudio,
+        questionBody: "-"
+    }
 
     const text: React.ReactNode = (
         <span>
@@ -14,19 +21,17 @@ const DescribePic = () =>{
             <p>Далее выберите - нужно ли описывать картинку с аудио или текстом</p>
         </span>
     )
-    const id = "Describe picture"
+    const qtype = "Describe picture"
 
-    const modal = useModal({text, id})
+    const modal = useModal({text, id: qtype})
+
+        
+    const { triggerPost, loading, error, data} = usePOST_Question(newDescribePic, qtype)
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        const newDescribePic: CreateDescribePic ={
-            s3PathToPic: PathToPic,
-            waudio,
-            QPOId: waudio ? 8 : 4,
-            questionBody: "-"
-        }
-        POST_Question(newDescribePic, "CTest")
+        triggerPost()
+        setPathToPic("")
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -50,15 +55,15 @@ const DescribePic = () =>{
     return(
         <form className="container mt-2 mx-2" onSubmit={HandleFormSubmit}>
            <div className="row q-container">
-            <div className="m-3">
-                {modal}
-            </div>
+                <div className="m-3">
+                    {modal}
+                </div>
                 <div className="m-3 vstack">
                     <label htmlFor="pathToPic">Локация:</label>
-                    <Input style={{width: "250px"}} id="pathToPic" type="text" onChange={HandleInputChange}></Input>
+                    <Input value={PathToPic} required style={{width: "250px"}} id="pathToPic" type="text" onChange={HandleInputChange}></Input>
                 </div> 
                 
-                <div  className="col-6 m-3 vstack">  
+                <div className="col-6 m-3 vstack">  
                     <label htmlFor="waudio">С аудио или без:</label>
                     <select style={{width: "130px"}} id="waudio" onChange={(e)=>{HandleNumInputChange(e.target.value)}}>
                         <option value="1">Аудио</option>
@@ -67,10 +72,15 @@ const DescribePic = () =>{
                 </div>
                 
                 <div className="m-3">
-                    <Button className={`btn btn-primary`} type="submit"> Создать </Button>
+                    <Button disabled={loading} className={`btn btn-primary`} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
                 </div>
            </div>
-
+            <div className="row">
+                <p>
+                    {error? error : ""}
+                    {data?.success? data.message : ""}
+                </p>
+            </div>
             
         </form>
     )

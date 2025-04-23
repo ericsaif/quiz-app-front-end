@@ -3,7 +3,7 @@ import { CreateIRA } from "./createIRA";
 import { MiniE1 } from "./miniE1";
 
 export interface CreateIRQ extends CreateQuestion {
-    miniE1: MiniE1 | null;
+    MiniE1DTO: MiniE1 | null;
     optionsMiniE2: string[];
     questionMiniE3: string | null;
     questionMiniE4: string | null;

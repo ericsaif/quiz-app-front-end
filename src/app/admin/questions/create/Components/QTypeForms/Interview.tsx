@@ -1,11 +1,16 @@
 import { Button } from "@headlessui/react"
 import React, { useState } from "react"
-import POST_Question from "../Hooks/postQuestion"
+import usePOST_Question from "../Hooks/postQuestion"
 import { CreateInterviewQ } from "../Models/CreateQModels/createInterviewQ"
 import useModal from "../Hooks/useModal"
 
 const Interview = (props:{QPOId: number}) =>{
     const [Topic, setTopic] = useState<string>("")
+
+    const newInterview: CreateInterviewQ ={
+        QPOId: props.QPOId,
+        questionBody: Topic,
+    }
 
     const text: React.ReactNode = (
         <span>
@@ -13,17 +18,17 @@ const Interview = (props:{QPOId: number}) =>{
         </span>
     )
 
-    const id = "Interview"
+    const qtype = "Interview"
 
-    const modal = useModal({text, id})
+    const modal = useModal({text, id: qtype})
+
+    const { triggerPost, loading, error, data} = usePOST_Question(newInterview, qtype)
+
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        const newInterview: CreateInterviewQ ={
-            QPOId: props.QPOId,
-            questionBody: Topic,
-        }
-        POST_Question(newInterview, id)
+        
+        triggerPost()
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
@@ -42,8 +47,14 @@ const Interview = (props:{QPOId: number}) =>{
                 <label htmlFor="interview">Тема Интервью:</label>
                 <textarea id="interview" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea> 
                 
-                <Button className={`btn btn-primary`} style={{width: "30%"}} type="submit"> Создать </Button>
+                <Button disabled={loading} className={`btn btn-primary`} style={{width: "30%"}} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
             </form>
+            <div className="">
+                <p>
+                    {error? error : ""}
+                    {data?.success? data.message : ""}
+                </p>
+            </div>
         </React.Fragment>
     )
 }

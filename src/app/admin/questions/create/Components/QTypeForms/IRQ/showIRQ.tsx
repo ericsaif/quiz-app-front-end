@@ -58,10 +58,10 @@ const ShowIRQ = (props: {
                         </div>
 
                         <label htmlFor="MiniE3">Впишите вопрос для mini excercise No 3: </label>
-                        <textarea style={{width: "600px"}} id="MiniE3" onChange={HandleMiniE3InputChange}></textarea>  
+                        <textarea required style={{width: "600px"}} id="MiniE3" onChange={HandleMiniE3InputChange}></textarea>  
 
                         <label htmlFor="MiniE4">Впишите вопрос для mini excercise No 4: </label>
-                        <textarea style={{width: "600px"}} id="MiniE4" onChange={HandleMiniE4InputChange}></textarea> 
+                        <textarea required style={{width: "600px"}} id="MiniE4" onChange={HandleMiniE4InputChange}></textarea> 
 
                         <label htmlFor="MiniE5Inputs">Впишите возможные ответы для mini excercise No 5: </label>
                         <div id="MiniE5Inputs">

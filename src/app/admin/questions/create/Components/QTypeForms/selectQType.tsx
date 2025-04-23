@@ -1,11 +1,12 @@
 import React from "react"
 
 const SelectQType = (props:{
-    setQType: React.Dispatch<React.SetStateAction<number>>
+    setQType: React.Dispatch<React.SetStateAction<number>>,
+    QType: number
 }) =>{
-    const {setQType} = props
+    const {setQType, QType} = props
     return(
-        <select name="setQType" id="setQType" onChange={(e) => setQType(parseInt(e.target.value,10))}>
+        <select name="setQType" id="setQType" value={QType} onChange={(e) => setQType(parseInt(e.target.value,10))}>
             <option value="1">CTest</option>
             <option value="2">Dictation</option>
             <option value="3">Read Aloud</option>

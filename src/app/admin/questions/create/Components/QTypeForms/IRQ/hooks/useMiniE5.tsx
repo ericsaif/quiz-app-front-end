@@ -19,7 +19,7 @@ const useMiniE5 = (props:{
                 <p>
                     {i+1}:
                 </p>
-                <Input type="text" key={`Options-MiniE5-no-${i}`} id={`Options-MiniE5-no-${i}`} onChange={(e) => HandleOptionsMiniE5Change(e.target.value, i)}></Input>
+                <Input required type="text" key={`Options-MiniE5-no-${i}`} id={`Options-MiniE5-no-${i}`} onChange={(e) => HandleOptionsMiniE5Change(e.target.value, i)}></Input>
             </div>
         );
     }
