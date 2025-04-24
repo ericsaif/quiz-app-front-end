@@ -22,13 +22,13 @@ export default function Home() {
         <div className={styles.ctas}>
           <a
             className={styles.primary}
-            href="/user/auth/login"
+            href="/auth/login"
             rel="noopener noreferrer"
           >
             Войти
           </a>
           <a
-            href="user/auth/register"
+            href="/auth/register"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.secondary}

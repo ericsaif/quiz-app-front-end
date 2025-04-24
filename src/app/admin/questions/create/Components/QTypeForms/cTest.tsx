@@ -11,7 +11,7 @@ import useModal from "../Hooks/useModal"
 const CTest = (props:{QPOId: number}) =>{
     const [questionBody, setQBody] = useState<string>("")
     const [num_words_w_blanks, setNumWords] = useState<number>(0)
-    const [rightAnswers, setRightAnswers] = useState<string[]>(num_words_w_blanks >0 ? Array(num_words_w_blanks).fill('') : [])
+    const [rightAnswers, setRightAnswers] = useState<string[]>(num_words_w_blanks >0 ? Array(num_words_w_blanks).fill('') : [''])
     const [CTestAnswers, setCTestAnswers] = useState<React.ReactNode>()
 
     const regex = /\[BLANK:\d+\]/g
@@ -97,7 +97,7 @@ const CTest = (props:{QPOId: number}) =>{
         setQBody('')
         setNumWords(0)
 
-        setRightAnswers(Array(num_words_w_blanks).fill(''))
+        setRightAnswers([''])
         setCTestAnswers([])
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{

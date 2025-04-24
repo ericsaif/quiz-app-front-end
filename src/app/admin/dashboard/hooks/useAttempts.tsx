@@ -14,7 +14,7 @@ const useAttempts = () =>{
     useEffect(()=>{
         async function fetchAttempts(){
             try{
-                const response = await fetch(`${BACKEND_BASE_URL}/api/admin/engtest`,{
+                const response = await fetch(`${BACKEND_BASE_URL}/admin/engtest`,{
                     method: 'GET',
                     credentials: 'include'
                 });

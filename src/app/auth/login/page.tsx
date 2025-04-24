@@ -2,17 +2,21 @@
 "use client"; // If using App Router and client-side logic
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // or 'next/router' for Pages Router
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@headlessui/react';
 
-import { BACKEND_BASE_URL } from '../../../../../constants/api';
+import { BACKEND_BASE_URL } from '../../../../constants/api';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setrememberMe] = useState<boolean>(false);
   const [error, setError] = useState<string | null>("");
+
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl');
+
 
   const handleSubmit = async (e: React.FormEvent) => { 
     e.preventDefault();
@@ -20,7 +24,7 @@ export default function LoginPage() {
 
     try {
       // Make the API call to your ASP.NET Core backend login endpoint
-      const response = await fetch(`${BACKEND_BASE_URL}/api/auth/login`, {
+      const response = await fetch(`${BACKEND_BASE_URL}/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -30,11 +34,28 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        // Backend should have set the HTTP-only cookie in the response headers
-        // Redirect to the appropriate page after successful login
-        router.push('/dashboard'); // Or redirect based on user role if returned
+        alert(`login was successful`)
+
+        let userRole = "guest"; // fallback role
+
+        // Check if response has content
+        const contentType = response.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          const userData = await response.json();
+          // You CANNOT access cookies like this from JS
+          userRole = userData.role || userRole;
+        }
+
+
+        if(callbackUrl){
+        alert(`redirecting to route ${callbackUrl}`)
+        console.log(`redirecting to route ${callbackUrl}`)
+          router.push(callbackUrl)
+        }else
+          router.push(`/${userRole}/dashboard`); 
+
       } else {
-        const errorData = await response.json(); // Assuming backend sends error JSON
+        const errorData = await response.json();
         setError(errorData.message || 'Login failed.');
       }
     } catch (err) {

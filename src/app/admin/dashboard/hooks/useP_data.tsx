@@ -15,7 +15,7 @@ const useP_data = () =>{
     useEffect(() =>{
         async function fetchPurchases(){
             try{
-                const response = await fetch(`${BACKEND_BASE_URL}/api/admin/purchases`,{
+                const response = await fetch(`${BACKEND_BASE_URL}/admin/purchases`,{
                     method: 'GET',
                     credentials: 'include'
                 });
