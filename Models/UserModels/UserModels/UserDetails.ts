@@ -1,4 +1,4 @@
-import { ReadEngTest } from "../EngTestModels/readEngTest";
+import { ReadEngTest } from "../../AdminModels/EngTestModels/readEngTest";
 
 
 export interface UserDetails{

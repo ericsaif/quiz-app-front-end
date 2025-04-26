@@ -16,6 +16,7 @@ const describePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAns
         const OnStartRecording = (event:  React.MouseEvent<HTMLButtonElement>) =>{
                 
             const { value } = event.currentTarget
+            alert(value)
         }
         return(
             

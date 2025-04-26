@@ -1,5 +1,3 @@
 import { Question } from "./question";
 
-export interface RSQ extends Question {
-
-}
+export type RSQ = Question 

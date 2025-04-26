@@ -30,8 +30,7 @@ const IRQ = (props:{QPOId: number}) =>{
 
     useEffect(()=>{
         const setMiniE1 = () =>{
-            for(let i =0; i< 10; i++)
-                correctOptionsMiniE1[i] = i*5
+            setcorrectOptionsMiniE1(Array.from({ length: 10 }, (_, y) => y * 5))
         }
     
         setMiniE1()

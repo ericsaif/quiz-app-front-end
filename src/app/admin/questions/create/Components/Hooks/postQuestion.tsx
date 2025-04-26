@@ -39,7 +39,7 @@ const usePOST_Question = (
     setData(null); // Reset data on new attempt
 
     try {
-      const response = await fetch(`${BACKEND_BASE_URL}/admin/questions`, {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/admin/questions`, {
         method: "POST", // HTTP method
         headers: {
           "Content-Type": "application/json", // Specify JSON content

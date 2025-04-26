@@ -1,5 +1,3 @@
 import { Question } from "./question";
 
-export interface RAQ extends Question {
-
-}
+export type RAQ = Question 

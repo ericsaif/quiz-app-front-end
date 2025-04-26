@@ -2,9 +2,11 @@ import React, { useState, useRef } from 'react';
 
 const AudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
-  const [audioChunks, setAudioChunks] = useState([]);
-  const [audioUrl, setAudioUrl] = useState(null);
-  const mediaRecorderRef = useRef(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([])
+  const [audioUrl, setAudioUrl] = useState<string>('');
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
 
   const startRecording = async () => {
     try {
@@ -13,18 +15,22 @@ const AudioRecorder = () => {
       setAudioChunks([]);
       setIsRecording(true);
 
-      mediaRecorderRef.current.ondataavailable = (event) => {
+      mediaRecorderRef.current.ondataavailable = (event: BlobEvent) => {
         if (event.data.size > 0) {
           setAudioChunks((prevChunks) => [...prevChunks, event.data]);
         }
       };
 
       mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        const url = URL.createObjectURL(audioBlob);
-        setAudioUrl(url);
+        setAudioChunks((chunks) => {
+          const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          const url = URL.createObjectURL(audioBlob);
+          setAudioUrl(url);
+          return chunks;
+        });
         setIsRecording(false);
       };
+      
 
       mediaRecorderRef.current.start();
       console.log('Recording started...');
@@ -55,7 +61,7 @@ const AudioRecorder = () => {
         <div>
           <h3>Recorded Audio:</h3>
           <audio src={audioUrl} controls />
-          <button onClick={() => setAudioUrl(null)}>Clear Recording</button>
+          <button onClick={() => setAudioUrl('')}>Clear Recording</button>
         </div>
       )}
     </div>

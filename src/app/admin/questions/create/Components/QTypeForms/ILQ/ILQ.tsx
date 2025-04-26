@@ -20,9 +20,7 @@ const ILQ = (props:{QPOId: number}) =>{
 
     useEffect(()=>{
         const setCO = () => {
-            for(let y =0; y<5; y++){
-                correctOptions[y] = y*5
-            }
+            setCorrectOptions(Array.from({ length: 5 }, (_, y) => y * 5))
         }
     
         setCO()

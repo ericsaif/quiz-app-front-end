@@ -9,35 +9,6 @@ import { MethodArgs } from "../../../../../../Models/QuizHubModels/MethodArgs";
 const useQuizHubR = (hubUrl: string, setQuestionCallback: React.Dispatch<React.SetStateAction<Question | null>>) : QuizHubHook => { // Get URL from env
     const { connection, isConnected, startConnection } = useSignalR(hubUrl);
 
-    // --- Register SignalR Event Handlers ---
-    useEffect(() => {
-        if (!connection || !isConnected) {
-            return; // Don't register handlers until connected
-        }
-
-        // Example: Listening for a message from the server
-        // Replace "ReceiveMessage" with the actual method name your server uses
-        const handleNextQuestion = (NextQ: Question) => {
-            setQuestionCallback(NextQ)
-        };
-
-        const handleStopTimer = () => {
-            submitAnswer()
-        };
-
-        connection.on("NextQuestion", handleNextQuestion);
-        connection.on("StopTimer", handleStopTimer);
-
-        // --- Cleanup function for event handlers ---
-        return () => {
-            // Important: Remove the handler when the component unmounts or connection changes
-            // to prevent memory leaks and duplicate handlers.
-            console.log("Removing 'NextQuestion' handler");
-            connection.off("NextQuestion", handleNextQuestion);
-        };
-
-    }, [connection, isConnected, setQuestionCallback]); // Re-run when connection or its status changes
-
     // --- Function to Send a Message ---
     const submitAnswer = useCallback(async (SM: string, args: MethodArgs) => { // SM - server method name
         if (connection && isConnected) {
@@ -53,6 +24,35 @@ const useQuizHubR = (hubUrl: string, setQuestionCallback: React.Dispatch<React.S
             console.warn("Cannot send message. Connection not established or message is empty.");
         }
     }, [connection, isConnected]); // Dependencies for the send function
+
+    // --- Register SignalR Event Handlers ---
+    useEffect(() => {
+        if (!connection || !isConnected) {
+            return; // Don't register handlers until connected
+        }
+
+        // Example: Listening for a message from the server
+        // Replace "ReceiveMessage" with the actual method name your server uses
+        const handleNextQuestion = (NextQ: Question) => {
+            setQuestionCallback(NextQ)
+        };
+
+        const handleStopTimer = () => {
+            submitAnswer("test", {"test1": "test"})
+        };
+
+        connection.on("NextQuestion", handleNextQuestion);
+        connection.on("StopTimer", handleStopTimer);
+
+        // --- Cleanup function for event handlers ---
+        return () => {
+            // Important: Remove the handler when the component unmounts or connection changes
+            // to prevent memory leaks and duplicate handlers.
+            console.log("Removing 'NextQuestion' handler");
+            connection.off("NextQuestion", handleNextQuestion);
+        };
+
+    }, [connection, isConnected, setQuestionCallback, submitAnswer]); // Re-run when connection or its status changes
 
     
     return { submitAnswer, startConnection };

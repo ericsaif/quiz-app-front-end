@@ -3,7 +3,7 @@ import React from "react"
 const useModal = (props:{
     text: React.ReactNode,
     id: string,
-    btn_color :string
+    btn_color?: string 
 }) =>{
     const { text, id, btn_color = "dark"  } = props
 
