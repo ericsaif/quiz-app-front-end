@@ -1,9 +1,13 @@
+import { Suspense } from "react"
+import RegisterPage from "./registerPage"
 
 
-export default function Register(){
+const Register = () =>{
     return(
-        <h1>
-            register
-        </h1>
+        <Suspense fallback={<div>Loading...</div>}>
+            <RegisterPage />
+        </Suspense>
     )
 }
+
+export default Register

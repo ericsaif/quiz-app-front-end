@@ -1,6 +1,6 @@
-export interface ReadPurchase {
-    id: number;
-    numTests: number;
+export interface ReadEngTest {
+    id: string;
+    purchaseId: number;
     purchaseDateTime: string;
     expirationDateTime: string;
     expired: boolean;

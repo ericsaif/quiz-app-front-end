@@ -1,20 +1,40 @@
 "use client";
 
 import EngTestWindow from "./Components/EngTestComponent";
-import { useParams } from "next/navigation";
+import { QUIZ_HUB_ROUTE } from "../../../../../constants/api";
+import { BACKEND_BASE_URL } from "../../../../../constants/api";
+import { useEffect, useState } from "react";
+
 
 function EngTest(){
-    const params = useParams()
-    const EngTestId = params.id as string
-    const hubUrl = process.env.NEXT_PUBLIC_SIGNALR_HUB_URL + `?${EngTestId}` || ""; // Get URL from env
+    const [hubURL, sethubURL] = useState<string>("") 
+
+
+
+    useEffect(() => {
+        // Get the current URL's query parameters
+        const queryParams = new URLSearchParams(window.location.search);
+
+        // Retrieve the 'engTestId' parameter
+        const EngTestId = queryParams.get('engTestId');
+
+        sethubURL(`${ BACKEND_BASE_URL }${ QUIZ_HUB_ROUTE }$?engTestId=${EngTestId}`)
+    }, []);
+
 
 
     return (
-        <div>
-            <EngTestWindow
-            hubUrl={hubUrl}
-            />
-        </div>
+            <div>
+                {hubURL !="" ? (
+                    <EngTestWindow
+                        hubUrl={hubURL}
+                    />
+                ) : (
+                    <p>Ошибка попробуйте еще раз.</p>
+                )}
+            </div>
+
+            
     )
 }
 
