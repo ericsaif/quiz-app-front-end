@@ -12,9 +12,9 @@ import {
     IRQ, 
     ILQ, 
     InterviewQ, 
-} from "../../../../../../../Models/QuestionsModels"; 
+} from "../../../../../../Models/QuestionsModels"; 
 
-import { MethodArgs } from "../../../../../../../Models/QuizHubModels/MethodArgs"
+import { MethodArgs } from "../../../../../../Models/QuizHubModels/MethodArgs"
 
 
 export type{

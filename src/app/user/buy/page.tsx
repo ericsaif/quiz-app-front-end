@@ -3,11 +3,11 @@
 import React, { useState } from "react"
 import { BACKEND_BASE_URL } from "../../../../constants/api"
 import { useRouter } from "next/navigation"
-import { Input } from "@headlessui/react"
+import { Button, Input } from "@headlessui/react"
 import Image from "next/image"
 
 const BuyTests = ()=>{
-    const [numTests, setnumTests] = useState<number>(1)
+    const [numTests, setnumTests] = useState<number>(2)
     const router = useRouter()
 
     const PostBuy = async ()=> {
@@ -30,23 +30,42 @@ const BuyTests = ()=>{
     }
     return (
         <React.Fragment>
-            <div className="container-fluid">
+            <div className="container-fluid" >
                 <h1 className="row">
                     КУПИТЬ ТЕСТЫ
                 </h1>
-                <form className="row vstack" onSubmit={HandleSubmit}>
-                    <div className="col d-flex justify-content-center border border-gray">
-                        <label htmlFor="selectNumTests1">
-                            <Input type="radio" value={1} checked={numTests === 1} onChange={HandleOptionsChange} name="selectNumTests" id="selectNumTests1"/>
-                            <Image alt="1 test" src={`/exam-vectorportal.svg`} width={300} height={400}/>
+                <form className="form-check vstack d-grid custom-radio " onSubmit={HandleSubmit}>
+                        <p className={`best-price text-center ${numTests === 2 ? 'best-price-checked' : ''}`}>
+                            Лучшая цена
+                        </p>
+                        <label className='test-option' htmlFor="selectNumTests2" >
+                            <Input className='form-check-input' type="radio" value={2} checked={numTests === 2} onChange={HandleOptionsChange} name="selectNumTests" id="selectNumTests2"/>
+                            
+                            <div className="hstack justify-content-start">
+                                <div className="buy-test-image">
+                                    <Image fill alt="1 test" src={`/reshot-icon-exam.svg`} />
+                                </div>
+                                <div className="buy-test-image">
+                                    <Image fill alt="1 test" src={`/reshot-icon-exam.svg`} />                                
+                                </div>
+                            </div>
+                            <p className="buy-tests-text">
+                                2 Теста - каждый по Х тг
+                            </p>
+                            <span className="checkmark"></span>
                         </label>
-                    </div>
-                    <div className="col d-flex justify-content-center border border-gray">
-                        <label htmlFor="selectNumTests2">
-                        <Input type="radio" value={2} checked={numTests === 2} onChange={HandleOptionsChange} name="selectNumTests" id="selectNumTests2"/>
-                            <Image alt="1 test" src={`/exam-vectorportal.svg`} width={300} height={400}/>
+
+                        <label className='test-option' htmlFor="selectNumTests1">
+                            <Input className='form-check-input' type="radio" value={1} checked={numTests === 1} onChange={HandleOptionsChange} name="selectNumTests" id="selectNumTests1"/>
+                            <div className="buy-test-image">
+                                <Image fill alt="1 test" src={`/reshot-icon-exam.svg`}/>
+                            </div>
+                            <span className="checkmark"></span>
+                            <p className="buy-tests-text">
+                                1 Тест - каждый по Х тг
+                            </p>
                         </label>
-                    </div>
+                    <Button type="submit" className={`btn btn-primary `}>КУПИТЬ</Button>
                 </form>
             </div>
         </React.Fragment>

@@ -1,18 +1,21 @@
-import Image from "next/image"
+import { cookies } from 'next/headers'
+
 import Link from "next/link"
 
-const NotFound = () =>{
-    return (
-        <main className="d-flex align-items-center vstack" style={{ height: "100vh" }}>
-            <Image src={`/browser-error-404-icon.svg`} width={200} height={300} alt="404"/>
-            <div className="mx-auto">
-                <h1 className="mx-auto">
-                    Данная Страница не существует
-                </h1>
-                <p className="mx-auto">Вернуться в <Link href={`/user/dashboard`}> Панель Управления</Link></p>
-            </div>
-        </main>
-    )
+const NotFound = async () =>{
+
+  const userRole = (await cookies()).get('userRole')?.value || 'guest'
+
+  return (
+      <main id="page-404" className="d-flex justify-content-center vstack" style={{ height: "100vh" }}>
+          <div id="text-404" >
+              <h1 className="">
+                  Страница не существует
+              </h1>
+              <p className="">Вернуться в <Link href={`/${userRole}/dashboard`}> Панель Управления</Link></p>
+          </div>
+      </main>
+  )
 }
 
 export default NotFound

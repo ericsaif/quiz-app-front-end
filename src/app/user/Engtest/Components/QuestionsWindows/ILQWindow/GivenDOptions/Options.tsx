@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { GivenDialogoptions } from "../../../../../../../../../Models/QuestionsModels/ILQ/givenDialogoptions"
+import { GivenDialogoptions } from "../../../../../../../../Models/QuestionsModels/ILQ/givenDialogoptions"
 
 const Options = (props:{ options:GivenDialogoptions, CurrentILQ: number }) =>{
     const [user_options, setUser_options]  = useState<string[]>([])

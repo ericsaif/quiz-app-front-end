@@ -1,13 +1,15 @@
+'use client'
+
 import React, { useEffect, useState } from "react"
 import { BACKEND_BASE_URL } from "../../../../constants/api"
-import { ReadEngTest } from "../../../../Models/AdminModels/EngTestModels/readEngTest"
+import { ReadEngTest } from "../../../../Models/UserModels/EngTestModels/ReadEngTest" 
 import BoughtTestsTable from "./components/PurchasesTable"
+import Link from "next/link"
 
 const BoughtTests = ()=>{
     const [userPurchases, setuserPurchases] = useState<ReadEngTest[]>([])
     const [error, seterror] = useState<string | null>(null)
     const [loading, setloading] = useState<boolean>(true)
-    const [table, settable] = useState<React.ReactNode[]>([])
 
     useEffect(()=>{
         const GetPurchases = async () =>{
@@ -22,9 +24,6 @@ const BoughtTests = ()=>{
                     seterror("Нет ни одной покупки")
                 }
                 setuserPurchases(responseData)
-                settable(
-                    BoughtTestsTable({TestsData: userPurchases})
-                )
             }else{
                 seterror('Что-то пошло не так')
             }
@@ -32,19 +31,24 @@ const BoughtTests = ()=>{
         } 
         GetPurchases()
         
-    },[setuserPurchases, settable, userPurchases])
+    },[])
 
     return (
         <React.Fragment key={`bought-tests-react-fragment`}>
-            <h1>
-                BoughtTests
-            </h1>
-            {loading && <p><i>Загрузка ...</i></p>}
-            {error && <p style={{color:'red'}}>{error}</p>}
-            {
-                userPurchases && 
-                table
-            }
+            <div>
+                <h1>
+                    Мои Тесты 
+                    <Link className='btn ms-2' style={{backgroundColor: 'purple', color: 'white'}} href={`/user/buy`} > КУПИТЬ ЕЩЕ</Link>
+                </h1>
+                {loading && <p><i>Загрузка ...</i></p>}
+                {error && <p style={{color:'red'}}>{error}</p>}
+                {
+                    userPurchases.length>0 && 
+                    <div>
+                        <BoughtTestsTable TestsData={userPurchases} />
+                    </div>
+                }
+            </div>
         </React.Fragment>
     )
 }

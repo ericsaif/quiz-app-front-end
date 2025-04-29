@@ -2,12 +2,12 @@
 
 import { ReactElement, useEffect, useState } from "react";
 import { Button } from "@mui/material";
-import { ETWP } from "../../../../../../Models/EngTestWindowModels/ETWProps";
+import { ETWP } from "../../../../../Models/EngTestWindowModels/ETWProps";
 
 import useQuizHubR from "./quizhubR";
 
 import * as QuestionsWindows from "./QuestionsWindows";
-import { Question,RACQ, DictationQ, RAQ, DescribePicQ, CTestQ, RSQ, WordExistsQ, DescribePicWAudioQ, LASQ, EssayQ, IRQ, ILQ, InterviewQ } from "../../../../../../Models/QuestionsModels";
+import { Question,RACQ, DictationQ, RAQ, DescribePicQ, CTestQ, RSQ, WordExistsQ, DescribePicWAudioQ, LASQ, EssayQ, IRQ, ILQ, InterviewQ } from "../../../../../Models/QuestionsModels";
 
 const EngTestWindow = (props: ETWP) => {
   const [windowContent, setWindow] = useState<ReactElement>();
@@ -18,8 +18,7 @@ const EngTestWindow = (props: ETWP) => {
     if (CurrentQ === null)
       setWindow(
         <div>
-          <p>Press the button below to start your test</p>
-          <Button onClick={() => startConnection()}></Button>
+          <Button className="btn btn-primary" onClick={() => startConnection()}>Начать</Button>
         </div>
       );
     else
