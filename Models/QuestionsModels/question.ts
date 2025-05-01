@@ -1,6 +1,6 @@
 export interface Question {
     id: number;
     questionBody: string | null;
-    qPOId: number;
+    qpoId: number;
     timer: string;
 }

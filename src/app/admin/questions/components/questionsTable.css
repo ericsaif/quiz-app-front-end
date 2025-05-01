@@ -1,0 +1,19 @@
+.slimColumnStyle {
+    width: 60%;
+    max-width: 60%;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow: hidden;
+    overflow-wrap: break-word;
+}
+
+.tableStyles {
+    width: 100%;
+    border-collapse: collapse;
+    /* table-layout: fixed; */
+}
+
+td{
+    margin: 0;
+    padding: 0px;
+}
