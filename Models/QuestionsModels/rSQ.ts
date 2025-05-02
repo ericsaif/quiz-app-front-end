@@ -1,3 +1,5 @@
 import { Question } from "./question";
 
-export type RSQ = Question 
+export class RSQ extends Question{
+    
+} 

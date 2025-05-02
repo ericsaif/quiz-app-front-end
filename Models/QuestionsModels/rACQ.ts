@@ -1,5 +1,5 @@
 import { Question } from "./question";
 
-export interface RACQ extends Question {
-    rACAId: number;
+export class RACQ extends Question {
+    rACAId: number =0;
 }

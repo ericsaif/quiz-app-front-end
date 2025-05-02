@@ -1,5 +1,5 @@
 import { Question } from "./question";
 
-export interface InterviewQ extends Question {
+export class InterviewQ extends Question {
 
 }

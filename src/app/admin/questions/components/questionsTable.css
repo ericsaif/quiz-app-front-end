@@ -13,6 +13,32 @@
     /* table-layout: fixed; */
 }
 
+.checkbox-columns-container {
+    column-count: 3; /* Create three columns */
+    column-gap: 40px; /* Adjust the space between columns */
+    padding: 10px;
+}
+
+.dropdownCSSStyle {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0.25rem;
+    padding: 0.5rem 0;
+    margin-top: 0.125rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175);
+    z-index: 1000;
+    min-width: 10rem;
+    display: block;
+}
+
+/* Add styling for checkbox labels to make them more user-friendly */
+.checkbox-label {
+    display: block;
+    margin-bottom: 6px;
+    cursor: pointer;
+}
+
 td{
     margin: 0;
     padding: 0px;

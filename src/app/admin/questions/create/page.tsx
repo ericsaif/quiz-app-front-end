@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react"
 
-import * as QTYPES from "./Components/QTypeForms/index"
-import useModal from "./Components/Hooks/useModal"
+import * as QTYPES from '../../../../../Components/QTypeForms/index'
+import useModal from '../../../../../Components/Hooks/useModal'
 
 const CreateQ = () =>{
     const [QType, setQType] = useState<number>(1)

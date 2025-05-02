@@ -1,10 +1,12 @@
 "use client"
 
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { ReadQuestion } from "../../../../../Models/AdminModels/QuestionsModels/ReadQuestion";
 import './questionsTable.css'
 import Image from "next/image";
-import { Input } from "@headlessui/react";
+import { Button, Input } from "@headlessui/react";
+
+import QTypesO from "./QTypes";
 
 // React icons
 import { LuArrowDown01, LuArrowDown10 } from "react-icons/lu";
@@ -28,31 +30,43 @@ const QuestionsTable = (props: {
         setall,
         all
     } = props
+    
+    const { QTypes, allIds } = QTypesO
+
     const [table, settable] = useState<React.ReactNode>(null)
     
+    const [LocalAll, setLocalAll] = useState<boolean>(all);
     const [selectedValues, setValues] = useState<number[] | null >([]);
+
+
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    
+    // Reference to the dropdown menu for click outside detection
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        }
+        
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     useEffect(()=>{
         function constructQTable(){
-            const QTypes = [
-                { Id: 1, QType: "CTest" },
-                { Id: 2, QType: "Dictation" },
-                { Id: 3, QType: "Read aloud" },
-                { Id: 4, QType: "Describe Picture" },
-                { Id: 5, QType: "Read and complete" },
-                { Id: 6, QType: "Read and speak" },
-                { Id: 7, QType: "Word Exists?" },
-                { Id: 8, QType: "Describe Picture With Audio" },
-                { Id: 9, QType: "Listen and speak" },
-                { Id: 11, QType: "Essay" },
-                { Id: 12, QType: "Iteractive reading" },
-                { Id: 13, QType: "Interactive listening" },
-                { Id: 14, QType: "Interview" },
-            ]
+
+            if(LocalAll) setValues(allIds)
+
         
             const HandleCategoryChange = (Selectedvalues: number[] | null) =>{
                 setcategory(Selectedvalues);
-
+                setall(LocalAll)
+                setIsDropdownOpen(false);
             }
 
             const HandleSubmit = (e: React.FormEvent) => {
@@ -64,56 +78,87 @@ const QuestionsTable = (props: {
             const HandleCheckBoxchange = (value : number ) =>{
                 if(value == 0){
                     setValues(null)
-                    if(!all)
-                        QTypes.map((qpo)=>{
-                            HandleCheckBoxchange(qpo.Id)
-                        })
-                    setall(!all)
+                    if(!LocalAll)
+                        setValues(allIds)
+                    setLocalAll(!LocalAll)
+                }else{
+                    setValues(prevValues => {
+                        if (prevValues?.includes(value)) {
+                            setLocalAll(false)
+                            return prevValues.filter(v => v !== value);
+                        }
+                        else {
+                            if(prevValues){
+                                const newValues = [...prevValues, value] 
+                                if(allIds.every((id)=>newValues.includes(id))){
+                                    setLocalAll(true)
+                                }
+                                return newValues
+                                    
+                            }else
+                                return [value];
+                        
+                        }
+                        
+                    });
                 }
-                    
-                setValues(prevValues => {
-                    if (prevValues?.includes(value)) {
-                        setall(false)
-                        return prevValues.filter(v => v !== value);
-                    }
-                    else 
-                        return prevValues ? [...prevValues, value] : [value];
-                    
-                });
+                
             }
             
+            const dropdownStyle: React.CSSProperties = {
+                display: isDropdownOpen ? 'block' : 'none'
+            };
 
             const dropDown = (
-                <div className="dropdown mb-0 pb-0" key={`dropdown-fragment`}>
-                    <label htmlFor="dropdownMenuButton">
-                        <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
-                        Тип
-                    </label>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <form key={`Qtypes-form`} onSubmit={HandleSubmit}>
-                            <label htmlFor={`QtypeCheckBoxAll`} key={`label-all-QtypeCheckBox`}>
-                                    <Input checked={all} onChange={(e) => {HandleCheckBoxchange(parseInt(e.target.value, 10))}} type="checkbox" name="QtypeCheckBox" id={`QtypeCheckBoxAll`}  value={0} />
-                                        Все
-                            </label>
-                            {QTypes.map((qpo) => (
-                                <label htmlFor={`QtypeCheckBox-${qpo.Id}`} key={`label-QtypeCheckBox-${qpo.Id}`}>
-                                    <Input onChange={(e) => {HandleCheckBoxchange(parseInt(e.target.value, 10))}} checked={category?.includes(qpo.Id) || all} type="checkbox" name="QtypeCheckBox" id={`QtypeCheckBox-${qpo.Id}`} key={qpo.Id} value={qpo.Id} />
-                                        {qpo.QType}
-                                </label>
-                                
-                            ))}
-                        </form>
-                    </div>
+                <div ref={dropdownRef} key={`dropdown-fragment`}>
+                    <Button 
+                        className="btn dropdown-toggle" 
+                        type="button" 
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    >
+                        <b style={{fontSize: 'medium'}}>Тип</b>
+                    </Button>
+                    {
+                        isDropdownOpen &&
+                            <div className="dropdown-menu dropdownCSSStyle" style={dropdownStyle} aria-labelledby="dropdownMenuButton">
+                            <form key={`Qtypes-form`} onSubmit={HandleSubmit}>
+                                <div className='checkbox-columns-container'>
+                                    <label className="checkbox-label" style={{cursor: 'pointer'}} htmlFor={`QtypeCheckBoxAll`} key={`label-all-QtypeCheckBox`}>
+                                            <Input checked={LocalAll} onChange={() => {HandleCheckBoxchange(0)}} type="checkbox" name="QtypeCheckBox" id={`QtypeCheckBoxAll`}   />
+                                                Все
+                                    </label>
+                                    {QTypes.map((qpo) => (
+                                        <label className="checkbox-label" htmlFor={`QtypeCheckBox-${qpo.Id}`} key={`label-QtypeCheckBox-${qpo.Id}`}>
+                                            <Input checked={selectedValues?.includes(qpo.Id) || LocalAll } onChange={(e) => {HandleCheckBoxchange(parseInt(e.target.value, 10))}}  type="checkbox" name="QtypeCheckBox" id={`QtypeCheckBox-${qpo.Id}`} key={qpo.Id} value={qpo.Id} />
+                                                {qpo.QType}
+                                        </label>
+                                        
+                                    ))}
+                                </div>
+                                <Button 
+                                className="btn btn-primary ms-2" 
+                                    type="submit" 
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
+                                    aria-haspopup="true" 
+                                    aria-expanded="false" >
+                                    <b>
+                                        Выбрать
+                                    </b>
+                                </Button>
+                            </form>
+                        </div>
+                    }
                 </div>
             )
             
             const TableHead = (
                 <thead key={`admin-questions-table-fragment`}>
                     <tr>
-                        <th scope="col mb-0 pb-0">
-                            <label htmlFor="btn-toggle" className="mb-0 pb-0">
+                        <th scope="col" className="mb-0 pb-0">
+                            <label htmlFor="btn-toggle" className="mb-0 pb-0" >
                                 id 
                                 <button
+                                style={{outline: '0'}}
                                 id="btn-toggle"
                                 onClick={() => setdescending(!descending)}
                                     // className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition"
@@ -123,7 +168,7 @@ const QuestionsTable = (props: {
                                 </button>
                             </label>
                         </th>
-                        <th scope="col"> 
+                        <th className="mb-0 pb-0" scope="col"> 
                             {dropDown} 
                         </th>
                         <th scope="col"> Вопрос </th>
@@ -163,7 +208,7 @@ const QuestionsTable = (props: {
             settable(table)
         }
         constructQTable()
-    },[descending, questionsData, setdescending, all, setall, category, setcategory])
+    },[descending, questionsData, setdescending, all, setall, category, setcategory, LocalAll, selectedValues, isDropdownOpen, allIds, QTypes])
     
     return table
 }

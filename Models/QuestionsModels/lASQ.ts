@@ -1,6 +1,6 @@
 import { Question } from "./question";
 
-export interface LASQ extends Question {
-    s3PathToAudioFile: string | null;
-    listenTries: number;
+export class LASQ extends Question {
+    s3PathToAudioFile: string | null='';
+    listenTries: number=0;
 }

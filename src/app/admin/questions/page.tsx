@@ -6,9 +6,15 @@ import QuestionsTable from "./components/questionsTable";
 import { Button, Input } from "@headlessui/react";
 import { ReadQuestion } from "../../../../Models/AdminModels/QuestionsModels/ReadQuestion";
 import Image from "next/image";
+import { QTableData } from "../../../../Models/AdminModels/QuestionsModels/QTableData";
+
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function Questions(){
     const [questions, setquestions] = useState<ReadQuestion[] | null>(null)
+    const [totalCount, settotalCount] = useState<number>(0)
+    const [maxPage, setmaxPage] = useState<number>(0)
     const [error, seterror] = useState<string | null>(null)
     const [loading, setloading] = useState<boolean>(true)
 
@@ -19,7 +25,7 @@ export default function Questions(){
     const [searchTerm, setsearchTerm] = useState<string>('')
     const [category, setcategory] = useState<number[] | null>(null)
 
-    const [all, setall] = useState<boolean>(false)
+    const [all, setall] = useState<boolean>(true)
 
     const baseURL = `${BACKEND_BASE_URL}/api/admin/questions`
 
@@ -28,33 +34,63 @@ export default function Questions(){
             setloading(true)
             const searchParams = new URLSearchParams
 
-            searchParams.append('page', currentPage.toString())
-            searchParams.append('QperPage', QperPage.toString())
+            searchParams.set('page', currentPage.toString())
+            searchParams.set('QperPage', QperPage.toString())
             
-            if(descending) searchParams.append('descending', 'true') 
-            if(searchTerm != ''){ alert(searchTerm); searchParams.append('searchTerm', searchTerm)}
+            if(descending) searchParams.set('descending', 'true') 
 
-            if(all)
-                searchParams.delete('category')
-            else if(category) 
-                searchParams.append('category', category.join(','))
+            if(searchTerm != '') searchParams.set('searchTerm', searchTerm)
 
-            const response =  await fetch(`${baseURL}?${searchParams}`,{
+            if(all) searchParams.delete('category')
+
+            else if(category && category.length > 0) {
+                // Fix: Instead of joining with comma, add multiple category parameters
+                category.forEach(catValue => {
+                    searchParams.append('category', catValue.toString());
+                });
+            }
+
+            const response =  await fetch(`${baseURL}?${searchParams.toString()}`,{
                 method: 'GET',
                 credentials: 'include',
                 
             })
             if(response.ok){
-                
-                const responseData:ReadQuestion[] = await response.json()
+                seterror(null)
+                const responseData:QTableData = await response.json()
 
-                if(responseData.length == 0)
-                    seterror('В базе нет ни одного вопроса')
+                setquestions(responseData.questions)
+                settotalCount(responseData.totalcount)
+                setmaxPage(
+                    Math.floor((responseData.totalcount + QperPage ) / QperPage )
+                )
+            }else if(response.status == 404){
+                seterror('В базе нет вопросов данного типа')
+                setquestions([])
+                settotalCount(0)
+                setmaxPage(0)         
 
-                setquestions(responseData)
+            }else if(response.status == 400){
+                const errorData = await response.json()
+                const errorMessage = 
+                        errorData.title || 
+                        (errorData.errors && JSON.stringify(errorData.errors)) || 
+                        `Ошибка ${response.status}: ${response.statusText}`;
+                seterror(errorMessage)
+                setquestions([])
+                settotalCount(0)
+                setmaxPage(0)
+
             }else{
                 const errorData = await response.json()
-                seterror(errorData)
+                const errorMessage = 
+                        errorData.title || 
+                        (errorData.errors && JSON.stringify(errorData.errors)) || 
+                        `Ошибка ${response.status}: ${response.statusText}`;
+                seterror(errorMessage)
+                setquestions([])
+                settotalCount(0)
+                setmaxPage(0)
             }
             setloading(false)
         }
@@ -83,11 +119,11 @@ export default function Questions(){
         <React.Fragment>
             <div className="container-fluid">
                 <div className="row">
-                    <h1>Вопросы</h1>
+                    <h1>Вопросы: {totalCount}</h1>
                 </div>
                 <div className="row">
                     {loading && <p><i>Загрузка ... </i></p>}
-                    {error && <p>Произошла ошибка из-за: {error}</p>}
+                    {error && <p style={{backgroundColor: 'red', color: 'white', padding:'10px', fontSize: 'large', width:'60%'}}><b>Произошла ошибка из-за: {error}</b></p>}
                     {
                         questions && 
                         <React.Fragment key={`admin-questions-table-react-fragment`}>
@@ -98,6 +134,7 @@ export default function Questions(){
                                         <Image src={'/reshot-icon-magnifier-glass.svg'} alt ='magnifying_glass' width={20} height={20}/>
                                     </Button>
                                 </form>
+                                <Button onClick={()=>setQperPage(10)} className='btn'>Test QperPage Set</Button>
                             </div>
                             <div>
                                 <QuestionsTable
@@ -110,14 +147,20 @@ export default function Questions(){
                                     setall={setall}
                                 />
                             </div>
-                            <Button onClick={HandleNextPage} className='btn'>Next</Button>
-                            <div>
-                                <p>
-                                    {currentPage}
-                                </p>
+                            <div className="hstack mx-auto justify-content-center">
+                                <Button onClick={HandlePrevPage} disabled={(currentPage - 1 == 0)} className='btn btn-primary'>
+                                    <FaArrowLeftLong size={20} />
+                                </Button>
+                                <div className="mb-0 pb-0">
+                                    <p className="text mx-5" style={{fontSize: 'x-large'}}>
+                                        {currentPage}
+                                    </p>
+                                </div>
+                                <Button onClick={HandleNextPage} disabled={(currentPage == maxPage)} className='btn btn-primary'>
+                                    <FaArrowRightLong size={20} />
+                                </Button>
                             </div>
-                            <Button onClick={HandlePrevPage} className='btn'>Previous</Button>
-                            <Button onClick={()=>setQperPage(10)} className='btn'>Test QperPage Set</Button>
+                            
                         </React.Fragment>
 
                     }

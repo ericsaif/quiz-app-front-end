@@ -1,5 +1,5 @@
 import { Question } from "./question";
 
-export interface WordExistsQ extends Question {
-    wordExistsAId: number | null;
+export class WordExistsQ extends Question {
+    wordExistsAId: number | null=0;
 }
