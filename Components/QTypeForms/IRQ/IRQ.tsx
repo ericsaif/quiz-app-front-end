@@ -4,69 +4,154 @@ import { Button  } from "@headlessui/react"
 import React, { useEffect, useState } from "react"
 import usePOST_PUT_Question from "../../Hooks/postQuestion"
 import { CreateIRQ } from "../../Models/CreateQModels/CreateIRQ/createIRQ"
-import { MiniE1 } from "../../Models/CreateQModels/CreateIRQ/miniE1"
+import { MiniE1_Create } from "../../Models/CreateQModels/CreateIRQ/miniE1"
 import { CreateIRA } from "../../Models/CreateQModels/CreateIRQ/createIRA"
 import ShowIRQ from "./showIRQ"
 import ShowIRA from "./showIRA"
 import useModal from "../../Hooks/useModal"
+import { IRQ } from "../../../Models/QuestionsModels"
+import { IRA } from "../../../Models/AdminModels/AnswersEntities/IRA"
+import { MiniE1 } from "../../../Models/QuestionsModels/IRQ/miniE1"
+import { useRouter } from "next/navigation"
 
-const IRQ = (props:{QPOId: number}) =>{
-    const [questionBody, setquestionBody] = useState<string>("")
+const I_R_Q = (props:{
+    QPOId: number,
+    question?: IRQ
+}) =>{
+
+    const router = useRouter()
+
+    const {QPOId, question } = props
+
+    const { miniE1 } = question || {}
+
+    const IsEditMode = question ? true : false
+
+    if(IsEditMode && (!question || !miniE1 || !question.IRA))
+        throw new Error('Нет необходимых данных, ошибка')
+
+    const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
     const [allMiniE1Options, setallMiniE1Options] = useState<string[]>(Array(50).fill(''))
     
-    const [questionMiniE3, setquestionMiniE3] = useState<string>("")
-    const [questionMiniE4, setquestionMiniE4] = useState<string>("")
+    const [questionMiniE3, setquestionMiniE3] = useState<string>(question?.questionMiniE3 || "")
+    const [questionMiniE4, setquestionMiniE4] = useState<string>(question?.questionMiniE4 || "")
 
-    const [optionsMiniE2, setOptionsMiniE2] = useState<string[]>([]);
-    const [optionsMiniE5, setOptionsMiniE5] = useState<string[]>([]);
-    const [optionsMiniE6, setOptionsMiniE6] = useState<string[]>([]);
+    const [optionsMiniE2, setOptionsMiniE2] = useState<string[]>(question?.optionsMiniE2 || []);
+    const [optionsMiniE5, setOptionsMiniE5] = useState<string[]>(question?.optionsMiniE5 || []);
+    const [optionsMiniE6, setOptionsMiniE6] = useState<string[]>(question?.optionsMiniE6 || []);
 
-    const [ correctOptionsMiniE1, setcorrectOptionsMiniE1 ] = useState<number[]>([])
-    const [ correctOptionMiniE2, setcorrectOptionMiniE2 ] = useState<number>(0)
-    const [ correctHighlightMiniE3, setcorrectHighlightMiniE3 ] = useState<string>("")
-    const [ correctHighlightMiniE4, setcorrectHighlightMiniE4 ] = useState<string>("")
-    const [ correctOptionMiniE5, setcorrectOptionMiniE5 ] = useState<number>(0)
-    const [ correctOptionMiniE6, setcorrectOptionMiniE6 ] = useState<number>(0)
+    const [ correctOptionsMiniE1, setcorrectOptionsMiniE1 ] = useState<number[]>(question?.IRA?.correctOptionsMiniE1 || [])
+    const [ correctOptionMiniE2, setcorrectOptionMiniE2 ] = useState<number>(question?.IRA?.correctOptionMiniE2 || 0)
+    const [ correctHighlightMiniE3, setcorrectHighlightMiniE3 ] = useState<string>(question?.IRA?.correctHighlightMiniE3 || "")
+    const [ correctHighlightMiniE4, setcorrectHighlightMiniE4 ] = useState<string>(question?.IRA?.correctHighlightMiniE4 || "")
+    const [ correctOptionMiniE5, setcorrectOptionMiniE5 ] = useState<number>(question?.IRA?.correctOptionMiniE5 || 0)
+    const [ correctOptionMiniE6, setcorrectOptionMiniE6 ] = useState<number>(question?.IRA?.correctOptionMiniE6 || 0)
 
     useEffect(()=>{
         const setMiniE1 = () =>{
             setcorrectOptionsMiniE1(Array.from({ length: 10 }, (_, y) => y * 5))
         }
+        if(!IsEditMode)
+            setMiniE1()
+        else{
+            if(!miniE1)
+                throw new Error('Нет вопроса, ошибка')
+
+            const arrays = [
+                ...miniE1.options0,
+                ...miniE1.options1,
+                ...miniE1.options2,
+                ...miniE1.options3,
+                ...miniE1.options4,
+                ...miniE1.options5,
+                ...miniE1.options6,
+                ...miniE1.options7,
+                ...miniE1.options8,
+                ...miniE1.options9,
+            ]
+            setallMiniE1Options(arrays)
+        }    
     
-        setMiniE1()
-    },[])
+    }, [IsEditMode, miniE1])
 
-    const newMiniE1: MiniE1 = {
-        options0: allMiniE1Options.slice(0, 5),
-        options1: allMiniE1Options.slice(5, 10),
-        options2: allMiniE1Options.slice(10, 15),
-        options3: allMiniE1Options.slice(15, 20),
-        options4: allMiniE1Options.slice(20, 25),
-        options5: allMiniE1Options.slice(25, 30),
-        options6: allMiniE1Options.slice(30, 35),
-        options7: allMiniE1Options.slice(35, 40),
-        options8: allMiniE1Options.slice(40, 45),
-        options9: allMiniE1Options.slice(45, 50),
-    }
 
-    const newIRA: CreateIRA ={
-        correctOptionsMiniE1,
-        correctOptionMiniE2,
-        correctHighlightMiniE3,
-        correctHighlightMiniE4,
-        correctOptionMiniE5,
-        correctOptionMiniE6,
-    }
-    const newIRQ: CreateIRQ ={
-        QPOId: props.QPOId,
-        questionBody,
-        createIRA: newIRA,
-        MiniE1DTO: newMiniE1,
-        optionsMiniE2, 
-        questionMiniE3, 
-        questionMiniE4, 
-        optionsMiniE5, 
-        optionsMiniE6
+    let POST_Q: CreateIRQ | undefined;
+    let PUT_Q: IRQ | undefined;
+
+    if(!IsEditMode){
+        const newMiniE1: MiniE1_Create = {
+            options0: allMiniE1Options.slice(0, 5),
+            options1: allMiniE1Options.slice(5, 10),
+            options2: allMiniE1Options.slice(10, 15),
+            options3: allMiniE1Options.slice(15, 20),
+            options4: allMiniE1Options.slice(20, 25),
+            options5: allMiniE1Options.slice(25, 30),
+            options6: allMiniE1Options.slice(30, 35),
+            options7: allMiniE1Options.slice(35, 40),
+            options8: allMiniE1Options.slice(40, 45),
+            options9: allMiniE1Options.slice(45, 50),
+        }
+    
+        const newIRA: CreateIRA ={
+            correctOptionsMiniE1,
+            correctOptionMiniE2,
+            correctHighlightMiniE3,
+            correctHighlightMiniE4,
+            correctOptionMiniE5,
+            correctOptionMiniE6,
+        }
+        const Newquestion: CreateIRQ ={
+            QPOId,
+            questionBody,
+            createIRA: newIRA,
+            MiniE1DTO: newMiniE1,
+            optionsMiniE2, 
+            questionMiniE3, 
+            questionMiniE4, 
+            optionsMiniE5, 
+            optionsMiniE6
+        }
+        POST_Q = Newquestion
+    }else{
+        const miniE1: MiniE1 = {
+            iRQId: question?.id || 0,
+            options0: allMiniE1Options.slice(0, 5),
+            options1: allMiniE1Options.slice(5, 10),
+            options2: allMiniE1Options.slice(10, 15),
+            options3: allMiniE1Options.slice(15, 20),
+            options4: allMiniE1Options.slice(20, 25),
+            options5: allMiniE1Options.slice(25, 30),
+            options6: allMiniE1Options.slice(30, 35),
+            options7: allMiniE1Options.slice(35, 40),
+            options8: allMiniE1Options.slice(40, 45),
+            options9: allMiniE1Options.slice(45, 50),
+        }
+    
+        const IRA: IRA ={
+            id: question?.IRA?.id || 0,
+            correctOptionsMiniE1,
+            correctOptionMiniE2,
+            correctHighlightMiniE3,
+            correctHighlightMiniE4,
+            correctOptionMiniE5,
+            correctOptionMiniE6,
+            iRQ: null,
+            iRQId: question?.id || 0
+        }
+        const Question: IRQ ={
+            miniE1,
+            optionsMiniE2,
+            questionMiniE3,
+            questionMiniE4,
+            optionsMiniE5,
+            optionsMiniE6,
+            IRA,
+            timer: question?.timer || "",
+            id: question?.id || 0,
+            questionBody,
+            qpoId: question?.qpoId || 0
+        }
+        PUT_Q = Question
     }
 
 
@@ -120,7 +205,12 @@ const IRQ = (props:{QPOId: number}) =>{
 
     const modalIRA = useModal({text: text2, id: modalidIRA})
 
-    const { triggerPost, loading, error, data } = usePOST_PUT_Question(newIRQ, qtype);
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+            !IsEditMode ? POST_Q : undefined,
+            'CTestQ',
+            IsEditMode ? PUT_Q : undefined,
+            IsEditMode ? question?.id : undefined,
+        )
     
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
@@ -131,23 +221,25 @@ const IRQ = (props:{QPOId: number}) =>{
     
     useEffect(() => {
         if (data) {
-          // Check if the 'data' indicates success (based on your PostResponse type)
           if (data.success) {
-            alert(`Вопрос типа: Interactive Reading был успешно создан`); // Your existing alert
-            // --- ADD PAGE RELOAD HERE ---
-            window.location.reload(); // Use standard JS reload
-            // OR if you have imported useRouter:
-            // router.reload(); // Use Next.js router reload
+            const message =  `Вопрос типа: Interactive Reading был успешно ${IsEditMode ? 'изменен' : 'создан'}` 
+            alert(message); 
+            
+            router.push('/admin/questions')
       
           } else {
-            // Handle API indicating failure even with 2xx status
-            alert(`Ошибка при создании вопроса типа: Interactive Reading: ${data.message || 'Сервер сообщил об ошибке'}`);
+            const message = `Ошибка при ${IsEditMode ? 'изменении' : 'создании'} вопроса типа: Interactive Reading: ${data.message || 'Сервер сообщил об ошибке'}`
+
+            alert(message);
+            router.push('/admin/questions')
+
           }
         } else if (error) {
-          // Handle network or other errors
-          alert(`Ошибка при создании вопроса типа: Interactive Reading: ${error}`);
+            alert(`Ошибка при ${IsEditMode ? 'изменении' : 'создании'} вопроса типа: Interactive Reading: ${error}`);
+            router.push('/admin/questions')
+
         }
-      }, [data, error]);
+      }, [IsEditMode, data, error, router]);
 
     
 
@@ -203,4 +295,4 @@ const IRQ = (props:{QPOId: number}) =>{
     )
 }
 
-export default IRQ
+export default I_R_Q

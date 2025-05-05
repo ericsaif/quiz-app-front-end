@@ -4,18 +4,54 @@ import usePOST_PUT_Question from "../Hooks/postQuestion"
 import { CreateWEA } from "../Models/CreateQModels/CreateWordExists/createWEA"
 import { Button, Input } from "@headlessui/react"
 import useModal from "../Hooks/useModal"
+import { WordExistsQ } from "../../Models/QuestionsModels"
+import { WordExistsA } from "../../Models/AdminModels/AnswersEntities/wordExistsA"
 
-const WordExists = (props:{QPOId: number}) =>{
-    const [questionBody, setquestionBody] = useState<string>("")
-    const [exists, setexists] = useState<boolean>(true)
+const WordExists = (props:{
+    QPOId: number,
+    question: WordExistsQ
+}) =>{
 
-    const createWEA: CreateWEA ={
-        exists
-    }
-    const newWE: CreateWordExists ={
-        QPOId: props.QPOId,
-        questionBody,
-        createWEA
+    const { QPOId, question } = props
+
+    const IsEditMode = question ? true : false
+
+    if(IsEditMode && (!question || !question.wordExistsA))
+        throw new Error('Нет необходимых данных, ошибка')
+
+
+    const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
+    const [exists, setexists] = useState<boolean>(question?.wordExistsA?.exists || true)
+                
+    let POST_Q: CreateWordExists | undefined;
+    let PUT_Q: WordExistsQ  | undefined;
+
+    if(!IsEditMode){
+        const createWEA: CreateWEA ={
+            exists
+        }
+        const Newquestion: CreateWordExists ={
+            QPOId,
+            questionBody,
+            createWEA
+        }
+        POST_Q = Newquestion
+    }else{
+        const QAnswer: WordExistsA = {
+            id: question?.wordExistsA?.id || 0,
+            wordExistsQId: question?.id || 0,
+            wordExistsQ: null,
+            exists
+        }
+        const Question: WordExistsQ = {
+            id: question?.id || 0,
+            questionBody,
+            qpoId: question?.qpoId || 0,
+            timer: question?.timer || '',
+            wordExistsA: QAnswer,
+        }
+            
+        PUT_Q = Question
     }
 
     const text: React.ReactNode = (
@@ -31,15 +67,22 @@ const WordExists = (props:{QPOId: number}) =>{
 
     const modal = useModal({text, id: qtype})
 
-        const { triggerPost, loading, error, data} = usePOST_PUT_Question(newWE, qtype)
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+                    !IsEditMode ? POST_Q : undefined,
+                    'CTestQ',
+                    IsEditMode ? PUT_Q : undefined,
+                    IsEditMode ? question?.id : undefined,
+                )
     
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
         
         triggerPost()
-        setquestionBody("")
         
+        if(!IsEditMode)
+            setquestionBody("")
+
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
         const { value } = event.target

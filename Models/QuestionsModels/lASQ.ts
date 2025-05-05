@@ -1,6 +1,7 @@
 import { Question } from "./question";
 
 export class LASQ extends Question {
-    s3PathToAudioFile: string | null='';
+    transcribedAudio: string = ''
+    s3PathToAudioFile: string ='';
     listenTries: number=0;
 }

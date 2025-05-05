@@ -1,8 +1,7 @@
 import { IRQ } from "../../QuestionsModels/IRQ/IrQ";
 
-export interface RA {
+export interface IRA {
     id: number;
-    text: string | null;
     correctOptionsMiniE1: number[];
     correctOptionMiniE2: number;
     correctHighlightMiniE3: string | null;
@@ -11,5 +10,4 @@ export interface RA {
     correctOptionMiniE6: number;
     iRQ: IRQ | null;
     iRQId: number;
-    timer: string;
 }

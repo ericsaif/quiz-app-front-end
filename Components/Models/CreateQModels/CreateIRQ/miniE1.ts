@@ -1,4 +1,4 @@
-export interface MiniE1 {
+export interface MiniE1_Create {
     options0: string[];
     options1: string[];
     options2: string[];

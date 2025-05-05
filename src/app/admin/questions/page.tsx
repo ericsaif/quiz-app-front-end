@@ -10,6 +10,8 @@ import { QTableData } from "../../../../Models/AdminModels/QuestionsModels/QTabl
 
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { IoAddCircle } from "react-icons/io5";
+import Link from "next/link";
 
 export default function Questions(){
     const [questions, setquestions] = useState<ReadQuestion[] | null>(null)
@@ -119,7 +121,16 @@ export default function Questions(){
         <React.Fragment>
             <div className="container-fluid">
                 <div className="row">
-                    <h1>Вопросы: {totalCount}</h1>
+                    <h1>Вопросы: {
+                    questions && 
+                    <>
+                        {totalCount}
+                        <Link className="btn" href={`/admin/questions/create`}>
+                            <IoAddCircle size={40} />
+                        </Link>
+                    
+                    </>
+                    }</h1>
                 </div>
                 <div className="row">
                     {loading && <p><i>Загрузка ... </i></p>}
@@ -127,7 +138,7 @@ export default function Questions(){
                     {
                         questions && 
                         <React.Fragment key={`admin-questions-table-react-fragment`}>
-                            <div>
+                            <div className="hstack">
                                 <form onSubmit={HandleSearcTerm}>
                                     <Input type="text" placeholder="" name='searchInput'/>
                                     <Button className={`btn pb-3`} type="submit">

@@ -7,23 +7,55 @@ import { CreateDictation } from "../Models/CreateQModels/CreateDictationQ/create
 import { CreateDictationA } from "../Models/CreateQModels/CreateDictationQ/createDictationA"
 import useModal from "../Hooks/useModal"
 import { DictationQ } from "../../Models/QuestionsModels"
+import { DictationA } from "../../Models/AdminModels/AnswersEntities/dictationA"
 
 
 const Dictation = (props:{
     QPOId: number,
     question?: DictationQ
 }) =>{
-    const [PathToAudio, setPathToAudio] = useState<string>("")
-    const [CorrectText, setCorrectText] = useState<string>("")
+    const { question, QPOId } = props
 
-    const newDictationA: CreateDictationA ={
-        correctText:CorrectText
-    }
-    const newDictation: CreateDictation ={
-        QPOId: props.QPOId,
-        s3PathToAudio:PathToAudio,
-        questionBody: "-",
-        createDictationA: newDictationA
+    const IsEditMode = question ? true : false
+
+    if(IsEditMode && (!question || !question.dictationA))
+        throw new Error('Нет необходимых данных, ошибка')
+
+    const [s3PathToAudio, setPathToAudio] = useState<string>(question?.s3PathToAudio || "")
+    const [correctText, setCorrectText] = useState<string>(question?.dictationA?.correctText || "")
+
+    
+    let POST_Q: CreateDictation | undefined;
+    let PUT_Q: DictationQ | undefined;
+
+    if(!IsEditMode){
+        const newDictationA: CreateDictationA ={
+            correctText
+        }
+        const Newquestion: CreateDictation ={
+            QPOId,
+            s3PathToAudio,
+            questionBody: "-",
+            createDictationA: newDictationA
+        }
+        POST_Q = Newquestion
+    }else{
+        const QAnswer: DictationA ={
+            id: question?.dictationA?.id || 0,
+            correctText,
+            dictationQId: question?.id || 0,
+            dictationQ: question || null
+        }
+        const Question: DictationQ = {
+            questionBody: question?.questionBody || '',
+            dictationA: QAnswer,
+            id: question?.id || 0,
+            qpoId: question?.qpoId || 0,
+            timer: question?.timer || "",
+            s3PathToAudio,
+            listenTries: question?.listenTries || 0
+        }
+        PUT_Q = Question
     }
 
     const text:React.ReactNode = (
@@ -37,7 +69,12 @@ const Dictation = (props:{
 
     const modal = useModal({text, id: qtype})
 
-    const { triggerPost, loading, error, data} = usePOST_PUT_Question(newDictation, qtype)
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+            !IsEditMode ? POST_Q : undefined,
+            'CTestQ',
+            IsEditMode ? PUT_Q : undefined,
+            IsEditMode ? question?.id : undefined,
+        )
     
 
     
@@ -45,8 +82,11 @@ const Dictation = (props:{
         event.preventDefault()
         
         triggerPost()
-        setPathToAudio("")
-        setCorrectText("")
+        
+        if(!IsEditMode){
+            setPathToAudio("")
+            setCorrectText("")
+        }
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -66,10 +106,10 @@ const Dictation = (props:{
                 </div>
                 <form className="q-container vstack gap-2 w-50 m-2 align-self-center" onSubmit={HandleFormSubmit}>
                     <label  htmlFor="pathToAudio">Локация:</label>
-                    <Input value={PathToAudio} required className="w-100" id="pathToAudio" type="text" onChange={HandleInputChange}></Input> 
+                    <Input value={s3PathToAudio} required className="w-100" id="pathToAudio" type="text" onChange={HandleInputChange}></Input> 
                     
                     <label htmlFor="dictA">Правильный ответ:</label>
-                    <Input value={CorrectText} required className="w-100" type="text" id="dictA" onChange={HandleAInputChange}></Input>
+                    <Input value={correctText} required className="w-100" type="text" id="dictA" onChange={HandleAInputChange}></Input>
                     
                     <Button disabled={loading} className={`btn btn-primary`} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
                 </form>

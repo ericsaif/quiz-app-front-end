@@ -39,25 +39,30 @@ const usePOST_PUT_Question = (
     setData(null); // Reset data on new attempt
 
     try {
-      const response = await fetch(`${BACKEND_BASE_URL}/api/admin/questions`, {
-        method: QId? 'PUT' : "POST", // HTTP method
+      const response = await fetch(`${BACKEND_BASE_URL}/api/admin/questions${ QId ? `/${QId}` :'' }`, {
+        method: QId? 'PUT' : "POST", 
         headers: {
-          "Content-Type": "application/json", // Specify JSON content
+          "Content-Type": "application/json",
         },
-        credentials: "include", // Include cookies, auth headers, etc.
-        body: JSON.stringify(QId? PUTquestion : question), // Convert the question object to JSON
+        credentials: "include", 
+        body: JSON.stringify(QId? PUTquestion : question), 
       });
 
       
     if (response.status === 204) {
-        // Handle successful creation with no content
-        setData({ success: true, message: 'Вопрос успешно создан' }); // Set a success state indicator
-        console.log("Question posted successfully (204 No Content)");
-        return;
+      const message = QId ? 'Вопрос успешно изменен' : 'Вопрос успешно создан' 
+
+      setData({ success: true, message  }); // Set a success state indicator
+      console.log("Question posted successfully (204 No Content)");
+      return;
     }else if (!response.ok) {
-        // Attempt to read error message from body if available
-        const errorDetail = await response.text().catch(() => response.statusText);
-        throw new Error(`Ошиька при создании вопроса: ${response.status} ${errorDetail}`);
+      // Attempt to read error message from body if available
+      const errorDetail = await response.text().catch(() => response.statusText);
+      if(!QId)
+        throw new Error(`Ошибка при создании вопроса: ${response.status} ${errorDetail}`);
+      else
+        throw new Error(`Ошибка при изменении вопроса: ${response.status} ${errorDetail}`);
+        
     }
 
       const result: PostResponse = await response.json();
@@ -65,29 +70,36 @@ const usePOST_PUT_Question = (
       console.log("Question posted successfully:", result);
     } catch (err) {
       console.error("Error posting question:", err);
-      // Set error state based on the caught error
-      setError(err instanceof Error ? err.message : "An unknown error occurred during post");
+      
+      const message =  `Ошибка при ${QId ? 'изменении' : 'создании'} вопроса `
+
+      setError(err instanceof Error ? err.message: message );
     } finally {
       setLoading(false); // Always set loading to false when done
     }
-  }, [QId, question]); // Dependencies: Recreate triggerPost if question or QType changes
+  }, [PUTquestion, QId, question]); // Dependencies: Recreate triggerPost if question or QType changes
 
   // Use useEffect to handle side effects like showing alerts based on state changes
   useEffect(() => {
     if (data) {
       // Assuming your API response has a 'success' property
       if (data.success) {
-         alert(`Вопрос типа: ${QType} был успешно создан`);
-         // Maybe trigger a form reset or redirect here if needed
+        const message = QId ? `Вопрос No: ${QId} был успешно изменен` : `Вопрос типа: ${QType} был успешно создан`
+        alert(message);
+        
       } else {
-         // Handle API indicating failure even with 2xx status (less common, but possible)
-         alert(`Ошибка при создании вопроса типа: ${QType}: ${data.message || 'Сервер сообщил об ошибке'}`);
+        const message = QId ? `Ошибка при изменении вопроса No: ${QId}: ${data.message || 'Сервер сообщил об ошибке'}`
+         : `Ошибка при создании вопроса типа: ${QType}: ${data.message || 'Сервер сообщил об ошибке'}`
+        
+        alert(message);
       }
     } else if (error) {
-       // Handle network or other errors caught in the catch block
-       alert(`Ошибка при создании вопроса типа: ${QType}: ${error}`);
+      const message = QId ? `Ошибка при изменении вопроса No: ${QId}: ${error}`
+         : `Ошибка при создании вопроса типа: ${QType}: ${error}`
+        
+      alert(message);
     }
-  }, [data, error, QType]); // Dependencies: Run this effect when data, error, or QType changes
+  }, [data, error, QType, QId]); // Dependencies: Run this effect when data, error, or QType changes
 
   // The hook returns the state and the function to trigger the action
   return {

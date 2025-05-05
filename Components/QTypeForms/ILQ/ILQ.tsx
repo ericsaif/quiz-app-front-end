@@ -4,14 +4,30 @@ import { Button } from "@headlessui/react"
 import React, { useEffect, useState } from "react"
 import usePOST_PUT_Question from "../../Hooks/postQuestion"
 import { CreateILQ } from "../../Models/CreateQModels/CreateILQ/createILQ"
-import { GivenDialogoptions } from "../../Models/CreateQModels/CreateILQ/givenDialogoptions"
-import { CorrectDialogOptions } from "../../Models/CreateQModels/CreateILQ/correctDialogOptions"
+import { GivenDialogoptions_Create } from "../../Models/CreateQModels/CreateILQ/givenDialogoptions"
+import { CorrectDialogOptions_Create } from "../../Models/CreateQModels/CreateILQ/correctDialogOptions"
 import useS3PathsInputs from "./useS3PathsInputs"
 import useInputs from "./useInputs"
 import useCorrectInputs from "./useCorrectOptions"
 import useModal from "../../Hooks/useModal"
+import { ILQ } from "../../../Models/QuestionsModels"
+import { GivenDialogoptions } from "../../../Models/QuestionsModels/ILQ/givenDialogoptions"
+import { CorrectDialogOptions } from "../../../Models/QuestionsModels/ILQ/correctDialogOptions"
 
-const ILQ = (props:{QPOId: number}) =>{
+const I_L_Q = (props:{
+    QPOId: number,
+    question?: ILQ
+}) =>{
+    const { QPOId, question } = props
+    const { correctDialogOptions, givenDialogoptions } = question || {}
+   
+    const IsEditMode = question ? true : false
+
+    if (IsEditMode && (!givenDialogoptions || !correctDialogOptions)) {
+        throw new Error("Необходимых данных не существует");
+    }
+
+
     const [allOptions, setAlloptions] = useState<string[]>(Array(25).fill(''))
     const [s3pathsToAudioAnswers, sets3pathsToAudioAnswers] = useState<string[]>(Array(5).fill('')) 
 
@@ -22,27 +38,77 @@ const ILQ = (props:{QPOId: number}) =>{
         const setCO = () => {
             setCorrectOptions(Array.from({ length: 5 }, (_, y) => y * 5))
         }
+        const EditMode = () =>{
+            if (!question || !givenDialogoptions || !correctDialogOptions) {
+                throw new Error("Необходимых данных не существует");
+            }
+            const arrays = [
+                ...givenDialogoptions.optionsDialogStart,
+                ...givenDialogoptions.optionsDialogContinuation1,
+                ...givenDialogoptions.optionsDialogContinuation2,
+                ...givenDialogoptions.optionsDialogContinuation3,
+                ...givenDialogoptions.optionsDialogContinuation4,
+            ]
+            setAlloptions(arrays)
+            setCorrectOptions(correctDialogOptions.correctOptionsDialogOptions)
+            setDialog(correctDialogOptions.Dialog)
+        }
+        if(!IsEditMode)
+            setCO()
+        else
+            EditMode()
+    },[IsEditMode, correctDialogOptions, givenDialogoptions, question])
     
-        setCO()
-    },[])
+    let POST_Q: CreateILQ | undefined;
+    let PUT_Q: ILQ | undefined;
 
-    const givenDialogoptions: GivenDialogoptions ={
-        optionsDialogStart: allOptions.slice(0,5),
-        optionsDialogContinuation1: allOptions.slice(5,10),
-        optionsDialogContinuation2: allOptions.slice(11,15),
-        optionsDialogContinuation3: allOptions.slice(15,20),
-        optionsDialogContinuation4: allOptions.slice(20,25),
-    }
-    const correctDialogOptions: CorrectDialogOptions ={
-        correctOptions:correctOptions,
-        Dialog
-    }
-    const newILQ: CreateILQ ={
-        QPOId: props.QPOId,
-        s3pathsToAudioAnswers: s3pathsToAudioAnswers,
-        questionBody: "-",
-        GivenDialogoptionsDTO: givenDialogoptions,
-        CorrectDialogOptionsDTO: correctDialogOptions
+    if(!IsEditMode){
+        const GivenDialogoptionsDTO: GivenDialogoptions_Create ={
+            optionsDialogStart: allOptions.slice(0,5),
+            optionsDialogContinuation1: allOptions.slice(5,10),
+            optionsDialogContinuation2: allOptions.slice(11,15),
+            optionsDialogContinuation3: allOptions.slice(15,20),
+            optionsDialogContinuation4: allOptions.slice(20,25),
+        }
+        const CorrectDialogOptionsDTO: CorrectDialogOptions_Create ={
+            correctOptions,
+            Dialog
+        }
+        const Newquestion: CreateILQ ={
+            QPOId,
+            s3pathsToAudioAnswers,
+            questionBody: "-",
+            GivenDialogoptionsDTO,
+            CorrectDialogOptionsDTO
+        }
+        POST_Q = Newquestion
+    }else{
+        const givenDialogoptions: GivenDialogoptions  ={
+            optionsDialogStart: allOptions.slice(0,5),
+            optionsDialogContinuation1: allOptions.slice(5,10),
+            optionsDialogContinuation2: allOptions.slice(11,15),
+            optionsDialogContinuation3: allOptions.slice(15,20),
+            optionsDialogContinuation4: allOptions.slice(20,25),
+            iLQ: null,
+            iLQId: question?.id || 0
+        }
+        const correctDialogOptions: CorrectDialogOptions = {
+            Dialog,
+            iLQ: null,
+            iLQId: question?.id || 0,
+            correctOptionsDialogOptions: correctOptions
+        }
+        const Question: ILQ = {
+            s3pathsToAudioAnswers: [],
+            givenDialogoptions,
+            correctDialogOptions,
+            summaryTimer: question?.summaryTimer || "",
+            id: question?.id || 0,
+            questionBody: '-',
+            qpoId: question?.qpoId || 0,
+            timer: question?.timer || ""
+        }
+        PUT_Q = Question
     }
 
     const ShowS3PathsInputs = useS3PathsInputs({sets3pathsToAudioAnswers, s3pathsToAudioAnswers})
@@ -51,7 +117,12 @@ const ILQ = (props:{QPOId: number}) =>{
 
     const qtype = "Interactive listening"
 
-    const { triggerPost, loading, error, data } = usePOST_PUT_Question(newILQ, qtype);
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+        !IsEditMode ? POST_Q : undefined,
+        'CTestQ',
+        IsEditMode ? PUT_Q : undefined,
+        IsEditMode ? question?.id : undefined,
+    )
 
     const text: React.ReactNode = (
         <>
@@ -82,11 +153,13 @@ const ILQ = (props:{QPOId: number}) =>{
         
         triggerPost()
 
-        setAlloptions(Array(25).fill(''))
-        sets3pathsToAudioAnswers(Array(5).fill(''))
-        setDialog('')
-        for(let y =0; y<5; y++){
-            correctOptions[y] = y*5
+        if(!IsEditMode){
+            setAlloptions(Array(25).fill(''))
+            sets3pathsToAudioAnswers(Array(5).fill(''))
+            setDialog('')
+            for(let y =0; y<5; y++){
+                correctOptions[y] = y*5
+            }
         }
         
     }
@@ -135,4 +208,4 @@ const ILQ = (props:{QPOId: number}) =>{
     )
 }
 
-export default ILQ
+export default I_L_Q

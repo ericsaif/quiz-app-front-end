@@ -1,5 +1,6 @@
+import { WordExistsA } from "../AdminModels/AnswersEntities/wordExistsA";
 import { Question } from "./question";
 
 export class WordExistsQ extends Question {
-    wordExistsAId: number | null=0;
+    wordExistsA: WordExistsA | null = null;
 }

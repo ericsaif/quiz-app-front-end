@@ -4,20 +4,55 @@ import usePOST_PUT_Question from "../Hooks/postQuestion"
 import { CreateRAC } from "../Models/CreateQModels/CreateRAC/createRAC"
 import { CreateRACA } from "../Models/CreateQModels/CreateRAC/createRACA"
 import useModal from "../Hooks/useModal"
+import { RACQ } from "../../Models/QuestionsModels"
+import { RACA } from "../../Models/AdminModels/AnswersEntities/rACA"
 
-const RAC = (props:{QPOId: number}) =>{
-    const [questionBody, setquestionBody] = useState<string>("")
-    const [answer, setanswer] = useState<string>("")
+const RAC = (props:{
+    QPOId: number
+    question?: RACQ
+}) =>{
+    
+    const { QPOId, question } = props
 
-    const createRACA: CreateRACA ={
-        answer
+    const IsEditMode = question ? true : false
+
+    if(IsEditMode && (!question || !question.RACA))
+        throw new Error('Нет необходимых данных, ошибка')
+    
+    const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
+    const [answer, setanswer] = useState<string>(question?.RACA?.answer || "")
+
+            
+    let POST_Q: CreateRAC | undefined;
+    let PUT_Q: RACQ  | undefined;
+
+    if(!IsEditMode){
+        const createRACA: CreateRACA ={
+            answer
+        }
+        const Newquestion: CreateRAC ={
+            QPOId,
+            questionBody,
+            CreateRACADTO:createRACA
+        }
+        POST_Q = Newquestion
+    }else{
+        const QAnswer: RACA = {
+            id: question?.RACA?.id || 0,
+            rACQId: question?.id || 0,
+            rACQ: null,
+            answer
+        }
+        const Question: RACQ = {
+            id: question?.id || 0,
+            questionBody,
+            qpoId: question?.qpoId || 0,
+            timer: question?.timer || '',
+            RACA: QAnswer
+        }
+            
+        PUT_Q = Question
     }
-    const newRAC: CreateRAC ={
-        QPOId:props.QPOId,
-        questionBody,
-        CreateRACADTO:createRACA
-    }
-
     const text: React.ReactNode = (
         <span>
 
@@ -42,7 +77,12 @@ const RAC = (props:{QPOId: number}) =>{
 
     const modal = useModal({text, id: qtype, btn_color: "dark"})
 
-    const { triggerPost, loading, error, data} = usePOST_PUT_Question(newRAC, qtype)
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+            !IsEditMode ? POST_Q : undefined,
+            'CTestQ',
+            IsEditMode ? PUT_Q : undefined,
+            IsEditMode ? question?.id : undefined,
+        )
 
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
@@ -50,8 +90,10 @@ const RAC = (props:{QPOId: number}) =>{
         
         triggerPost()
 
-        setquestionBody("")
-        setanswer("")
+        if(!IsEditMode){
+            setquestionBody("")
+            setanswer("")
+        }
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{

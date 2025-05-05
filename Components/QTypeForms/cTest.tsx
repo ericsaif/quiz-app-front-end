@@ -8,13 +8,20 @@ import { CreateCTestA } from "../Models/CreateQModels/CreateCtestQ/CreateCTestA"
 import useModal from "../Hooks/useModal" 
 
 import { CTestQ } from "../../Models/QuestionsModels"
+import { CTestA } from "../../Models/AdminModels/AnswersEntities/cTestA"
 
 
 const CTest = (props:{
     QPOId: number
-    question?: CTestQ | null
+    question?: CTestQ 
 }) =>{
-    const { QPOId, question = null } = props
+    const { QPOId, question } = props
+
+    const IsEditMode = question ? true : false
+
+    if(IsEditMode && (!question || !question.cTestA))
+        throw new Error('Нет необходимых данных, ошибка')
+
     const [questionBody, setQBody] = useState<string>(question?.questionBody || '')
     const [num_words_w_blanks, setNumWords] = useState<number>(question?.cTestA?.rightAnswers.length || 0)
     const [rightAnswers, setRightAnswers] = useState<string[]>(question?.cTestA?.rightAnswers || num_words_w_blanks >0 ? Array(num_words_w_blanks).fill('') : [''])
@@ -22,22 +29,42 @@ const CTest = (props:{
 
     const regex = /\[BLANK:\d+\]/g
 
+    let POST_Q: CreateCTestQ | undefined;
+    let PUT_Q: CTestQ | undefined;
 
-    const CreateCTestA: CreateCTestA ={
-        rightAnswers
-    }
-    const CtestQ: CreateCTestQ = {
-        QPOId,
-        questionBody,
-        CreateCTestA
+    if(!IsEditMode){
+        const CreateCTestA: CreateCTestA ={
+            rightAnswers
+        }
+        const Newquestion: CreateCTestQ = {
+            QPOId,
+            questionBody,
+            CreateCTestA
+        }
+        POST_Q = Newquestion
+    }else{
+        const cTestA: CTestA ={
+            id: question?.cTestA?.id || 0,
+            rightAnswers,
+            cTestQId: question?.id || 0,
+            cTestQ: question || null
+        }
+        const CtestQ: CTestQ = {
+            questionBody,
+            cTestA,
+            id: question?.id || 0,
+            qpoId: question?.qpoId || 0,
+            timer: question?.timer || ""
+        }
+        PUT_Q = CtestQ
     }
 
-    const CreateQ = {
-        question: CtestQ, 
-        QType: "CTest"
-    }
-
-    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(CreateQ)
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+        !IsEditMode ? POST_Q : undefined,
+        'CTestQ',
+        IsEditMode ? PUT_Q : undefined,
+        IsEditMode ? question?.id : undefined,
+    )
 
     const text: React.ReactNode =(
         <>
@@ -90,13 +117,10 @@ const CTest = (props:{
     const HandleRightAnswersChange = (index:number, event:React.ChangeEvent<HTMLInputElement>) =>{
         const newValue  = event.target.value
         setRightAnswers(prevAnswers => {
-            // Create a *new* array based on the previous state
             const newAnswers = [...prevAnswers];
 
-            // Update the string at the specific index
             newAnswers[index] = newValue;
 
-            // Return the new array to update the state
             return newAnswers;
         });
     }
@@ -106,11 +130,13 @@ const CTest = (props:{
         
         triggerPost()
 
-        setQBody('')
-        setNumWords(0)
+        if(!IsEditMode){
+            setQBody('')
+            setNumWords(0)
 
-        setRightAnswers([''])
-        setCTestAnswers([])
+            setRightAnswers([''])
+            setCTestAnswers([])
+        }
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
         const { value } = event.target

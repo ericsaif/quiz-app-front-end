@@ -3,16 +3,55 @@ import React, { useState } from "react"
 import { CreateDescribePic } from "../Models/CreateQModels/createDescribePic"
 import usePOST_PUT_Question from "../Hooks/postQuestion"
 import useModal from "../Hooks/useModal"
+import { DescribePicQ, DescribePicWAudioQ } from "../../Models/QuestionsModels"
 
-const DescribePic = () =>{
-    const [waudio, setWAudio] = useState<boolean>(true)
-    const [PathToPic, setPathToPic] = useState<string>("")
+const DescribePic = (props:{
+    question? : DescribePicQ | DescribePicWAudioQ 
+}) =>{
+    const { question } = props
 
-    const newDescribePic: CreateDescribePic ={
-        QPOId: 4,
-        s3PathToPic: PathToPic,
-        waudio,
-        questionBody: "-"
+    const IsEditMode = question ? true : false
+
+    if(IsEditMode && (!question))
+        throw new Error('Нет необходимых данных, ошибка')
+
+    const [waudio, setWAudio] = useState<boolean>(question?.qpoId == 4 ? false : true || true)
+    const [s3PathToPic, setPathToPic] = useState<string>(question?.s3PathToPic || "")
+        
+    let POST_Q: CreateDescribePic | undefined;
+    let PUT_Q: DescribePicQ | DescribePicWAudioQ  | undefined;
+
+    if(!IsEditMode){
+        const Newquestion: CreateDescribePic ={
+            QPOId: 4,
+            s3PathToPic,
+            waudio,
+            questionBody: "-"
+        }
+        POST_Q = Newquestion
+    }else{
+        let Question
+        if(question?.qpoId == 4){
+            const tempQ: DescribePicQ ={
+                s3PathToPic,
+                id: question?.id,
+                questionBody: '-',
+                qpoId: question?.qpoId,
+                timer: question?.timer
+            }
+            Question = tempQ
+        }else if(question?.qpoId == 8){
+            const tempQ: DescribePicWAudioQ ={
+                s3PathToPic,
+                id: question?.id,
+                questionBody: '-',
+                qpoId: question?.qpoId,
+                timer: question?.timer
+            }
+            Question = tempQ
+        }
+            
+        PUT_Q = Question
     }
 
     const text: React.ReactNode = (
@@ -26,13 +65,20 @@ const DescribePic = () =>{
     const modal = useModal({text, id: qtype})
 
         
-    const { triggerPost, loading, error, data} = usePOST_PUT_Question(newDescribePic, qtype)
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+            !IsEditMode ? POST_Q : undefined,
+            'CTestQ',
+            IsEditMode ? PUT_Q : undefined,
+            IsEditMode ? question?.id : undefined,
+        )
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
         triggerPost()
-        setPathToPic("")
         
+        if(!IsEditMode)
+            setPathToPic("")
+
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
         const { value } = event.target
@@ -60,7 +106,7 @@ const DescribePic = () =>{
                 </div>
                 <div className="m-3 vstack">
                     <label htmlFor="pathToPic">Локация:</label>
-                    <Input value={PathToPic} required style={{width: "250px"}} id="pathToPic" type="text" onChange={HandleInputChange}></Input>
+                    <Input value={s3PathToPic} required style={{width: "250px"}} id="pathToPic" type="text" onChange={HandleInputChange}></Input>
                 </div> 
                 
                 <div className="col-6 m-3 vstack">  

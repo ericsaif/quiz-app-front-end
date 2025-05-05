@@ -4,39 +4,75 @@ import usePOST_PUT_Question from "../Hooks/postQuestion"
 import { CreateLAS } from "../Models/CreateQModels/createLAS"
 
 import useModal from "../Hooks/useModal"
+import { LASQ } from "../../Models/QuestionsModels"
 
 
-const LAS = (props:{QPOId: number}) =>{
-    const [transcribedAudio, settranscribedAudio] = useState<string>("")
-    const [s3PathToAudioFile, sets3PathToAudioFile] = useState<string>("")
+const LAS = (props:{
+    QPOId: number
+    question?: LASQ
+}) =>{
+    const { QPOId, question } = props
 
-    const newLAS: CreateLAS ={
-        QPOId:props.QPOId,
-        questionBody: "-",
-        s3PathToAudioFile,
-        transcribedAudio
+    const IsEditMode = question ? true : false
+
+    if(IsEditMode && (!question))
+        throw new Error('Нет необходимых данных, ошибка')
+
+    const [transcribedAudio, settranscribedAudio] = useState<string>(question?.transcribedAudio || "")
+    const [s3PathToAudioFile, sets3PathToAudioFile] = useState<string>(question?.s3PathToAudioFile || "")
+            
+    let POST_Q: CreateLAS | undefined;
+    let PUT_Q: LASQ  | undefined;
+
+    if(!IsEditMode){
+        const Newquestion: CreateLAS ={
+            QPOId,
+            questionBody: "-",
+            s3PathToAudioFile,
+            transcribedAudio
+        }
+        POST_Q = Newquestion
+    }else{
+        const Question: LASQ = {
+            id: question?.id || 0,
+            questionBody: '-',
+            qpoId: question?.qpoId || 0,
+            timer: question?.timer || '',
+            s3PathToAudioFile,
+            listenTries: question?.listenTries || 0,
+            transcribedAudio
+        }
+            
+        PUT_Q = Question
     }
+    const text: React.ReactNode = (
+        <span>
+            <p>Вставьте локацию аудиофайла с облачного хранилища</p>
+            <p>Далее впишите транскрипцию текста с аудио</p>
+        </span>
+    )
 
-     const text: React.ReactNode = (
-            <span>
-                <p>Вставьте локацию аудиофайла с облачного хранилища</p>
-                <p>Далее впишите транскрипцию текста с аудио</p>
-            </span>
+    const qtype = "Listen and Speak"
+
+    const modal = useModal({text, id:qtype})
+
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+            !IsEditMode ? POST_Q : undefined,
+            'CTestQ',
+            IsEditMode ? PUT_Q : undefined,
+            IsEditMode ? question?.id : undefined,
         )
-    
-        const qtype = "Listen and Speak"
-    
-        const modal = useModal({text, id:qtype})
-
-        const { triggerPost, loading, error, data} = usePOST_PUT_Question(newLAS, qtype)
 
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
         
         triggerPost()
-        settranscribedAudio("")
-        sets3PathToAudioFile("")
+        
+        if(!IsEditMode){
+            settranscribedAudio("")
+            sets3PathToAudioFile("")
+        }
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{

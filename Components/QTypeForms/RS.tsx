@@ -3,15 +3,42 @@ import { CreateRS } from "../Models/CreateQModels/createRS"
 import usePOST_PUT_Question from "../Hooks/postQuestion"
 import React, { useState } from "react"
 import useModal from "../Hooks/useModal"
+import { RSQ } from "../../Models/QuestionsModels"
 
-const RS = (props:{QPOId:number}) =>{
-    const [questionBody, setquestionBody] = useState<string>("")
+const RS = (props:{
+    QPOId:number,
+    question: RSQ
 
-    const newRS: CreateRS ={
-        QPOId: props.QPOId,
-        questionBody,
+}) =>{
+    const { QPOId, question } = props
+
+    const IsEditMode = question ? true : false
+
+    if(IsEditMode && (!question ))
+        throw new Error('Нет необходимых данных, ошибка')
+    
+    const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
+
+            
+    let POST_Q: CreateRS | undefined;
+    let PUT_Q: RSQ  | undefined;
+
+    if(!IsEditMode){
+        const Newquestion: CreateRS ={
+            QPOId,
+            questionBody,
+        }
+        POST_Q = Newquestion
+    }else{
+        const Question: RSQ = {
+            id: question?.id || 0,
+            questionBody,
+            qpoId: question?.qpoId || 0,
+            timer: question?.timer || '',
+        }
+            
+        PUT_Q = Question
     }
-
     const text: React.ReactNode = (
         <span>
 
@@ -24,14 +51,21 @@ const RS = (props:{QPOId:number}) =>{
 
     const modal = useModal({text, id: qtype})
 
-    const { triggerPost, loading, error, data} = usePOST_PUT_Question(newRS, qtype)
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+                !IsEditMode ? POST_Q : undefined,
+                'CTestQ',
+                IsEditMode ? PUT_Q : undefined,
+                IsEditMode ? question?.id : undefined,
+            )
 
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
         
         triggerPost()
-        setquestionBody("")
+        if(!IsEditMode)
+            setquestionBody("")
+
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
         const { value } = event.target

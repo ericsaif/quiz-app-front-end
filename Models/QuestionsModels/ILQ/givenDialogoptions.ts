@@ -1,7 +1,6 @@
 import { ILQ } from "./IlQ";
 
 export interface GivenDialogoptions {
-    id: number;
     iLQ: ILQ | null;
     iLQId: number;
     optionsDialogStart: string[];

@@ -1,5 +1,4 @@
 export interface MiniE1 {
-    id: number;
     iRQId: number;
     options0: string[];
     options1: string[];

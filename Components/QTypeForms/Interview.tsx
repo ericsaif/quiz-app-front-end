@@ -3,13 +3,40 @@ import React, { useState } from "react"
 import usePOST_PUT_Question from "../Hooks/postQuestion"
 import { CreateInterviewQ } from "../Models/CreateQModels/createInterviewQ"
 import useModal from "../Hooks/useModal"
+import { InterviewQ } from "../../Models/QuestionsModels"
 
-const Interview = (props:{QPOId: number}) =>{
-    const [Topic, setTopic] = useState<string>("")
+const Interview = (props:{
+    QPOId: number,
+    question?: InterviewQ
 
-    const newInterview: CreateInterviewQ ={
-        QPOId: props.QPOId,
-        questionBody: Topic,
+}) =>{
+    const [questionBody, setTopic] = useState<string>("")
+    
+    const { QPOId, question } = props
+
+    const IsEditMode = question ? true : false
+
+    if(IsEditMode && (!question))
+        throw new Error('Нет необходимых данных, ошибка')
+            
+    let POST_Q: CreateInterviewQ | undefined;
+    let PUT_Q: InterviewQ  | undefined;
+
+    if(!IsEditMode){
+        const Newquestion: CreateInterviewQ ={
+            QPOId,
+            questionBody,
+        }
+        POST_Q = Newquestion
+    }else{
+        const Question: InterviewQ = {
+            id: question?.id || 0,
+            questionBody,
+            qpoId: question?.qpoId || 0,
+            timer: question?.timer || ''
+        }
+            
+        PUT_Q = Question
     }
 
     const text: React.ReactNode = (
@@ -22,13 +49,21 @@ const Interview = (props:{QPOId: number}) =>{
 
     const modal = useModal({text, id: qtype})
 
-    const { triggerPost, loading, error, data} = usePOST_PUT_Question(newInterview, qtype)
+    const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
+        !IsEditMode ? POST_Q : undefined,
+        'CTestQ',
+        IsEditMode ? PUT_Q : undefined,
+        IsEditMode ? question?.id : undefined,
+    )
 
     
     const HandleFormSubmit =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
         
         triggerPost()
+        
+        if(!IsEditMode)
+            setTopic('')
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{

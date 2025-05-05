@@ -1,5 +1,6 @@
+import { RACA } from "../AdminModels/AnswersEntities/rACA";
 import { Question } from "./question";
 
 export class RACQ extends Question {
-    rACAId: number =0;
+    RACA: RACA | null = null
 }

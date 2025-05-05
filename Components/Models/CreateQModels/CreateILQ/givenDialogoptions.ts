@@ -1,4 +1,4 @@
-export interface GivenDialogoptions {
+export interface GivenDialogoptions_Create {
     optionsDialogStart: string[];
     optionsDialogContinuation1: string[];
     optionsDialogContinuation2: string[];

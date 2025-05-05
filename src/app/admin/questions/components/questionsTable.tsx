@@ -10,6 +10,8 @@ import QTypesO from "./QTypes";
 
 // React icons
 import { LuArrowDown01, LuArrowDown10 } from "react-icons/lu";
+import Link from "next/link";
+import useDeleteQ from "./hooks/useDeleteQ";
 
 const QuestionsTable = (props: { 
     questionsData: ReadQuestion[],
@@ -30,6 +32,9 @@ const QuestionsTable = (props: {
         setall,
         all
     } = props
+
+    const triggerdelete = useDeleteQ()
+    
     
     const { QTypes, allIds } = QTypesO
 
@@ -40,6 +45,9 @@ const QuestionsTable = (props: {
 
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    const [DeleteQId, setDeleteQId] = useState<number | null>(null);
     
     // Reference to the dropdown menu for click outside detection
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -104,10 +112,60 @@ const QuestionsTable = (props: {
                 }
                 
             }
+
+            const HandleDeleteModal = (id: number) =>{
+                setDeleteQId(id)
+                setIsDeleteModalOpen(true)
+            }
+
+            const HandleOnDelete = () =>{
+                triggerdelete(DeleteQId)
+                HandleCloseDeleteModal()
+            }
+            const HandleCloseDeleteModal = () =>{
+                setIsDeleteModalOpen(false)
+                setDeleteQId(null)
+            }
             
             const dropdownStyle: React.CSSProperties = {
                 display: isDropdownOpen ? 'block' : 'none'
             };
+
+            const DeleteModalStyle: React.CSSProperties = {
+                display: isDeleteModalOpen ? 'block' : 'none',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                zIndex: 1050,
+                overflow: 'hidden',
+            };
+            
+            const DeleteQModal = (
+                <div onClick={HandleCloseDeleteModal} style={DeleteModalStyle} tabIndex={-1} aria-labelledby="modalLabel" aria-hidden="true">
+                    <div className="m-dialog">
+                        <div className="m-content">
+                        <div className="m-header">
+                            <h1 className="m-title fs-5" id="modalLabel">Вы действительно хотите удалить вопрос No: {DeleteQId}?</h1>
+                            <button type="button" className="btn-close" onClick={HandleCloseDeleteModal} aria-label="Close"></button>
+                        </div>
+                        <div className="m-body">
+                            После того как вы удалите данный вопрос, возможности восстановить его уже не будет
+                        </div>
+                        <div className="m-footer">
+                            <Button className={`btn btn-primary`} onClick={HandleOnDelete} >
+                                Удалить
+                            </Button>
+                            <Button className={`btn btn-primary`} onClick={HandleCloseDeleteModal} >
+                                Отмена
+                            </Button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            )
 
             const dropDown = (
                 <div ref={dropdownRef} key={`dropdown-fragment`}>
@@ -186,10 +244,15 @@ const QuestionsTable = (props: {
                     <td className="slimColumnStyle" >{question.questionBody}</td>
                     <td>{question.timer}</td>
                     <td >
-                        <Image width={30} height={30} src={`/reshot-icon-edit2.svg`} alt="edit"/>
+                        <Link href={`/admin/questions/${question.id}?QPOId=${question.qpoId}`}>
+                            <Image width={30} height={30} src={`/reshot-icon-edit2.svg`} alt="edit"/>
+                        </Link>
+                        
                     </td>
-                    <td> 
-                    <Image width={30} height={30} src={`/reshot-icon-trash.svg`} alt="delete"/>
+                    <td className={``}> 
+                        <Button className={`btn pt-0`} onClick={() => HandleDeleteModal(question.id)}>
+                            <Image width={30} height={30} src={`/reshot-icon-trash.svg`} alt="delete"/>
+                        </Button>
                     </td>
                 </tr>
             ));
@@ -202,13 +265,16 @@ const QuestionsTable = (props: {
                                 {TableBody}
                             </tbody>
                         </table>
+                        <div>
+                            {DeleteQModal}
+                        </div>
                     </React.Fragment>
             ) 
 
             settable(table)
         }
         constructQTable()
-    },[descending, questionsData, setdescending, all, setall, category, setcategory, LocalAll, selectedValues, isDropdownOpen, allIds, QTypes])
+    },[descending, questionsData, setdescending, all, setall, category, setcategory, LocalAll, selectedValues, isDropdownOpen, allIds, QTypes, isDeleteModalOpen, DeleteQId, triggerdelete])
     
     return table
 }
