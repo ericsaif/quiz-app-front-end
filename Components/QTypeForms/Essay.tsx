@@ -17,8 +17,6 @@ const Essay = (props:{
         throw new Error('Нет необходимых данных, ошибка')
 
     const [questionBody, setTopic] = useState<string>(question?.questionBody || "")
-
-
             
     let POST_Q: CreateEssay | undefined;
     let PUT_Q: EssayQ  | undefined;
@@ -31,9 +29,9 @@ const Essay = (props:{
         POST_Q = Newquestion
     }else{
         const Question: EssayQ = {
+            qpoId: QPOId,
             id: question?.id || 0,
             questionBody,
-            qpoId: question?.qpoId || 0,
             timer: question?.timer || ''
         }
             
@@ -52,7 +50,7 @@ const Essay = (props:{
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
         !IsEditMode ? POST_Q : undefined,
-        'CTestQ',
+        qtype,
         IsEditMode ? PUT_Q : undefined,
         IsEditMode ? question?.id : undefined,
     )
@@ -77,9 +75,9 @@ const Essay = (props:{
             <div className="m-2">
                 {modal}
             </div>
-            <form className="q-container vstack gap-2 mx-2" style={{width: "30%"}} onSubmit={HandleFormSubmit}>
+            <form className="q-container vstack gap-2 mx-2" style={{width: "40%", height: "400px"}} onSubmit={HandleFormSubmit}>
                 <label htmlFor="Topic">Тема:</label>
-                <textarea value={questionBody} required style={{width: "300px", height: "200px"}} id="Topic"  onChange={HandleInputChange}></textarea> 
+                <textarea value={questionBody} required style={{width: "90%", height: "90%"}} id="Topic"  onChange={HandleInputChange}></textarea> 
                 
                 <Button disabled={loading} className={`btn btn-primary`} style={{width: "50%"}} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
             </form>

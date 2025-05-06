@@ -5,6 +5,8 @@ import { ReadQuestion } from "../../../../../Models/AdminModels/QuestionsModels/
 import './questionsTable.css'
 import Image from "next/image";
 import { Button, Input } from "@headlessui/react";
+import { useRouter } from "next/navigation"
+
 
 import QTypesO from "./QTypes";
 
@@ -34,7 +36,8 @@ const QuestionsTable = (props: {
     } = props
 
     const triggerdelete = useDeleteQ()
-    
+    const router = useRouter()
+
     
     const { QTypes, allIds } = QTypesO
 
@@ -121,6 +124,8 @@ const QuestionsTable = (props: {
             const HandleOnDelete = () =>{
                 triggerdelete(DeleteQId)
                 HandleCloseDeleteModal()
+                router.refresh()
+
             }
             const HandleCloseDeleteModal = () =>{
                 setIsDeleteModalOpen(false)

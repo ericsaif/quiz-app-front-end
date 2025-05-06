@@ -6,7 +6,7 @@ import React from 'react';
 export default function AdminLayout({ 
   children 
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
         <React.Fragment key={`admin-layout-fragment`}>

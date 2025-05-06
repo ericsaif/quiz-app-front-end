@@ -11,7 +11,14 @@ const ShowIRQ = (props: {
     setquestionMiniE3: React.Dispatch<React.SetStateAction<string>>,
     setquestionMiniE4: React.Dispatch<React.SetStateAction<string>>,
     setOptionsMiniE5: React.Dispatch<React.SetStateAction<string[]>>,
-    setOptionsMiniE6: React.Dispatch<React.SetStateAction<string[]>>
+    setOptionsMiniE6: React.Dispatch<React.SetStateAction<string[]>>,
+    allMiniE1Options:string[],
+    questionMiniE3:string,
+    questionMiniE4:string,
+    optionsMiniE2:string[],
+    optionsMiniE5:string[],
+    optionsMiniE6:string[],
+    questionBody:string
 }) => {
     const { 
         setquestionBody, 
@@ -20,7 +27,14 @@ const ShowIRQ = (props: {
         setquestionMiniE3, 
         setquestionMiniE4, 
         setOptionsMiniE5, 
-        setOptionsMiniE6 
+        setOptionsMiniE6 ,
+        allMiniE1Options,
+        questionMiniE3,
+        questionMiniE4,
+        optionsMiniE2,
+        optionsMiniE5,
+        optionsMiniE6,
+        questionBody,
     } = props;
 
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -28,10 +42,10 @@ const ShowIRQ = (props: {
         setquestionBody(value);
     };
 
-    const ShowMiniE1Options = useMiniE1({setallMiniE1Options})
-    const ShowMiniE2Options = useMiniE2({setOptionsMiniE2})
-    const ShowOptionsMiniE5 = useMiniE5({setOptionsMiniE5})
-    const ShowOptionsMiniE6 = useMiniE6({setOptionsMiniE6})
+    const ShowMiniE1Options = useMiniE1({setallMiniE1Options, allMiniE1Options})
+    const ShowMiniE2Options = useMiniE2({setOptionsMiniE2, optionsMiniE2})
+    const ShowOptionsMiniE5 = useMiniE5({setOptionsMiniE5, optionsMiniE5})
+    const ShowOptionsMiniE6 = useMiniE6({setOptionsMiniE6, optionsMiniE6})
     
 
     const HandleMiniE3InputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -49,8 +63,9 @@ const ShowIRQ = (props: {
             <div id="Create-Questions-Container" className="container m-0 ">
                 <div className="row  pr-4">
                     <div className="col-6 align-self-start vstack">
+
                         <label htmlFor="questionBody">Текст:</label>
-                        <textarea id="questionBody" style={{width: "600px", height: "200px"}} onChange={HandleInputChange}></textarea>
+                        <textarea value={questionBody} id="questionBody" style={{width: "600px", height: "200px"}} onChange={HandleInputChange}></textarea>
 
                         <label htmlFor="MiniE2Inputs">Впишите возможные ответы для mini excercise No 2: </label>
                         <div id="MiniE2Inputs">
@@ -58,10 +73,10 @@ const ShowIRQ = (props: {
                         </div>
 
                         <label htmlFor="MiniE3">Впишите вопрос для mini excercise No 3: </label>
-                        <textarea required style={{width: "600px"}} id="MiniE3" onChange={HandleMiniE3InputChange}></textarea>  
+                        <textarea value={questionMiniE3} required style={{width: "600px"}} id="MiniE3" onChange={HandleMiniE3InputChange}></textarea>  
 
                         <label htmlFor="MiniE4">Впишите вопрос для mini excercise No 4: </label>
-                        <textarea required style={{width: "600px"}} id="MiniE4" onChange={HandleMiniE4InputChange}></textarea> 
+                        <textarea value={questionMiniE4} required style={{width: "600px"}} id="MiniE4" onChange={HandleMiniE4InputChange}></textarea> 
 
                         <label htmlFor="MiniE5Inputs">Впишите возможные ответы для mini excercise No 5: </label>
                         <div id="MiniE5Inputs">

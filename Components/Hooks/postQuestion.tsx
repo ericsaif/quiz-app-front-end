@@ -45,7 +45,7 @@ const usePOST_PUT_Question = (
           "Content-Type": "application/json",
         },
         credentials: "include", 
-        body: JSON.stringify(QId? PUTquestion : question), 
+        body: JSON.stringify(QId ? PUTquestion : question), 
       });
 
       
@@ -79,15 +79,13 @@ const usePOST_PUT_Question = (
     }
   }, [PUTquestion, QId, question]); // Dependencies: Recreate triggerPost if question or QType changes
 
-  // Use useEffect to handle side effects like showing alerts based on state changes
   useEffect(() => {
     if (data) {
-      // Assuming your API response has a 'success' property
       if (data.success) {
         const message = QId ? `Вопрос No: ${QId} был успешно изменен` : `Вопрос типа: ${QType} был успешно создан`
         alert(message);
         
-      } else {
+      }else {
         const message = QId ? `Ошибка при изменении вопроса No: ${QId}: ${data.message || 'Сервер сообщил об ошибке'}`
          : `Ошибка при создании вопроса типа: ${QType}: ${data.message || 'Сервер сообщил об ошибке'}`
         

@@ -47,10 +47,10 @@ const Dictation = (props:{
             dictationQ: question || null
         }
         const Question: DictationQ = {
+            qpoId: QPOId,
             questionBody: question?.questionBody || '',
             dictationA: QAnswer,
             id: question?.id || 0,
-            qpoId: question?.qpoId || 0,
             timer: question?.timer || "",
             s3PathToAudio,
             listenTries: question?.listenTries || 0
@@ -71,7 +71,7 @@ const Dictation = (props:{
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
             !IsEditMode ? POST_Q : undefined,
-            'CTestQ',
+            qtype,
             IsEditMode ? PUT_Q : undefined,
             IsEditMode ? question?.id : undefined,
         )

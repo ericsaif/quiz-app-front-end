@@ -34,9 +34,9 @@ const LAS = (props:{
         POST_Q = Newquestion
     }else{
         const Question: LASQ = {
+            qpoId: QPOId,
             id: question?.id || 0,
             questionBody: '-',
-            qpoId: question?.qpoId || 0,
             timer: question?.timer || '',
             s3PathToAudioFile,
             listenTries: question?.listenTries || 0,
@@ -58,7 +58,7 @@ const LAS = (props:{
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
             !IsEditMode ? POST_Q : undefined,
-            'CTestQ',
+            qtype,
             IsEditMode ? PUT_Q : undefined,
             IsEditMode ? question?.id : undefined,
         )

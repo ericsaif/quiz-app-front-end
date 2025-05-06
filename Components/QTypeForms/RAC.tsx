@@ -44,9 +44,9 @@ const RAC = (props:{
             answer
         }
         const Question: RACQ = {
+            qpoId: QPOId,
             id: question?.id || 0,
             questionBody,
-            qpoId: question?.qpoId || 0,
             timer: question?.timer || '',
             RACA: QAnswer
         }
@@ -79,7 +79,7 @@ const RAC = (props:{
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
             !IsEditMode ? POST_Q : undefined,
-            'CTestQ',
+            qtype,
             IsEditMode ? PUT_Q : undefined,
             IsEditMode ? question?.id : undefined,
         )

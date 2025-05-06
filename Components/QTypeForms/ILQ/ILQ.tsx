@@ -99,13 +99,13 @@ const I_L_Q = (props:{
             correctOptionsDialogOptions: correctOptions
         }
         const Question: ILQ = {
+            qpoId: QPOId,
             s3pathsToAudioAnswers: [],
             givenDialogoptions,
             correctDialogOptions,
             summaryTimer: question?.summaryTimer || "",
             id: question?.id || 0,
             questionBody: '-',
-            qpoId: question?.qpoId || 0,
             timer: question?.timer || ""
         }
         PUT_Q = Question
@@ -119,7 +119,7 @@ const I_L_Q = (props:{
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
         !IsEditMode ? POST_Q : undefined,
-        'CTestQ',
+        qtype,
         IsEditMode ? PUT_Q : undefined,
         IsEditMode ? question?.id : undefined,
     )

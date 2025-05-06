@@ -9,7 +9,7 @@ import { WordExistsA } from "../../Models/AdminModels/AnswersEntities/wordExists
 
 const WordExists = (props:{
     QPOId: number,
-    question: WordExistsQ
+    question?: WordExistsQ
 }) =>{
 
     const { QPOId, question } = props
@@ -44,9 +44,9 @@ const WordExists = (props:{
             exists
         }
         const Question: WordExistsQ = {
+            qpoId: QPOId,
             id: question?.id || 0,
             questionBody,
-            qpoId: question?.qpoId || 0,
             timer: question?.timer || '',
             wordExistsA: QAnswer,
         }
@@ -69,7 +69,7 @@ const WordExists = (props:{
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
                     !IsEditMode ? POST_Q : undefined,
-                    'CTestQ',
+                    qtype,
                     IsEditMode ? PUT_Q : undefined,
                     IsEditMode ? question?.id : undefined,
                 )

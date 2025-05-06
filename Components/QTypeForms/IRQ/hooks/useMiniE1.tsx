@@ -3,9 +3,10 @@ import React, { SetStateAction } from "react";
 
     
 const useMiniE1 = (props:{
-    setallMiniE1Options: React.Dispatch<SetStateAction<string[]>>
+    setallMiniE1Options: React.Dispatch<SetStateAction<string[]>>,
+    allMiniE1Options:string[],
 }) => {
-    const { setallMiniE1Options } = props
+    const { setallMiniE1Options, allMiniE1Options } = props
     const MiniE1HandleChange = (value: string, index: number) => {
         setallMiniE1Options(prevOptions => {
             const newOptions = [...prevOptions];
@@ -21,7 +22,7 @@ const useMiniE1 = (props:{
             <React.Fragment key={`option-minie1-no-${i}`}>
                 <div className="vstack">
                     <p>{i+1}:</p>
-                    <Input required placeholder=" "  id={`option-${i}`} type="text" onChange={(e) => MiniE1HandleChange(e.target.value, i)}></Input>
+                    <Input required value={allMiniE1Options[i]} placeholder=" "  id={`option-${i}`} type="text" onChange={(e) => MiniE1HandleChange(e.target.value, i)}></Input>
                 </div>
             </React.Fragment>
         );

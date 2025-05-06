@@ -66,12 +66,12 @@ export default function LoginPage() {
           router.push(`/${effectiveRole}/dashboard`); 
 
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Login failed.');
+        // const errorData = await response.text();
+        setError(await response.text() || 'Ошибка при попытке войти в аккаунт.');
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('An error occurred during login.');
+      setError('Ошибка при попытке войти в аккаунт');
     }
   };
 

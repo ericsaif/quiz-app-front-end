@@ -55,7 +55,6 @@ export default function Questions(){
             const response =  await fetch(`${baseURL}?${searchParams.toString()}`,{
                 method: 'GET',
                 credentials: 'include',
-                
             })
             if(response.ok){
                 seterror(null)

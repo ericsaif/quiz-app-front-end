@@ -36,12 +36,12 @@ const EditQuestion = () =>{
     const router = useRouter()
 
     const [QForm, setQForm] = useState<React.ReactNode>()
-    const [title, setTitle] = useState<string>("Выберите вопрос")
+    const [title, setTitle] = useState<string>(`Изменить вопрос No: ${QId}`)
 
     const modaltitle = `Изменение вопроса номер: ${QId}`
     const text: React.ReactNode =(
         <div>
-            <p>Нажмите на выпадающий список и выберите нужный вам вопрос</p>
+            <p>Измените то что вам нужно в каждом поле и нажмите на кнопку Сохранить</p>
             <p>Дальнейшие указания найдете нажав на черную кнопку со знаком - ?</p>
         </div>
     )
@@ -69,10 +69,10 @@ const EditQuestion = () =>{
                         case 7: setQForm(<QTYPES.WordExists question={Object.assign(new WordExistsQ(), rawResponseData)} QPOId={7}/>); setTitle("Word Exists"); break;
                         case 8: setQForm(<QTYPES.DescribePic question={Object.assign(new DescribePicWAudioQ(), rawResponseData)} />); setTitle("Describe Picture"); break;
                         case 9: setQForm(<QTYPES.LAS question={Object.assign(new LASQ(), rawResponseData)} QPOId={9}/>); setTitle("Listen and speak"); break;
-                        case 10: setQForm(<QTYPES.Essay question={Object.assign(new EssayQ(), rawResponseData)} QPOId={11}/>); setTitle("Essay"); break;
-                        case 11: setQForm(<QTYPES.IRQ question={Object.assign(new IRQ(), rawResponseData)} QPOId={12}/>); setTitle("Interactive Reading"); break;
-                        case 12: setQForm(<QTYPES.ILQ question={Object.assign(new ILQ(), rawResponseData)} QPOId={13}/>); setTitle("Interactive Listening"); break;
-                        case 13: setQForm(<QTYPES.Interview question={Object.assign(new InterviewQ(), rawResponseData)} QPOId={14}/>); setTitle("Interview"); break;
+                        case 11: setQForm(<QTYPES.Essay question={Object.assign(new EssayQ(), rawResponseData)} QPOId={11}/>); setTitle("Essay"); break;
+                        case 12: setQForm(<QTYPES.IRQ question={Object.assign(new IRQ(), rawResponseData)} QPOId={12}/>); setTitle("Interactive Reading"); break;
+                        case 13: setQForm(<QTYPES.ILQ question={Object.assign(new ILQ(), rawResponseData)} QPOId={13}/>); setTitle("Interactive Listening"); break;
+                        case 14: setQForm(<QTYPES.Interview question={Object.assign(new InterviewQ(), rawResponseData)} QPOId={14}/>); setTitle("Interview"); break;
                     }
                 }
             }catch(error){
@@ -90,7 +90,7 @@ const EditQuestion = () =>{
                 <div >
                     <div className="d-flex hstack ">
                         <div className="p-2">
-                            <h4  >Выберите Вопрос</h4>
+                            <h4  >Изменить вопрос No: {QId}</h4>
                         </div>
     
                         <div className="p-2">

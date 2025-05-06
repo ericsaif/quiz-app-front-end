@@ -23,14 +23,19 @@ const I_R_Q = (props:{
 
     const {QPOId, question } = props
 
+    alert(`questionBody before = ${question?.questionBody}`)
+
     const { miniE1 } = question || {}
 
     const IsEditMode = question ? true : false
 
-    if(IsEditMode && (!question || !miniE1 || !question.IRA))
+    if(IsEditMode && (!question || !miniE1 || !question.ira))
         throw new Error('Нет необходимых данных, ошибка')
 
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
+
+    alert(`questionBody after = ${question?.questionBody}`)
+
     const [allMiniE1Options, setallMiniE1Options] = useState<string[]>(Array(50).fill(''))
     
     const [questionMiniE3, setquestionMiniE3] = useState<string>(question?.questionMiniE3 || "")
@@ -40,12 +45,12 @@ const I_R_Q = (props:{
     const [optionsMiniE5, setOptionsMiniE5] = useState<string[]>(question?.optionsMiniE5 || []);
     const [optionsMiniE6, setOptionsMiniE6] = useState<string[]>(question?.optionsMiniE6 || []);
 
-    const [ correctOptionsMiniE1, setcorrectOptionsMiniE1 ] = useState<number[]>(question?.IRA?.correctOptionsMiniE1 || [])
-    const [ correctOptionMiniE2, setcorrectOptionMiniE2 ] = useState<number>(question?.IRA?.correctOptionMiniE2 || 0)
-    const [ correctHighlightMiniE3, setcorrectHighlightMiniE3 ] = useState<string>(question?.IRA?.correctHighlightMiniE3 || "")
-    const [ correctHighlightMiniE4, setcorrectHighlightMiniE4 ] = useState<string>(question?.IRA?.correctHighlightMiniE4 || "")
-    const [ correctOptionMiniE5, setcorrectOptionMiniE5 ] = useState<number>(question?.IRA?.correctOptionMiniE5 || 0)
-    const [ correctOptionMiniE6, setcorrectOptionMiniE6 ] = useState<number>(question?.IRA?.correctOptionMiniE6 || 0)
+    const [ correctOptionsMiniE1, setcorrectOptionsMiniE1 ] = useState<number[]>(question?.ira?.correctOptionsMiniE1 || [])
+    const [ correctOptionMiniE2, setcorrectOptionMiniE2 ] = useState<number>(question?.ira?.correctOptionMiniE2 || 0)
+    const [ correctHighlightMiniE3, setcorrectHighlightMiniE3 ] = useState<string>(question?.ira?.correctHighlightMiniE3 || "")
+    const [ correctHighlightMiniE4, setcorrectHighlightMiniE4 ] = useState<string>(question?.ira?.correctHighlightMiniE4 || "")
+    const [ correctOptionMiniE5, setcorrectOptionMiniE5 ] = useState<number>(question?.ira?.correctOptionMiniE5 || 0)
+    const [ correctOptionMiniE6, setcorrectOptionMiniE6 ] = useState<number>(question?.ira?.correctOptionMiniE6 || 0)
 
     useEffect(()=>{
         const setMiniE1 = () =>{
@@ -128,7 +133,7 @@ const I_R_Q = (props:{
         }
     
         const IRA: IRA ={
-            id: question?.IRA?.id || 0,
+            id: question?.ira?.id || 0,
             correctOptionsMiniE1,
             correctOptionMiniE2,
             correctHighlightMiniE3,
@@ -139,17 +144,17 @@ const I_R_Q = (props:{
             iRQId: question?.id || 0
         }
         const Question: IRQ ={
+            qpoId: QPOId,
             miniE1,
             optionsMiniE2,
             questionMiniE3,
             questionMiniE4,
             optionsMiniE5,
             optionsMiniE6,
-            IRA,
+            ira: IRA,
             timer: question?.timer || "",
             id: question?.id || 0,
             questionBody,
-            qpoId: question?.qpoId || 0
         }
         PUT_Q = Question
     }
@@ -207,7 +212,7 @@ const I_R_Q = (props:{
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
             !IsEditMode ? POST_Q : undefined,
-            'CTestQ',
+            qtype,
             IsEditMode ? PUT_Q : undefined,
             IsEditMode ? question?.id : undefined,
         )
@@ -253,14 +258,20 @@ const I_R_Q = (props:{
                             {modal}
                         </div>                        
                         <ShowIRQ 
-                                setallMiniE1Options={setallMiniE1Options}
-                                setOptionsMiniE2={setOptionsMiniE2}
-                                setquestionMiniE3={setquestionMiniE3}
-                                setquestionMiniE4={setquestionMiniE4}
-                                setOptionsMiniE5={setOptionsMiniE5}
-                                setOptionsMiniE6={setOptionsMiniE6}
-                                setquestionBody={setquestionBody}
-                                
+                            setallMiniE1Options={setallMiniE1Options}
+                            setOptionsMiniE2={setOptionsMiniE2}
+                            setquestionMiniE3={setquestionMiniE3}
+                            setquestionMiniE4={setquestionMiniE4}
+                            setOptionsMiniE5={setOptionsMiniE5}
+                            setOptionsMiniE6={setOptionsMiniE6}
+                            setquestionBody={setquestionBody} 
+                            allMiniE1Options={allMiniE1Options} 
+                            questionMiniE3={questionMiniE3} 
+                            questionMiniE4={questionMiniE4} 
+                            optionsMiniE2={optionsMiniE2} 
+                            optionsMiniE5={optionsMiniE5} 
+                            optionsMiniE6={optionsMiniE6} 
+                            questionBody={questionBody}                                
                             />
                     </div>
 

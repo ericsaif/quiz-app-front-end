@@ -9,6 +9,6 @@ export class IRQ extends Question {
     questionMiniE4: string | null='';
     optionsMiniE5: string[]=[];
     optionsMiniE6: string[]=[];
-    IRA: IRA | null = null;
+    ira: IRA | null = null;
     timer: string='';
 }

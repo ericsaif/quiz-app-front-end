@@ -32,9 +32,9 @@ const RA = (props:{
         POST_Q = Newquestion
     }else{
         const Question: RAQ = {
+            qpoId: QPOId,
             id: question?.id || 0,
             questionBody,
-            qpoId: question?.qpoId || 0,
             timer: question?.timer || ''
         }
             
@@ -53,7 +53,7 @@ const RA = (props:{
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
             !IsEditMode ? POST_Q : undefined,
-            'CTestQ',
+            qtype,
             IsEditMode ? PUT_Q : undefined,
             IsEditMode ? question?.id : undefined,
         )

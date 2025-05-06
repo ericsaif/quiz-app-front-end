@@ -10,9 +10,10 @@ const Interview = (props:{
     question?: InterviewQ
 
 }) =>{
-    const [questionBody, setTopic] = useState<string>("")
     
     const { QPOId, question } = props
+    
+    const [questionBody, setTopic] = useState<string>(question?.questionBody || "")
 
     const IsEditMode = question ? true : false
 
@@ -30,9 +31,9 @@ const Interview = (props:{
         POST_Q = Newquestion
     }else{
         const Question: InterviewQ = {
+            qpoId: QPOId,
             id: question?.id || 0,
             questionBody,
-            qpoId: question?.qpoId || 0,
             timer: question?.timer || ''
         }
             
@@ -51,7 +52,7 @@ const Interview = (props:{
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
         !IsEditMode ? POST_Q : undefined,
-        'CTestQ',
+        qtype,
         IsEditMode ? PUT_Q : undefined,
         IsEditMode ? question?.id : undefined,
     )

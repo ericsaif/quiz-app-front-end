@@ -24,7 +24,7 @@ const CTest = (props:{
 
     const [questionBody, setQBody] = useState<string>(question?.questionBody || '')
     const [num_words_w_blanks, setNumWords] = useState<number>(question?.cTestA?.rightAnswers.length || 0)
-    const [rightAnswers, setRightAnswers] = useState<string[]>(question?.cTestA?.rightAnswers || num_words_w_blanks >0 ? Array(num_words_w_blanks).fill('') : [''])
+    const [rightAnswers, setRightAnswers] = useState<string[]>(question?.cTestA?.rightAnswers || (num_words_w_blanks >0 ? Array(num_words_w_blanks).fill('') : ['']))
     const [CTestAnswers, setCTestAnswers] = useState<React.ReactNode>()
 
     const regex = /\[BLANK:\d+\]/g
@@ -50,10 +50,10 @@ const CTest = (props:{
             cTestQ: question || null
         }
         const CtestQ: CTestQ = {
+            qpoId: QPOId,
             questionBody,
             cTestA,
             id: question?.id || 0,
-            qpoId: question?.qpoId || 0,
             timer: question?.timer || ""
         }
         PUT_Q = CtestQ
@@ -100,7 +100,7 @@ const CTest = (props:{
                     <div className="p-2 hstack">
                         {`Правильный ответ No: ${i + 1}: `} 
                         <Input 
-                            value={rightAnswers[i]}
+                            value={rightAnswers[i] ?? ''}
                             placeholder={`rightAnswer ${i + 1}`} 
                             id={`rightAnswer-${i + 1}`} 
                             type="text" 
@@ -111,7 +111,7 @@ const CTest = (props:{
                 </React.Fragment>
                             )
         }
-        setCTestAnswers((inputs))
+        setCTestAnswers(inputs)
     },[num_words_w_blanks,rightAnswers])
 
     const HandleRightAnswersChange = (index:number, event:React.ChangeEvent<HTMLInputElement>) =>{
@@ -165,7 +165,7 @@ const CTest = (props:{
                                 <Button style={{width: "600px"}}  disabled={loading} className={`btn btn-primary mt-1`} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
 
                             </div>
-                            <div className=" col-6  ">
+                            <div className="col-4">
                                 <div className="vstack d-grid gap-2 ">
                                     {CTestAnswers}
                                 </div>
