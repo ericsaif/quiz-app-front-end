@@ -12,18 +12,13 @@ import useModal from "../../Hooks/useModal"
 import { IRQ } from "../../../Models/QuestionsModels"
 import { IRA } from "../../../Models/AdminModels/AnswersEntities/IRA"
 import { MiniE1 } from "../../../Models/QuestionsModels/IRQ/miniE1"
-import { useRouter } from "next/navigation"
 
 const I_R_Q = (props:{
     QPOId: number,
     question?: IRQ
 }) =>{
 
-    const router = useRouter()
-
     const {QPOId, question } = props
-
-    alert(`questionBody before = ${question?.questionBody}`)
 
     const { miniE1 } = question || {}
 
@@ -33,8 +28,6 @@ const I_R_Q = (props:{
         throw new Error('Нет необходимых данных, ошибка')
 
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
-
-    alert(`questionBody after = ${question?.questionBody}`)
 
     const [allMiniE1Options, setallMiniE1Options] = useState<string[]>(Array(50).fill(''))
     
@@ -222,29 +215,36 @@ const I_R_Q = (props:{
         event.preventDefault()
         
         triggerPost()
+
+        if(!IsEditMode){
+            setallMiniE1Options(Array(50).fill(''))
+            setOptionsMiniE2([''])
+            setquestionMiniE3('')
+            setquestionMiniE4('')
+            setOptionsMiniE5([])
+            setOptionsMiniE6([])
+            setquestionBody('')
+            setcorrectOptionsMiniE1(Array.from({ length: 10 }, (_, y) => y * 5))
+            setcorrectOptionMiniE2(0)
+            setcorrectHighlightMiniE3('')
+            setcorrectHighlightMiniE4('')
+            setcorrectOptionMiniE5(0)
+            setcorrectOptionMiniE6(0)
+        }
     }
     
     useEffect(() => {
-        if (data) {
-          if (data.success) {
+        if(data){
+          if(data.success){
             const message =  `Вопрос типа: Interactive Reading был успешно ${IsEditMode ? 'изменен' : 'создан'}` 
             alert(message); 
-            
-            router.push('/admin/questions')
-      
-          } else {
+          }else{
             const message = `Ошибка при ${IsEditMode ? 'изменении' : 'создании'} вопроса типа: Interactive Reading: ${data.message || 'Сервер сообщил об ошибке'}`
-
             alert(message);
-            router.push('/admin/questions')
-
           }
-        } else if (error) {
+        }else if (error)
             alert(`Ошибка при ${IsEditMode ? 'изменении' : 'создании'} вопроса типа: Interactive Reading: ${error}`);
-            router.push('/admin/questions')
-
-        }
-      }, [IsEditMode, data, error, router]);
+      }, [IsEditMode, data, error]);
 
     
 
@@ -281,13 +281,18 @@ const I_R_Q = (props:{
                             {modalIRA}
                         </div>
                         <ShowIRA 
-                            setcorrectOptionsMiniE1 = {setcorrectOptionsMiniE1}
-                            setcorrectOptionMiniE2 = {setcorrectOptionMiniE2}
-                            setcorrectHighlightMiniE3 = {setcorrectHighlightMiniE3}
-                            setcorrectHighlightMiniE4 = {setcorrectHighlightMiniE4}
-                            setcorrectOptionMiniE5 = {setcorrectOptionMiniE5}
-                            setcorrectOptionMiniE6 = {setcorrectOptionMiniE6}
-                            />
+                            setcorrectOptionsMiniE1={setcorrectOptionsMiniE1}
+                            setcorrectOptionMiniE2={setcorrectOptionMiniE2}
+                            setcorrectHighlightMiniE3={setcorrectHighlightMiniE3}
+                            setcorrectHighlightMiniE4={setcorrectHighlightMiniE4}
+                            setcorrectOptionMiniE5={setcorrectOptionMiniE5}
+                            setcorrectOptionMiniE6={setcorrectOptionMiniE6} 
+                            correctOptionsMiniE1={correctOptionsMiniE1 }
+                            correctOptionMiniE2={correctOptionMiniE2} 
+                            correctHighlightMiniE3={correctHighlightMiniE3 }
+                            correctHighlightMiniE4={correctHighlightMiniE4} 
+                            correctOptionMiniE5={correctOptionMiniE5} 
+                            correctOptionMiniE6={correctOptionMiniE6}                            />
                     </div>
 
                     <div className="row mt-4 align-self-center">

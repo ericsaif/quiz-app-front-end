@@ -5,8 +5,8 @@ import { IRA } from "../../AdminModels/AnswersEntities/IRA";
 export class IRQ extends Question {
     miniE1: MiniE1 | null = null;
     optionsMiniE2: string[]=[];
-    questionMiniE3: string | null='';
-    questionMiniE4: string | null='';
+    questionMiniE3: string ='';
+    questionMiniE4: string ='';
     optionsMiniE5: string[]=[];
     optionsMiniE6: string[]=[];
     ira: IRA | null = null;

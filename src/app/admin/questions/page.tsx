@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BACKEND_BASE_URL } from "../../../../constants/api";
 import QuestionsTable from "./components/questionsTable";
 import { Button, Input } from "@headlessui/react";
@@ -31,8 +31,12 @@ export default function Questions(){
 
     const baseURL = `${BACKEND_BASE_URL}/api/admin/questions`
 
+    const callBackRef = useRef(() =>{})
+
     useEffect(()=>{
         async function fetchQuestions (){
+            alert(`about to fetch updated q table`)
+
             setloading(true)
             const searchParams = new URLSearchParams
 
@@ -95,6 +99,9 @@ export default function Questions(){
             }
             setloading(false)
         }
+
+        callBackRef.current = fetchQuestions 
+
         fetchQuestions()
     },[currentPage, QperPage, descending, searchTerm, baseURL,category, all])
 
@@ -155,6 +162,7 @@ export default function Questions(){
                                     setcategory={setcategory}
                                     all={all}
                                     setall={setall}
+                                    fetchquestions={()=>callBackRef.current}
                                 />
                             </div>
                             <div className="hstack mx-auto justify-content-center">

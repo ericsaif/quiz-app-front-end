@@ -5,8 +5,6 @@ import { ReadQuestion } from "../../../../../Models/AdminModels/QuestionsModels/
 import './questionsTable.css'
 import Image from "next/image";
 import { Button, Input } from "@headlessui/react";
-import { useRouter } from "next/navigation"
-
 
 import QTypesO from "./QTypes";
 
@@ -22,7 +20,8 @@ const QuestionsTable = (props: {
     setall: React.Dispatch<SetStateAction<boolean>>,
     descending: boolean,
     category:number[] | null,
-    all: boolean
+    all: boolean,
+    fetchquestions: () => void
 
 }) =>{
     const { 
@@ -32,11 +31,11 @@ const QuestionsTable = (props: {
         setcategory,
         category,
         setall,
-        all
+        all,
+        fetchquestions
     } = props
 
     const triggerdelete = useDeleteQ()
-    const router = useRouter()
 
     
     const { QTypes, allIds } = QTypesO
@@ -97,8 +96,7 @@ const QuestionsTable = (props: {
                         if (prevValues?.includes(value)) {
                             setLocalAll(false)
                             return prevValues.filter(v => v !== value);
-                        }
-                        else {
+                        }else{
                             if(prevValues){
                                 const newValues = [...prevValues, value] 
                                 if(allIds.every((id)=>newValues.includes(id))){
@@ -108,10 +106,7 @@ const QuestionsTable = (props: {
                                     
                             }else
                                 return [value];
-                        
-                        }
-                        
-                    });
+                        }});
                 }
                 
             }
@@ -124,8 +119,7 @@ const QuestionsTable = (props: {
             const HandleOnDelete = () =>{
                 triggerdelete(DeleteQId)
                 HandleCloseDeleteModal()
-                router.refresh()
-
+                fetchquestions()
             }
             const HandleCloseDeleteModal = () =>{
                 setIsDeleteModalOpen(false)
@@ -279,7 +273,7 @@ const QuestionsTable = (props: {
             settable(table)
         }
         constructQTable()
-    },[descending, questionsData, setdescending, all, setall, category, setcategory, LocalAll, selectedValues, isDropdownOpen, allIds, QTypes, isDeleteModalOpen, DeleteQId, triggerdelete])
+    },[descending, questionsData, setdescending, all, setall, category, setcategory, LocalAll, selectedValues, isDropdownOpen, allIds, QTypes, isDeleteModalOpen, DeleteQId, triggerdelete, fetchquestions])
     
     return table
 }

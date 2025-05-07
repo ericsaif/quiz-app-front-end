@@ -29,7 +29,7 @@ const useInputs = (props:{
                     </p>
                     <Input
                         placeholder=" "
-                        value={allOptions[i]}
+                        value={allOptions[i] || ''}
                         required
                         id={`dialog-option-${i}`}
                         type="text"
@@ -39,6 +39,7 @@ const useInputs = (props:{
                         }}
                     />
                 </div>
+                
             </React.Fragment>
         );
 

@@ -2,9 +2,10 @@ import { Input } from "@headlessui/react";
 import React, { SetStateAction } from "react";
 
 const useMiniE2 = (props:{
-    setOptionsMiniE2:React.Dispatch<SetStateAction<string[]>>
+    setOptionsMiniE2:React.Dispatch<SetStateAction<string[]>>,
+    optionsMiniE2: string[]
 }) => {
-    const { setOptionsMiniE2 } = props
+    const { setOptionsMiniE2, optionsMiniE2 } = props
     const MiniE2HandleChange = (value: string, index: number) => {
         setOptionsMiniE2(prevOptions => {
             const newOptions = [...prevOptions];
@@ -19,7 +20,7 @@ const useMiniE2 = (props:{
                 <p>
                     {i+1}: 
                 </p>
-                <Input required key={`option-${i}`} id={`option-${i}`} type="text" onChange={(e) => MiniE2HandleChange(e.target.value, i)}></Input>
+                <Input value={optionsMiniE2[i]} required key={`option-${i}`} id={`option-${i}`} type="text" onChange={(e) => MiniE2HandleChange(e.target.value, i)}></Input>
             </div>
         );
     }

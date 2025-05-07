@@ -2,9 +2,10 @@ import { Input } from "@headlessui/react";
 import React, { SetStateAction } from "react";
 
 const useMiniE5 = (props:{
-    setOptionsMiniE5: React.Dispatch<SetStateAction<string[]>>
+    setOptionsMiniE5: React.Dispatch<SetStateAction<string[]>>,
+    optionsMiniE5: string[]
 }) => {
-    const { setOptionsMiniE5 } = props
+    const { setOptionsMiniE5, optionsMiniE5 } = props
     const HandleOptionsMiniE5Change = (value: string, index: number) => {
         setOptionsMiniE5(prevValues => {
             const newValues = [...prevValues];
@@ -19,7 +20,7 @@ const useMiniE5 = (props:{
                 <p>
                     {i+1}:
                 </p>
-                <Input required type="text" key={`Options-MiniE5-no-${i}`} id={`Options-MiniE5-no-${i}`} onChange={(e) => HandleOptionsMiniE5Change(e.target.value, i)}></Input>
+                <Input value={optionsMiniE5[i]} required type="text" key={`Options-MiniE5-no-${i}`} id={`Options-MiniE5-no-${i}`} onChange={(e) => HandleOptionsMiniE5Change(e.target.value, i)}></Input>
             </div>
         );
     }

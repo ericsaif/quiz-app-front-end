@@ -12,11 +12,8 @@ const useCorrectInputs = (props:{
     const HandleCorrectOptionschange = (value: string, index: number) =>{
         setCorrectOptions(prevOptions =>{
             const newAnswers = [...prevOptions];
-
-            // Update the string at the specific index
             newAnswers[index] = parseInt(value,10);
 
-            // Return the new array to update the state
             return newAnswers;
         })
     }
@@ -55,7 +52,7 @@ const useCorrectInputs = (props:{
             </div>
             <div className="vstack mt-3">
                 <label htmlFor="ILQ-Dialog">Диалог</label>
-                <textarea style={{width: "500px", height: "300px"}} name="ILQ-Dialog" id="ILQ-Dialog" placeholder="correct-dailog" value={Dialog} onChange={(e) =>setDialog(e.target.value)}></textarea>
+                <textarea placeholder="correct-dailog" value={Dialog} style={{width: "500px", height: "300px"}} name="ILQ-Dialog" id="ILQ-Dialog" onChange={(e) =>setDialog(e.target.value)}></textarea>
             </div>
         </React.Fragment>
 

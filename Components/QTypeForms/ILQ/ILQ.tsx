@@ -29,10 +29,11 @@ const I_L_Q = (props:{
 
 
     const [allOptions, setAlloptions] = useState<string[]>(Array(25).fill(''))
-    const [s3pathsToAudioAnswers, sets3pathsToAudioAnswers] = useState<string[]>(Array(5).fill('')) 
+    const [s3pathsToAudioAnswers, sets3pathsToAudioAnswers] = useState<string[]>(question?.s3pathsToAudioAnswers || Array(5).fill('')) 
 
     const [correctOptions, setCorrectOptions] = useState<number[]>([])
-    const [Dialog, setDialog] = useState<string>("")
+
+    const [Dialog, setDialog] = useState<string>(correctDialogOptions?.dialog || "")
 
     useEffect(()=>{
         const setCO = () => {
@@ -51,7 +52,7 @@ const I_L_Q = (props:{
             ]
             setAlloptions(arrays)
             setCorrectOptions(correctDialogOptions.correctOptionsDialogOptions)
-            setDialog(correctDialogOptions.Dialog)
+            setDialog(correctDialogOptions.dialog)
         }
         if(!IsEditMode)
             setCO()
@@ -66,7 +67,7 @@ const I_L_Q = (props:{
         const GivenDialogoptionsDTO: GivenDialogoptions_Create ={
             optionsDialogStart: allOptions.slice(0,5),
             optionsDialogContinuation1: allOptions.slice(5,10),
-            optionsDialogContinuation2: allOptions.slice(11,15),
+            optionsDialogContinuation2: allOptions.slice(10,15),
             optionsDialogContinuation3: allOptions.slice(15,20),
             optionsDialogContinuation4: allOptions.slice(20,25),
         }
@@ -86,21 +87,21 @@ const I_L_Q = (props:{
         const givenDialogoptions: GivenDialogoptions  ={
             optionsDialogStart: allOptions.slice(0,5),
             optionsDialogContinuation1: allOptions.slice(5,10),
-            optionsDialogContinuation2: allOptions.slice(11,15),
+            optionsDialogContinuation2: allOptions.slice(10,15),
             optionsDialogContinuation3: allOptions.slice(15,20),
             optionsDialogContinuation4: allOptions.slice(20,25),
             iLQ: null,
             iLQId: question?.id || 0
         }
         const correctDialogOptions: CorrectDialogOptions = {
-            Dialog,
+            dialog: Dialog,
             iLQ: null,
             iLQId: question?.id || 0,
             correctOptionsDialogOptions: correctOptions
         }
         const Question: ILQ = {
             qpoId: QPOId,
-            s3pathsToAudioAnswers: [],
+            s3pathsToAudioAnswers,
             givenDialogoptions,
             correctDialogOptions,
             summaryTimer: question?.summaryTimer || "",
