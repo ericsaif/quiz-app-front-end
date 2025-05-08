@@ -6,7 +6,7 @@ import React from "react"
 const AdminSidebar = () =>{
     return (
         <nav className="vstack">
-            <div>
+            <div >
                 <p>
                     duolingo.kz english Test
                 </p>

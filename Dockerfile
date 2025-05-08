@@ -27,6 +27,7 @@ COPY public ./public
 COPY src ./src
 COPY Models ./Models
 COPY constants ./constants
+COPY Components ./Components
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry

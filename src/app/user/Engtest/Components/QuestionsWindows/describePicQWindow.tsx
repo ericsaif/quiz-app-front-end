@@ -12,7 +12,7 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
         const newM: MethodArgs = {
             "Description": picDescription,
             "QId":props.question.id,
-            "QPOId":props.question.qPOId
+            "QPOId":props.question.qpoId
         }
         props.submitAnswer("SubmitPicDescriptionAsync",  newM)
       }

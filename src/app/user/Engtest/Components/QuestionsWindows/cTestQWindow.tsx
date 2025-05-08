@@ -9,7 +9,9 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
         event.preventDefault()
         const newM: MethodArgs= {
             QId: props.question.id,
-            blankValues:blankValues
+            blankValues:blankValues,
+            "QPOId":props.question.qpoId
+
         }
         props.submitAnswer("SubmitCtestAttemptAsync", newM)
     }

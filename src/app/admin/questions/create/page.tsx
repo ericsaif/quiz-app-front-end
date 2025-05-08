@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 
 import * as QTYPES from '../../../../../Components/QTypeForms/index'
 import useModal from '../../../../../Components/Hooks/useModal'
+import FormWrapper from "../components/FormWrapper"
 
 const CreateQ = () =>{
     const [QType, setQType] = useState<number>(1)
@@ -38,28 +39,30 @@ const CreateQ = () =>{
 
     return (
         <React.Fragment key={`form-fragment-of-question-${title}`}>
-            <div >
-                <div className="d-flex hstack ">
-                    <div className="p-2">
-                        <h4  >Выберите Вопрос</h4>
-                    </div>
-                    
-                    <div className="p-2">
-                        <QTYPES.SelectQType setQType={setQType} QType={QType}/>
-                    </div>
+            <FormWrapper formType={QType == 11 ? "12" : QType.toString()}>
+                <div >
+                    <div className="d-flex hstack ">
+                        <div className="p-2">
+                            <h4  >Выберите Вопрос</h4>
+                        </div>
+                        
+                        <div className="p-2">
+                            <QTYPES.SelectQType setQType={setQType} QType={QType}/>
+                        </div>
 
-                    <div className="p-2">
-                        {modal }
-                    </div>
+                        <div className="p-2">
+                            {modal }
+                        </div>
 
-                    <div className="p-2">
-                        <h1 className="">{title}</h1>
+                        <div className="p-2">
+                            <h1 className="">{title}</h1>
+                        </div>
+                    </div>
+                    <div className="">
+                        {QForm}
                     </div>
                 </div>
-                <div className="">
-                    {QForm}
-                </div>
-            </div>
+            </FormWrapper>
         </React.Fragment>
     )
 }

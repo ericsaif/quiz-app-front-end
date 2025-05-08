@@ -21,7 +21,7 @@ const WordExists = (props:{
 
 
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
-    const [exists, setexists] = useState<boolean>(question?.wordExistsA?.exists || true)
+    const [exists, setexists] = useState<boolean>(question?.wordExistsA?.exists ?? true)
                 
     let POST_Q: CreateWordExists | undefined;
     let PUT_Q: WordExistsQ  | undefined;
@@ -90,7 +90,7 @@ const WordExists = (props:{
     }   
     const HandleExistsChange = (event: React.ChangeEvent<HTMLSelectElement>)=>{
         const { value } = event.target
-        const bool = value == "true" ? true : false 
+        const bool = parseInt(value, 10) == 1 ? true : false 
         setexists(bool)
     }   
 
@@ -106,9 +106,9 @@ const WordExists = (props:{
                 <Input value={questionBody} required style={{width: "30%"}} id="RAText" type="text" onChange={HandleInputChange}></Input>  
 
                 <label htmlFor="select-wordexists">СУЩЕСТВУЕТ ?</label>
-                <select style={{width: "30%"}} name="select-wordexists" id="select-wordexists" onChange={HandleExistsChange}>
-                    <option value="true">ДА</option>
-                    <option value="false">НЕТ</option>
+                <select value={exists ? 1 : 0} style={{width: "30%"}} name="select-wordexists" id="select-wordexists" onChange={HandleExistsChange}>
+                    <option value={1}>ДА</option>
+                    <option value={0}>НЕТ</option>
                 </select>
                       
 

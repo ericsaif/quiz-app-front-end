@@ -101,7 +101,7 @@ const CTest = (props:{
                         {`Правильный ответ No: ${i + 1}: `} 
                         <Input 
                             value={rightAnswers[i] ?? ''}
-                            placeholder={`rightAnswer ${i + 1}`} 
+                            placeholder={`Correct Answer  ${i + 1}`} 
                             id={`rightAnswer-${i + 1}`} 
                             type="text" 
                             onChange={(e) => { HandleRightAnswersChange(i, e); }} 
@@ -112,6 +112,18 @@ const CTest = (props:{
                             )
         }
         setCTestAnswers(inputs)
+        setRightAnswers(prevAnswers => {
+            if (prevAnswers.length === num_words_w_blanks)
+              return prevAnswers; 
+            
+            if (prevAnswers.length < num_words_w_blanks) {
+              return [
+                ...prevAnswers,
+                ...Array(num_words_w_blanks - prevAnswers.length).fill('')
+              ];
+            } else
+              return prevAnswers.slice(0, num_words_w_blanks);
+          })
     },[num_words_w_blanks,rightAnswers])
 
     const HandleRightAnswersChange = (index:number, event:React.ChangeEvent<HTMLInputElement>) =>{

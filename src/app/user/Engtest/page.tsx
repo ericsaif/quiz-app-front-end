@@ -3,11 +3,11 @@
 import EngTestWindow from "./Components/EngTestComponent";
 import { QUIZ_HUB_ROUTE } from "../../../../constants/api";
 import { BACKEND_BASE_URL } from "../../../../constants/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 
-function EngTest(){
+const EngTestInner = () =>{
     const [hubURL, sethubURL] = useState<string>("") 
     const queryParams = useSearchParams()
     
@@ -33,6 +33,12 @@ function EngTest(){
 
             
     )
+}
+
+const EngTest = () =>{
+    <Suspense fallback={<div>Loading...</div>}>
+        <EngTestInner />
+    </Suspense>
 }
 
 export default EngTest

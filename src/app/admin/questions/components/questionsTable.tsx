@@ -11,7 +11,7 @@ import QTypesO from "./QTypes";
 // React icons
 import { LuArrowDown01, LuArrowDown10 } from "react-icons/lu";
 import Link from "next/link";
-import useDeleteQ from "./hooks/useDeleteQ";
+import DeleteModal from "./DeleteModal";
 
 const QuestionsTable = (props: { 
     questionsData: ReadQuestion[],
@@ -34,9 +34,6 @@ const QuestionsTable = (props: {
         all,
         fetchquestions
     } = props
-
-    const triggerdelete = useDeleteQ()
-
     
     const { QTypes, allIds } = QTypesO
 
@@ -116,11 +113,6 @@ const QuestionsTable = (props: {
                 setIsDeleteModalOpen(true)
             }
 
-            const HandleOnDelete = () =>{
-                triggerdelete(DeleteQId)
-                HandleCloseDeleteModal()
-                fetchquestions()
-            }
             const HandleCloseDeleteModal = () =>{
                 setIsDeleteModalOpen(false)
                 setDeleteQId(null)
@@ -130,41 +122,6 @@ const QuestionsTable = (props: {
                 display: isDropdownOpen ? 'block' : 'none'
             };
 
-            const DeleteModalStyle: React.CSSProperties = {
-                display: isDeleteModalOpen ? 'block' : 'none',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100vh',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                zIndex: 1050,
-                overflow: 'hidden',
-            };
-            
-            const DeleteQModal = (
-                <div onClick={HandleCloseDeleteModal} style={DeleteModalStyle} tabIndex={-1} aria-labelledby="modalLabel" aria-hidden="true">
-                    <div className="m-dialog">
-                        <div className="m-content">
-                        <div className="m-header">
-                            <h1 className="m-title fs-5" id="modalLabel">Вы действительно хотите удалить вопрос No: {DeleteQId}?</h1>
-                            <button type="button" className="btn-close" onClick={HandleCloseDeleteModal} aria-label="Close"></button>
-                        </div>
-                        <div className="m-body">
-                            После того как вы удалите данный вопрос, возможности восстановить его уже не будет
-                        </div>
-                        <div className="m-footer">
-                            <Button className={`btn btn-primary`} onClick={HandleOnDelete} >
-                                Удалить
-                            </Button>
-                            <Button className={`btn btn-primary`} onClick={HandleCloseDeleteModal} >
-                                Отмена
-                            </Button>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            )
 
             const dropDown = (
                 <div ref={dropdownRef} key={`dropdown-fragment`}>
@@ -265,7 +222,13 @@ const QuestionsTable = (props: {
                             </tbody>
                         </table>
                         <div>
-                            {DeleteQModal}
+                            <DeleteModal 
+                            
+                                isDeleteModalOpen={isDeleteModalOpen} 
+                                HandleCloseDeleteModal={HandleCloseDeleteModal} 
+                                DeleteQId={DeleteQId} 
+                                fetchquestions={fetchquestions}
+                            />
                         </div>
                     </React.Fragment>
             ) 
@@ -273,7 +236,7 @@ const QuestionsTable = (props: {
             settable(table)
         }
         constructQTable()
-    },[descending, questionsData, setdescending, all, setall, category, setcategory, LocalAll, selectedValues, isDropdownOpen, allIds, QTypes, isDeleteModalOpen, DeleteQId, triggerdelete, fetchquestions])
+    },[descending, questionsData, setdescending, all, setall, category, setcategory, LocalAll, selectedValues, isDropdownOpen, allIds, QTypes, isDeleteModalOpen, DeleteQId, fetchquestions])
     
     return table
 }

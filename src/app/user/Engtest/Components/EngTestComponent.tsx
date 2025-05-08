@@ -22,7 +22,7 @@ const EngTestWindow = (props: ETWP) => {
         </div>
       );
     else
-      switch (CurrentQ.qPOId) {
+      switch (CurrentQ.qpoId) {
         case 1:( setWindow(<QuestionsWindows.RACQWindow question={CurrentQ as RACQ } submitAnswer={submitAnswer}/>) );break;
         case 2:( setWindow(<QuestionsWindows.DictationQWindow question={CurrentQ as DictationQ } submitAnswer={submitAnswer}/>) );break;
         case 3:( setWindow(<QuestionsWindows.RAQWindow question={CurrentQ as RAQ } submitAnswer={submitAnswer}/>) );break;

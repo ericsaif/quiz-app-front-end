@@ -16,11 +16,11 @@ const RAC = (props:{
 
     const IsEditMode = question ? true : false
 
-    if(IsEditMode && (!question || !question.RACA))
+    if(IsEditMode && (!question || !question.raca))
         throw new Error('Нет необходимых данных, ошибка')
     
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
-    const [answer, setanswer] = useState<string>(question?.RACA?.answer || "")
+    const [answer, setanswer] = useState<string>(question?.raca?.answer || "")
 
             
     let POST_Q: CreateRAC | undefined;
@@ -38,7 +38,7 @@ const RAC = (props:{
         POST_Q = Newquestion
     }else{
         const QAnswer: RACA = {
-            id: question?.RACA?.id || 0,
+            id: question?.raca?.id || 0,
             rACQId: question?.id || 0,
             rACQ: null,
             answer
@@ -48,7 +48,7 @@ const RAC = (props:{
             id: question?.id || 0,
             questionBody,
             timer: question?.timer || '',
-            RACA: QAnswer
+            raca: QAnswer
         }
             
         PUT_Q = Question

@@ -4,7 +4,7 @@ import { EssayQ, MethodArgs } from "./commonImports"
 const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
     const [essay, setEssay] = useState<string>("")
     const Topic = props.question.questionBody
-    const QPOId = props.question.qPOId
+    const QPOId = props.question.qpoId
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault()

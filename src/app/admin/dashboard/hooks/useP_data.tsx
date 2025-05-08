@@ -41,7 +41,6 @@ const useP_data = () =>{
             if(purchases_data){
     
                 const filtered_purchases_data = purchases_data
-                .filter(p => p.purchaseFinilized == true)
                 .map(({id, purchaseDateTime}) => ({
                     id, 
                     purchaseDateTime

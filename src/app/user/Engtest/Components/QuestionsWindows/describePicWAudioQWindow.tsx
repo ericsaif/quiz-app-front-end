@@ -9,7 +9,7 @@ const describePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAns
             event.preventDefault()
             const newM: MethodArgs = {
                 "AudioData": AudioData,
-                "QPOId":props.question.qPOId
+                "QPOId":props.question.qpoId
             }
             props.submitAnswer("SubmitPicDescriptionAsync",  newM)
           }

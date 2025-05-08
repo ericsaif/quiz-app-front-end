@@ -8,6 +8,7 @@ import * as QTYPES from "../../../../../Components/QTypeForms/index"
 import useModal from "../../../../../Components/Hooks/useModal"
 import Link from "next/link"
 import * as QCat from '../../../../../Models/QuestionsModels/index'
+import FormWrapper from "../components/FormWrapper"
 
 
 const EditQuestion = () =>{
@@ -87,24 +88,26 @@ const EditQuestion = () =>{
     
         return (
             <React.Fragment key={`form-fragment-of-question-${title}`}>
-                <div >
-                    <div className="d-flex hstack ">
-                        <div className="p-2">
-                            <h4  >Изменить вопрос No: {QId}</h4>
+                <FormWrapper formType={QPOId}>
+                    <div >
+                        <div className="d-flex hstack ">
+                            <div className="p-2">
+                                <h4  >Изменить вопрос No: {QId}</h4>
+                            </div>
+        
+                            <div className="p-2">
+                                {modal }
+                            </div>
+        
+                            <div className="p-2">
+                                <h1 className="">{title}</h1>
+                            </div>
                         </div>
-    
-                        <div className="p-2">
-                            {modal }
-                        </div>
-    
-                        <div className="p-2">
-                            <h1 className="">{title}</h1>
+                        <div className="">
+                            {QForm}
                         </div>
                     </div>
-                    <div className="">
-                        {QForm}
-                    </div>
-                </div>
+                </FormWrapper>
             </React.Fragment>
         )
 }

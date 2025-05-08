@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { BACKEND_BASE_URL } from "../../../../constants/api";
 import { useSearchParams, useRouter } from "next/navigation";
 import { UserStatus } from "../Models/UserStatus";
 
 
-const EmailConfirm = () =>{
+const EmailConfirmInner = () =>{
     const [error, seterror] = useState<string | null>(null)
     const [success, setsuccess] = useState<string | null>(null)
     const [loading, setloading] = useState<boolean>(true)
@@ -94,5 +94,11 @@ const EmailConfirm = () =>{
         </React.Fragment>
     )
 }
+
+const EmailConfirm = () => (
+    <Suspense fallback={<div>Loading...</div>}>
+        <EmailConfirmInner />
+    </Suspense>
+);
 
 export default EmailConfirm

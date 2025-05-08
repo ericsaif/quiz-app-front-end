@@ -34,9 +34,9 @@ const I_R_Q = (props:{
     const [questionMiniE3, setquestionMiniE3] = useState<string>(question?.questionMiniE3 || "")
     const [questionMiniE4, setquestionMiniE4] = useState<string>(question?.questionMiniE4 || "")
 
-    const [optionsMiniE2, setOptionsMiniE2] = useState<string[]>(question?.optionsMiniE2 || []);
-    const [optionsMiniE5, setOptionsMiniE5] = useState<string[]>(question?.optionsMiniE5 || []);
-    const [optionsMiniE6, setOptionsMiniE6] = useState<string[]>(question?.optionsMiniE6 || []);
+    const [optionsMiniE2, setOptionsMiniE2] = useState<string[]>(question?.optionsMiniE2 || Array(5).fill(''));
+    const [optionsMiniE5, setOptionsMiniE5] = useState<string[]>(question?.optionsMiniE5 || Array(5).fill(''));
+    const [optionsMiniE6, setOptionsMiniE6] = useState<string[]>(question?.optionsMiniE6 || Array(5).fill(''));
 
     const [ correctOptionsMiniE1, setcorrectOptionsMiniE1 ] = useState<number[]>(question?.ira?.correctOptionsMiniE1 || [])
     const [ correctOptionMiniE2, setcorrectOptionMiniE2 ] = useState<number>(question?.ira?.correctOptionMiniE2 || 0)
@@ -218,11 +218,11 @@ const I_R_Q = (props:{
 
         if(!IsEditMode){
             setallMiniE1Options(Array(50).fill(''))
-            setOptionsMiniE2([''])
+            setOptionsMiniE2(Array(5).fill(''))
             setquestionMiniE3('')
             setquestionMiniE4('')
-            setOptionsMiniE5([])
-            setOptionsMiniE6([])
+            setOptionsMiniE5(Array(5).fill(''))
+            setOptionsMiniE6(Array(5).fill(''))
             setquestionBody('')
             setcorrectOptionsMiniE1(Array.from({ length: 10 }, (_, y) => y * 5))
             setcorrectOptionMiniE2(0)
@@ -233,21 +233,6 @@ const I_R_Q = (props:{
         }
     }
     
-    useEffect(() => {
-        if(data){
-          if(data.success){
-            const message =  `Вопрос типа: Interactive Reading был успешно ${IsEditMode ? 'изменен' : 'создан'}` 
-            alert(message); 
-          }else{
-            const message = `Ошибка при ${IsEditMode ? 'изменении' : 'создании'} вопроса типа: Interactive Reading: ${data.message || 'Сервер сообщил об ошибке'}`
-            alert(message);
-          }
-        }else if (error)
-            alert(`Ошибка при ${IsEditMode ? 'изменении' : 'создании'} вопроса типа: Interactive Reading: ${error}`);
-      }, [IsEditMode, data, error]);
-
-    
-
     return(
         <React.Fragment>
             <form className="p-0 m-0" onSubmit={HandleFormSubmit}>

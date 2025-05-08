@@ -8,8 +8,7 @@ import { ReadQuestion } from "../../../../Models/AdminModels/QuestionsModels/Rea
 import Image from "next/image";
 import { QTableData } from "../../../../Models/AdminModels/QuestionsModels/QTableData";
 
-import { FaArrowLeftLong } from "react-icons/fa6";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import { IoAddCircle } from "react-icons/io5";
 import Link from "next/link";
 
@@ -35,8 +34,6 @@ export default function Questions(){
 
     useEffect(()=>{
         async function fetchQuestions (){
-            alert(`about to fetch updated q table`)
-
             setloading(true)
             const searchParams = new URLSearchParams
 
@@ -67,7 +64,7 @@ export default function Questions(){
                 setquestions(responseData.questions)
                 settotalCount(responseData.totalcount)
                 setmaxPage(
-                    Math.floor((responseData.totalcount + QperPage ) / QperPage )
+                    Math.floor((responseData.totalcount + QperPage-1 ) / QperPage )
                 )
             }else if(response.status == 404){
                 seterror('В базе нет вопросов данного типа')

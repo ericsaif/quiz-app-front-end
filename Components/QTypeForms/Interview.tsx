@@ -81,7 +81,7 @@ const Interview = (props:{
 
             <form className="q-container w-50 vstack gap-2 mx-2" onSubmit={HandleFormSubmit}>
                 <label htmlFor="interview">Тема Интервью:</label>
-                <textarea id="interview" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea> 
+                <textarea value={questionBody} id="interview" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea> 
                 
                 <Button disabled={loading} className={`btn btn-primary`} style={{width: "30%"}} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
             </form>
