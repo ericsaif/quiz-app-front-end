@@ -1,16 +1,18 @@
 import { Button } from "@headlessui/react";
-import useDeleteQ from "./hooks/useDeleteQ";
+import useDeleteObject from "./hooks/useDeleteQ";
 
 const DeleteModal = (props:{
     isDeleteModalOpen: boolean
     HandleCloseDeleteModal: () =>void
-    DeleteQId: number | null
-    fetchquestions: () => void
+    DeleteObjectId: number | string | null
+    ObjectType?: string
+    route?: string
+    fetch: () => void
 
 }) =>{
-    const { isDeleteModalOpen, HandleCloseDeleteModal,DeleteQId, fetchquestions } = props
+    const { isDeleteModalOpen, HandleCloseDeleteModal,DeleteObjectId, ObjectType ='вопрос', route = "/api/admin/questions/",  fetch } = props
 
-    const triggerdelete = useDeleteQ()
+    const triggerdelete = useDeleteObject( {route, ObjectType} )
 
 
     const DeleteModalStyle: React.CSSProperties = {
@@ -26,9 +28,9 @@ const DeleteModal = (props:{
     };
 
     const HandleOnDelete = () =>{
-        triggerdelete(DeleteQId)
+        triggerdelete(DeleteObjectId)
         HandleCloseDeleteModal()
-        fetchquestions()
+        fetch()
     }
     
     const DeleteQModal = (
@@ -36,11 +38,11 @@ const DeleteModal = (props:{
             <div className="m-dialog">
                 <div className="m-content">
                 <div className="m-header">
-                    <h1 className="m-title fs-5" id="modalLabel">Вы действительно хотите удалить вопрос No: {DeleteQId}?</h1>
+                    <h1 className="m-title fs-5" id="modalLabel">Вы действительно хотите удалить обьект типа - {ObjectType} No: {DeleteObjectId}?</h1>
                     <button type="button" className="btn-close" onClick={HandleCloseDeleteModal} aria-label="Close"></button>
                 </div>
                 <div className="m-body">
-                    После того как вы удалите данный вопрос, возможности восстановить его уже не будет
+                    После того как вы удалите данный обьект, возможности восстановить его уже не будет
                 </div>
                 <div className="m-footer">
                     <Button className={`btn btn-primary`} onClick={HandleOnDelete} >

@@ -226,8 +226,8 @@ const QuestionsTable = (props: {
                             
                                 isDeleteModalOpen={isDeleteModalOpen} 
                                 HandleCloseDeleteModal={HandleCloseDeleteModal} 
-                                DeleteQId={DeleteQId} 
-                                fetchquestions={fetchquestions}
+                                DeleteObjectId={DeleteQId} 
+                                fetch={fetchquestions}
                             />
                         </div>
                     </React.Fragment>

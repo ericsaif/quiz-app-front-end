@@ -1,5 +1,7 @@
-export interface ReadUser{
+export interface ReadUser {
     id: string;
-    username: string;
-    email: string;
+    userName: string | null;
+    email: string | null;
+    boughtTests: number;
+    finishedTests: number;
 }

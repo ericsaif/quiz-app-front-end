@@ -97,7 +97,7 @@ export default function Questions(){
             setloading(false)
         }
 
-        callBackRef.current = fetchQuestions 
+        callBackRef.current = fetchQuestions
 
         fetchQuestions()
     },[currentPage, QperPage, descending, searchTerm, baseURL,category, all])
