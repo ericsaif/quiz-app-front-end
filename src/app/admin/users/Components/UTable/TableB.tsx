@@ -6,8 +6,9 @@ import { Button } from "@headlessui/react";
 const TableB = (props:{
     UsersData: ReadUser[]
     HandleDeleteModal: (id: string) => void
+    HandleGenEngTestModal: (id: string, userName: string | null) => void
 }) =>{
-    const { UsersData, HandleDeleteModal } = props
+    const { UsersData, HandleDeleteModal, HandleGenEngTestModal } = props
 
     return UsersData.map((user: ReadUser) => (
         <tr key={`row-in-an-admin-users-table-${user.id}`}>
@@ -16,6 +17,11 @@ const TableB = (props:{
             <td className="slimColumnStyle" >{user.email}</td>
             <td>{user.boughtTests}</td>
             <td>{user.finishedTests}</td>
+            <td className={``}> 
+                <Button className={`btn pt-0`} onClick={() => HandleGenEngTestModal(user.id, user.userName)}>
+                    <Image width={30} height={30} src={`/reshot-icon-add.svg`} alt="engTestGen"/>
+                </Button>
+            </td>
             <td >
                 <Link href={`/admin/users/${user.id}`}>
                     <Image width={30} height={30} src={`/reshot-icon-edit2.svg`} alt="edit"/>

@@ -1,3 +1,5 @@
+'use client'
+
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { BACKEND_BASE_URL } from "../../../../constants/api";
 import { ReadUser } from "../../../../Models/AdminModels/UserModels/ReadUser";
@@ -59,7 +61,7 @@ import Image from "next/image";
         fetchRef.current = fetchUsers
 
         fetchUsers()
-    })
+    },[UperPage, baseURl, currentPage, descending, searchTerm])
 
     const HandleNextPage = () =>{
             setcurrentPage(prevPage => prevPage + 1)
@@ -82,7 +84,7 @@ import Image from "next/image";
         <React.Fragment key={`react-fragment-users-table`}>
             <div className="container-fluid">
                 <div className="row">
-                    <h1>Вопросы: {
+                    <h1>Пользователи: {
                     UTableData && 
                     <>
                         {totalCount}
@@ -140,9 +142,11 @@ import Image from "next/image";
 }
 
 const Users = () =>{
-    <Suspense fallback={<div>Загрузка ... </div>}>
-        <UsersInner/>
-    </Suspense>
+    return(
+        <Suspense fallback={<div>Загрузка ... </div>}>
+            <UsersInner/>
+        </Suspense>
+    )
 }
 
 export default Users

@@ -11,9 +11,13 @@ const BoughtTestsTable = (props:{TestsData : ReadEngTest[]}) =>{
     
 
     useEffect(()=>{
+        const ConstructDateTime = (dateTimeString: string) =>{
+            const date = new Date(dateTimeString)
+            return `${date.toLocaleDateString()} : ${date.toLocaleTimeString()}`
+        }
         function constructTable(){
             const TableHead = (
-                <th key={`purchases-table-fragment`}>
+                <thead key={`purchases-table-fragment`}>
                     <tr>
                         <td scope="col"> id </td>
                         <td scope="col"> Дата покупки </td>
@@ -21,14 +25,14 @@ const BoughtTestsTable = (props:{TestsData : ReadEngTest[]}) =>{
                         <td scope="col"> Срок Вышел </td>
                         <td scope="col">  </td>
                     </tr>
-                </th>
+                </thead>
             )
 
             const TableBody = TestsData.map((test: ReadEngTest) => (
                 <tr className={``} key={test.id}>
                     <td scope="row">{test.id}</td>
-                    <td scope="col">{test.purchaseDateTime}</td>
-                    <td scope="col">{test.expirationDateTime}</td>
+                    <td scope="col">{ConstructDateTime(test.purchaseDateTime)}</td>
+                    <td scope="col">{ConstructDateTime(test.expirationDateTime)}</td>
                     <td scope="col">{test.expired ? "Да" : "Нет"}</td>
                     <td scope="col">
                     {test.expired ? (
@@ -36,7 +40,7 @@ const BoughtTestsTable = (props:{TestsData : ReadEngTest[]}) =>{
                             Тест недоступен
                         </button>
                     ) : (
-                        <Link  href={`/user/Engtest/?engTestId=${test.id}`} className={`btn btn-primary`}>
+                        <Link style={{color: 'white'}} href={`/user/Engtest/?engTestId=${test.id}`} className={`btn btn-primary`}>
                             Начать Тест
                         </Link>
                     )}
@@ -48,7 +52,9 @@ const BoughtTestsTable = (props:{TestsData : ReadEngTest[]}) =>{
                <React.Fragment key={`bought-tests-table`}>
                     <table className="table table-striped">
                         {TableHead}
-                        {TableBody}
+                        <tbody>
+                            {TableBody}
+                        </tbody>
                     </table>
                </React.Fragment>
             )
@@ -56,7 +62,7 @@ const BoughtTestsTable = (props:{TestsData : ReadEngTest[]}) =>{
             setTable(table)
         }
         constructTable()
-    },[TestsData, table])
+    },[TestsData])
     
 
     return table

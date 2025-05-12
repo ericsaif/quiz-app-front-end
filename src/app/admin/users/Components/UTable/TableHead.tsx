@@ -29,6 +29,7 @@ const TableHead = (props:{
                 <th scope="col"> Email </th>
                 <th scope="col"> Купленные Тесты </th>
                 <th scope="col"> Пройденные Тесты </th>
+                <th scope="col"> Новый Тест </th>
                 <th scope="col">  </th>
                 <th scope="col">  </th>
             </tr>

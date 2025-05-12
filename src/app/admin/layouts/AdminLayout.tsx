@@ -17,41 +17,35 @@ const Layout = ({
 }>) =>{
 
   const { formType, isSidebarCollapsed, setIsSidebarCollapsed } = useLayout();
-  const [windowWidth, setWindowWidth] = useState(
-    typeof window !== 'undefined' ? window.innerWidth : 0
-  );
+  const [windowWidth, setWindowWidth] = useState<number | null>(null);
+
 
   // Handle window resize
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    if (typeof window !== 'undefined') {
+      handleResize(); // initialize
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
   }, []);
 
-  useEffect(()=>{
-    if(formType === '12' || formType === '4' || formType === '8' || formType === '13')
-      setIsSidebarCollapsed(true)
-  },[formType, setIsSidebarCollapsed])
-  
-  // Automatically collapse sidebar on small screens
   useEffect(() => {
-    if (windowWidth < 950) {
+    if (windowWidth !== null && (windowWidth < 950 || ['12', '4', '8', '13'].includes(formType))) {
       setIsSidebarCollapsed(true);
     }
-  }, [windowWidth, setIsSidebarCollapsed]);
+  }, [formType, windowWidth, setIsSidebarCollapsed]);
   
-  // Define layout classes based on form type and screen width
+  if (windowWidth === null) return null;
+
   const getLayoutClasses = () => {
     const baseClasses = 'row transition-all duration-300';
     
-    if (isSidebarCollapsed || (formType === '12' || formType === '4' || formType === '8')) {
-      return `${baseClasses} `;
-    }
+    if (isSidebarCollapsed || windowWidth < 950 || ['12', '4', '8', '13'].includes(formType))
+      return `${baseClasses}`;
     
     return `${baseClasses} flex-row`;
   };
@@ -68,14 +62,14 @@ const Layout = ({
     if (isSidebarCollapsed)
       return `${baseClasses} sidebar-collapsed`;
 
-    if(!isSidebarCollapsed && (formType === '12' || formType === '4' || formType === '8' || formType === '13'))
-      return `col-3 ${baseClasses} sidebar-expanded-overlap`
+    if(!isSidebarCollapsed && (windowWidth < 950 || ['12', '4', '8', '13'].includes(formType)))
+      return `col-6 ${baseClasses} sidebar-expanded-overlap`
     
     return `col-3 ${baseClasses} sidebar-expanded`;
   };
 
   const getBackdropClasses = () =>{
-    if(!isSidebarCollapsed && (formType === '12' || formType === '4' || formType === '8' || formType === '13'))
+    if(!isSidebarCollapsed && (windowWidth < 950 || ['12', '4', '8', '13'].includes(formType)))
       return 'd-block'
     return 'd-none'
   }
@@ -85,7 +79,7 @@ const Layout = ({
         <div className={`container-fluid`}>
           <div className={`${getLayoutClasses()}`}  >
             <div className={`backdrop ${getBackdropClasses()}`} onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}></div>
-            <div className={`${getSidebarClasses()} `} >
+            <div className={`${getSidebarClasses()}`} >
                 <AdminSidebar />
             </div>
             <main className={`${getContentClasses()} `} style={{ flexGrow: 1, position: 'relative' }}>

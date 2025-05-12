@@ -12,23 +12,22 @@ const EngTestInner = () =>{
     const queryParams = useSearchParams()
     
     useEffect(() => {
-        // Retrieve the 'engTestId' parameter
         const EngTestId = queryParams.get('engTestId');
 
-        sethubURL(`${ BACKEND_BASE_URL }${ QUIZ_HUB_ROUTE }$?engTestId=${EngTestId}`)
+        sethubURL(`${ BACKEND_BASE_URL }${ QUIZ_HUB_ROUTE }?EngTestId=${EngTestId}`)
     }, [queryParams]);
-
-
 
     return (
             <div>
-                {hubURL !="" ? (
-                    <EngTestWindow
-                        hubUrl={hubURL}
-                    />
-                ) : (
-                    <p style={{color: 'red'}}>Ошибка попробуйте еще раз.</p>
-                )}
+                {
+                    hubURL !="" ? (
+                        <EngTestWindow
+                            hubUrl={hubURL}
+                        />
+                    ) : (
+                        <p style={{color: 'red'}}>Ошибка попробуйте еще раз.</p>
+                    )
+                }
             </div>
 
             
@@ -36,9 +35,11 @@ const EngTestInner = () =>{
 }
 
 const EngTest = () =>{
-    <Suspense fallback={<div>Loading...</div>}>
-        <EngTestInner />
-    </Suspense>
+    return(
+        <Suspense fallback={<div>Loading...</div>}>
+            <EngTestInner />
+        </Suspense>
+    )
 }
 
 export default EngTest

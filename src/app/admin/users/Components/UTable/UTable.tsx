@@ -2,11 +2,12 @@
 
 import React, { SetStateAction, useEffect, useState } from "react";
 import { ReadUser } from "../../../../../../Models/AdminModels/UserModels/ReadUser";
-import './questionsTable.css'
+import './UTable.css'
 
 import DeleteModal from "@/app/admin/questions/components/DeleteModal";
 import TableHead from "./TableHead";
 import TableB from "./TableB";
+import GenTestModal from "../Modals/GenTestModal";
 
 const UserTable = (props: { 
     UsersData: ReadUser[],
@@ -25,8 +26,11 @@ const UserTable = (props: {
     const [table, settable] = useState<React.ReactNode>(null)
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isGenTestModalOpen, setisGenTestModalOpen] = useState(false);
 
     const [DeleteUId, setDeleteUId] = useState<string | null>(null);
+    const [GenTestUId, setGenTestUId] = useState<string | null>(null);
+    const [userName, setuserName] = useState<string | null>(null);
 
     useEffect(()=>{
         function constructQTable(){
@@ -41,6 +45,17 @@ const UserTable = (props: {
                 setDeleteUId(null)
             }
 
+            const HandleGenEngTestModal = (id: string, userName: string | null) =>{
+                setGenTestUId(id)
+                setisGenTestModalOpen(true)
+                setuserName(userName)
+            }
+
+            const HandleCloseGenTestModal = () =>{
+                setisGenTestModalOpen(false)
+                setGenTestUId(null)
+            }
+
             const table = (
                 <React.Fragment key={`admin-users-table`}>
                         <table className="table table-striped tableStyles">
@@ -50,8 +65,9 @@ const UserTable = (props: {
                             />
                             <tbody>
                                 <TableB 
-                                UsersData={UsersData} 
-                                HandleDeleteModal={HandleDeleteModal}                                
+                                    UsersData={UsersData} 
+                                    HandleDeleteModal={HandleDeleteModal}      
+                                    HandleGenEngTestModal={HandleGenEngTestModal}                          
                                 />
                             </tbody>
                         </table>
@@ -66,13 +82,22 @@ const UserTable = (props: {
                                 fetch={fetchUsers}
                             />
                         </div>
+                        <div>
+                            <GenTestModal 
+                            
+                                isGenTestModalOpen={isGenTestModalOpen} 
+                                HandleCloseGenTestModal={HandleCloseGenTestModal} 
+                                GenTestUId={GenTestUId} 
+                                userName={userName}
+                            />
+                        </div>
                     </React.Fragment>
             ) 
 
             settable(table)
         }
         constructQTable()
-    },[descending, UsersData, setdescending, isDeleteModalOpen, DeleteUId, fetchUsers])
+    },[descending, UsersData, setdescending, isDeleteModalOpen, DeleteUId, fetchUsers, isGenTestModalOpen, GenTestUId, userName])
     
     return table
 }

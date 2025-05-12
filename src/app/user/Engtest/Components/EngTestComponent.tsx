@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { ETWP } from "../../../../../Models/EngTestWindowModels/ETWProps";
 
@@ -14,14 +14,24 @@ const EngTestWindow = (props: ETWP) => {
   const [CurrentQ, SetQ] = useState<Question | null>(null);
   const { startConnection, submitAnswer } = useQuizHubR(props.hubUrl, SetQ);
 
+
+
+  const StartingW = React.useMemo(() => (
+      <div>
+        <Button className="btn btn-primary" onClick={() => startConnection()}>Начать</Button>
+      </div>
+  ), [startConnection]);
+
+  const [displaySW, setdisplaySW] = useState<boolean>(true);
+  const [loading, setloading] = useState<boolean>(true);
+
   useEffect(() => {
+      setloading(true)
     if (CurrentQ === null)
-      setWindow(
-        <div>
-          <Button className="btn btn-primary" onClick={() => startConnection()}>Начать</Button>
-        </div>
-      );
-    else
+      setloading(false)
+    else{
+      setloading(false)
+      setdisplaySW(false)
       switch (CurrentQ.qpoId) {
         case 1:( setWindow(<QuestionsWindows.RACQWindow question={CurrentQ as RACQ } submitAnswer={submitAnswer}/>) );break;
         case 2:( setWindow(<QuestionsWindows.DictationQWindow question={CurrentQ as DictationQ } submitAnswer={submitAnswer}/>) );break;
@@ -37,12 +47,25 @@ const EngTestWindow = (props: ETWP) => {
         case 12:( setWindow(<QuestionsWindows.ILQWindow question={CurrentQ as ILQ } submitAnswer={submitAnswer}/>) );break;
         case 13:( setWindow(<QuestionsWindows.InterviewQWindow question={CurrentQ as InterviewQ } submitAnswer={submitAnswer}/>) );break;
       }
-  }, [CurrentQ, submitAnswer, startConnection]);
+    }
+  }, [CurrentQ, submitAnswer, startConnection, StartingW]);
 
   return (
-    <div>
-      {windowContent}
-    </div>
+    <React.Fragment key={`react-engTest-window-fragment`}>
+      {displaySW && StartingW}
+      {loading && <p>Загрузка ... </p>}
+      {
+        CurrentQ &&
+          <div className={`container-fluid`}>
+            <div className="row">
+              <h1>Time Left: {CurrentQ.timer}</h1>
+            </div>
+            <div className="row">
+              {windowContent}
+            </div>
+        </div>
+      }
+    </React.Fragment>
   );
 };
 

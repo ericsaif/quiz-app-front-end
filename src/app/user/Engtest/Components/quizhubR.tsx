@@ -6,7 +6,12 @@ import { Question } from "../../../../../Models/QuestionsModels/question";
 import { QuizHubHook } from "../../../../../Models/QuizHubModels/QuizHubHook";
 import { MethodArgs } from "../../../../../Models/QuizHubModels/MethodArgs";
 
-const useQuizHubR = (hubUrl: string, setQuestionCallback: React.Dispatch<React.SetStateAction<Question | null>>) : QuizHubHook => { // Get URL from env
+const useQuizHubR = (
+    hubUrl: string, 
+    setNexQuestion: React.Dispatch<React.SetStateAction<Question | null>>
+
+) : QuizHubHook => { 
+    
     const { connection, isConnected, startConnection } = useSignalR(hubUrl);
 
     // --- Function to Send a Message ---
@@ -30,17 +35,15 @@ const useQuizHubR = (hubUrl: string, setQuestionCallback: React.Dispatch<React.S
         if (!connection || !isConnected) {
             return; // Don't register handlers until connected
         }
-
-        // Example: Listening for a message from the server
-        // Replace "ReceiveMessage" with the actual method name your server uses
         const handleNextQuestion = (NextQ: Question) => {
-            setQuestionCallback(NextQ)
+            setNexQuestion(NextQ)
         };
 
         const handleStopTimer = () => {
             submitAnswer("test", {"test1": "test"})
         };
 
+        connection.on("StartQuiz", handleNextQuestion);
         connection.on("NextQuestion", handleNextQuestion);
         connection.on("StopTimer", handleStopTimer);
 
@@ -48,11 +51,14 @@ const useQuizHubR = (hubUrl: string, setQuestionCallback: React.Dispatch<React.S
         return () => {
             // Important: Remove the handler when the component unmounts or connection changes
             // to prevent memory leaks and duplicate handlers.
-            console.log("Removing 'NextQuestion' handler");
+            console.log("Removing 'NextQuestion' || 'StartQuiz' || 'StopTimer' handler");
             connection.off("NextQuestion", handleNextQuestion);
+            connection.off("StartQuiz", handleNextQuestion);
+            connection.off("StopTimer", handleStopTimer);
+
         };
 
-    }, [connection, isConnected, setQuestionCallback, submitAnswer]); // Re-run when connection or its status changes
+    }, [connection, isConnected, setNexQuestion, submitAnswer]); // Re-run when connection or its status changes
 
     
     return { submitAnswer, startConnection };
