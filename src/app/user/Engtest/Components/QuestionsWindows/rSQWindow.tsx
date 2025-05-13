@@ -1,19 +1,22 @@
+import React from "react"
+import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 import { RSQ, MethodArgs } from "./commonImports"
 
 
 const rSQWindow = (props:{question: RSQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-        event.preventDefault()
-      }
+    const { question, submitAnswer } = props
+    
     return(
-
-        <form onSubmit={handleSubmit}>
-            <div>
-                <p>
-                    {props.question.questionBody}
+        <React.Fragment>
+             <div>
+                <p style={{whiteSpace: 'pre-line'}}>
+                    {question.questionBody}
                 </p>
             </div>
-        </form>
+            <div>
+                <AudioRecorder submitAnswer={submitAnswer} SM={"SubmitRSAsync"} QPOId={question.qpoId} />
+            </div>
+        </React.Fragment>
         
     )
 }

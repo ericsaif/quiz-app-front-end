@@ -3,7 +3,7 @@
 import EngTestWindow from "./Components/EngTestComponent";
 import { QUIZ_HUB_ROUTE } from "../../../../constants/api";
 import { BACKEND_BASE_URL } from "../../../../constants/api";
-import { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 
@@ -18,19 +18,17 @@ const EngTestInner = () =>{
     }, [queryParams]);
 
     return (
-            <div>
-                {
-                    hubURL !="" ? (
-                        <EngTestWindow
-                            hubUrl={hubURL}
-                        />
-                    ) : (
-                        <p style={{color: 'red'}}>Ошибка попробуйте еще раз.</p>
-                    )
-                }
-            </div>
-
-            
+        <React.Fragment key={`react-engTest-window-enclosing-div`}>
+            {
+            hubURL !="" ? (
+                <EngTestWindow
+                    hubUrl={hubURL}
+                />
+            ) : (
+                <p style={{color: 'red'}}>Ошибка попробуйте еще раз.</p>
+            )
+            }
+        </React.Fragment>
     )
 }
 

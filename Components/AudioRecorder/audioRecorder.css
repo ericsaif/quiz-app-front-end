@@ -1,0 +1,69 @@
+.audio-recorder {
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    }
+
+    .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    }
+
+    button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+    }
+
+    .record-button {
+    background-color: #dc3545;
+    color: white;
+    }
+
+    .stop-button {
+    background-color: #6c757d;
+    color: white;
+    }
+
+    .submit-button {
+    background-color: #28a745;
+    color: white;
+    }
+
+    .recording-indicator {
+    color: #dc3545;
+    font-weight: bold;
+    animation: blink 1s infinite;
+    }
+
+    .audio-preview {
+    width: 100%;
+    }
+
+    .audio-preview audio {
+    width: 100%;
+    }
+
+    .error-message {
+    color: #dc3545;
+    font-weight: bold;
+    }
+
+    .success-message {
+    color: #28a745;
+    font-weight: bold;
+    }
+
+    @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+    }

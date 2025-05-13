@@ -21,7 +21,7 @@ const useP_data = () =>{
                 });
                 if(!response.ok)
                     throw new Error(`Http stasus: ${response.status}`)
-                const jsonData : ReadPurchase[] = await response.json()
+                const jsonData : ReadPurchase[] = await response.json() || []
                 set_purchases_data(jsonData)
             }catch (e: unknown) {
                 if (e instanceof Error) {
