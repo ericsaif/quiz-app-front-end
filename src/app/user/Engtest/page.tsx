@@ -5,6 +5,7 @@ import { QUIZ_HUB_ROUTE } from "../../../../constants/api";
 import { BACKEND_BASE_URL } from "../../../../constants/api";
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 
 const EngTestInner = () =>{
@@ -20,13 +21,13 @@ const EngTestInner = () =>{
     return (
         <React.Fragment key={`react-engTest-window-enclosing-div`}>
             {
-            hubURL !="" ? (
-                <EngTestWindow
-                    hubUrl={hubURL}
-                />
-            ) : (
-                <p style={{color: 'red'}}>Ошибка попробуйте еще раз.</p>
-            )
+                hubURL !="" ? (
+                    <EngTestWindow
+                        hubUrl={hubURL}
+                    />
+                ) : (
+                    <p style={{color: 'red'}}>Ошибка попробуйте еще раз. <Link href="/user/myTests">Вернуться к моим тестам</Link></p>
+                )
             }
         </React.Fragment>
     )

@@ -1,9 +1,9 @@
-import { ReadEngTest } from "../EngTestModels/readEngTest";
+import { ReadPurchase } from "../PurchaseModels/ReadPurchase";
 
 
 export interface UserDetails{
     id: string;
     email: string;
-    username: string;
-    EngTests : ReadEngTest[]
+    userName: string;
+    boughtTests : ReadPurchase[]
 }

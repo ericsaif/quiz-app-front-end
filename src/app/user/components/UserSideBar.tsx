@@ -36,6 +36,22 @@ const UserSideBar = () =>{
                                 </p>
                             </div>
                         </Link>
+                        <Link className="btn border border-gray hstack m-0 p-0" style={{width:"100%"}} href={`/user/results`}> 
+                            <div className="sidebar-link hstack">
+                                <Image className="sidebar-image" width={50} height={50} alt="results" src="/reshot-icon-exam-result.svg"/>
+                                <p className="mt-3">
+                                    МОИ РЕЗУЛЬТАТЫ
+                                </p>
+                            </div>
+                        </Link>
+                        <Link className="btn border border-gray hstack m-0 p-0" style={{width:"100%"}} href={`/user/settings`}> 
+                            <div className="sidebar-link hstack">
+                                <Image className="sidebar-image" width={50} height={50} alt="results" src="/reshot-icon-setting.svg"/>
+                                <p className="mt-3">
+                                    НАСТРОЙКИ
+                                </p>
+                            </div>
+                        </Link>
                     </div>
                 </nav>
         </React.Fragment>

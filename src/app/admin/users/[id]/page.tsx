@@ -4,6 +4,7 @@ import { useParams } from "next/navigation"
 import React, { useEffect, useState } from 'react';
 
 import { UserDetails } from "../../../../../Models/AdminModels/UserModels/UserDetails";
+import { BACKEND_BASE_URL } from "../../../../../constants/api";
 
 
 const MyComponent = () => {
@@ -17,7 +18,7 @@ const MyComponent = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('/api/admin/users/${userId}'); // Assuming you have an API route at /api/data
+        const response = await fetch(`${BACKEND_BASE_URL}/api/admin/users/${userId}`); // Assuming you have an API route at /api/data
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -41,7 +42,7 @@ const MyComponent = () => {
 
   if (loading) return <p>Loading data...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (data) return <p>Fetched user: {data.username}</p>;
+  if (data) return <p>Fetched user: {data.userName}</p>;
 
   return null;
 };

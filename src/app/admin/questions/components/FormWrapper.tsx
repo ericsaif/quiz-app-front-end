@@ -10,8 +10,6 @@ export default function FormWrapper({ formType = 'default', children
   
   useEffect(() => {
     setFormType(formType);
-    
-    // Clean up when component unmounts
     return () => setFormType('default');
   }, [formType, setFormType]);
   

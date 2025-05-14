@@ -23,7 +23,7 @@ const DeleteModal = (props:{
         width: '100%',
         height: '100vh',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        zIndex: 1050,
+        zIndex: 10050,
         overflow: 'hidden',
     };
 
