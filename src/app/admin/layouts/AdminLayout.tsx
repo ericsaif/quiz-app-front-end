@@ -10,6 +10,9 @@ import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand  } from "react-i
 
 import "./adminLayout.css"
 
+import "@/../Components/css/layout.css"
+
+
 const Layout = ({ 
     children 
   }: Readonly<{
@@ -57,7 +60,7 @@ const Layout = ({
   };
   
   const getSidebarClasses = () => {
-    const baseClasses = 'bg-gray-100 transition-all duration-300 border border-gray sidebar';
+    const baseClasses = 'sidebar';
 
     if (isSidebarCollapsed)
       return `${baseClasses} sidebar-collapsed`;

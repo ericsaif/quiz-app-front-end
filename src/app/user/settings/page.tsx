@@ -1,39 +1,56 @@
 'use client'
 
-import { Button } from "@mui/material"
 import React, { useState } from "react"
-import { BACKEND_BASE_URL } from "../../../../constants/api"
-import { useRouter } from "next/navigation"
+import LogoutModal from "./components/LogoutModal"
+import ChangePasswordModal from "./components/changePasswordModal"
+import Image from "next/image"
+
+import "./components/css/user-settings.css"
+import ChangeUserDataModal from "./components/changeUserDataModal"
 
 const Settings = ()=>{
-    const router = useRouter()
-    const [error, seterror] = useState<string | null>(null)
-    const HandleLogOut = async () =>{
-        const response = await fetch(`${BACKEND_BASE_URL}/api/auth/logout`,{
-            method: 'POST',
-            credentials: 'include'
-        })
 
-        if(response.status === 204){
-            router.push('/')
-        }else{
-            const errorData = await response.json();
-            seterror(errorData.message || "An error occurred");
-        }
-    }
+    const [ LogoutModalOpen, setLogoutModalOpen ] = useState<boolean>(false)
+    const [ ChangePasswordModalOpen, setChangePasswordModalOpen ] = useState<boolean>(false)
+    const [ ChangeUserDataModalOpen, setChangeUserDataModalOpen ] = useState<boolean>(false)
+    
     return (
 
         <React.Fragment key={`react-settings-fragment`}>
-            <div className="container-fluid">
-                <h1>
-                    Настройки
+            <main className="container-fluid">
+                <h1 className="row">
+                    <p>
+                        Настройки
+                    </p>
                 </h1>
-                
-                <main>
-                    {error && <p style={{color: 'red'}}>{error}</p>}
-                    <Button type='button' onClick={HandleLogOut} className="btn">Выйти</Button>
-                </main>
-            </div>
+                <div className="row">
+                    <div className="col vstack" >
+                        <button type='button' onClick={()=>{setChangePasswordModalOpen(true) }} className="settingsButton" >
+                            Сменить пароль
+                            <Image className="ms-2" src={`/reshot-icon-password-locked.svg`} alt="change_password_icon" width={40} height={40}/>
+                        </button>
+                        <button type='button' onClick={()=>{setChangeUserDataModalOpen(true)}} className="settingsButton">
+                            Изменить Данные
+                            <Image className="ms-2" src={`/id-proof-line-icon.svg`} alt="log_out_icon" width={30} height={30}/>
+                        </button>
+                        <button type='button' onClick={()=>{setLogoutModalOpen(true)}} className="settingsButton">
+                            Выйти
+                            <Image className="ms-2" src={`/reshot-icon-log-out.svg`} alt="log_out_icon" width={30} height={30}/>
+                        </button>
+                    </div>
+                </div>
+                <LogoutModal 
+                    LogoutModalOpen={LogoutModalOpen} 
+                    setLogoutModalOpen={setLogoutModalOpen}                    
+                />
+                <ChangePasswordModal 
+                    ChangePasswordModalOpen={ChangePasswordModalOpen} 
+                    setChangePasswordModalOpen={setChangePasswordModalOpen}
+                />
+                <ChangeUserDataModal 
+                ChangeUserDataModalOpen={ChangeUserDataModalOpen} 
+                setChangeUserDataModalOpen={setChangeUserDataModalOpen}                />
+            </main>
         </React.Fragment>
     )
 }

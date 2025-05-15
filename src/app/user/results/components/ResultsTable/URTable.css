@@ -1,0 +1,6 @@
+.tableStyles {
+    width: 100%;
+    border-collapse: collapse;
+    transition: all 0.3s ease;
+    /* table-layout: fixed; */
+}

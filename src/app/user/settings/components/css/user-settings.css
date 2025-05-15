@@ -1,0 +1,15 @@
+.settingsButton{
+    border: 2px solid gray;
+    border-radius: 5px;
+    margin: 2px;
+    width: 15rem;
+    padding: 0;
+    height: 3rem;
+    color: black;
+    background-color: whitesmoke;
+}
+
+.settingsButton:hover{
+    background-color: teal;
+    color: white;
+}

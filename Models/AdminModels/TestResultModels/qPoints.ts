@@ -1,8 +1,5 @@
-import { TestResult } from "./result";
-
 export interface QPoints {
     id: number;
-    result: TestResult | null;
     resultId: string;
     iLQpoints: number;
     iRQpoints: number;

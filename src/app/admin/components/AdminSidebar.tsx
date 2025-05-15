@@ -2,12 +2,14 @@ import Image from "next/image"
 import Link from "next/link"
 import React from "react"
 
+import "@/../Components/css/SideBar.css"
 
 const AdminSidebar = () =>{
     return (
         <nav className="vstack">
-            <div >
+            <div className="m-2">
                 <p>
+                    <Image className="united-kingdom-flag-icon" width={30} height={30} alt="united-kingdom-flag-icon" src="/united-kingdom-flag-icon.svg"/>
                     duolingo.kz english Test
                 </p>
             </div>

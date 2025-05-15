@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import { BACKEND_BASE_URL } from "../../../../constants/api"
-import { UserDetails } from "../../../../Models/AdminModels/UserModels/UserDetails"
+import { UserDetails } from "../../../../Models/UserModels/UserModels/UserDetails"
 import { useRouter } from "next/navigation"
 
 const UserDashboard =() =>{
@@ -43,7 +43,10 @@ const UserDashboard =() =>{
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-5 vstack">
-                        <h3 >Моя Панель Управления</h3>
+                        <h3 >Моя Панель Управления {
+                            user &&
+                            user.username
+                        }</h3>
                         {
                             error && 
                             <p style={{color: 'red'}}>
@@ -57,9 +60,6 @@ const UserDashboard =() =>{
                             <p>
                                 Загрузка
                             </p>
-                        }{
-                            user &&
-                            user.userName
                         }
                     </div>
                     <div style={{ position: 'relative'}} className="col-7" >

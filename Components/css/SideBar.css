@@ -1,0 +1,30 @@
+.navLink{
+    border-radius: 5px;
+    margin: 0;
+    margin-bottom: 4px;
+    padding: 4px;    
+    color: black;
+    font-weight: 400;
+    font-size: large;
+    text-transform: uppercase;
+    text-decoration: none;
+    height: 100%;
+    text-align: center;
+}
+
+.navLink:hover{
+    background-color: teal;
+    color: white;
+}
+
+.navLink_active{
+    border: 2px solid lightgray;
+}
+
+.sidebar-image{
+    margin-right: 2%;
+}
+
+.united-kingdom-flag-icon{
+    margin-right: 5px;
+}
