@@ -1,6 +1,6 @@
 "use client"
 
-// import './AudioRecorder.css' 
+import './audioRecorder.css' 
 
 
 import Image from 'next/image';
@@ -23,7 +23,7 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
     useEffect(() => {
         return () => {
         if (streamRef.current && isRecording) {
-            streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current.getTracks().forEach(track => track.stop());
         }
         };
     }, [isRecording]);
@@ -45,7 +45,7 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
 
             mediaRecorder.ondataavailable = (event) => {
                 if (event.data.size > 0) {
-                audioChunksRef.current.push(event.data);
+                  audioChunksRef.current.push(event.data);
                 }
             };
 
@@ -58,8 +58,8 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
 
                 // Stop all tracks to release the microphone
                 if (streamRef.current) {
-                streamRef.current.getTracks().forEach(track => track.stop());
-                streamRef.current = null;
+                  streamRef.current.getTracks().forEach(track => track.stop());
+                  streamRef.current = null;
                 }
             };
 
@@ -68,6 +68,7 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
             console.error("Error accessing the microphone:", err);
             setError("Could not access microphone. Please check permissions.");
             setRecordingStatus('idle');
+            console.log(error)
         }
     };
 
@@ -105,7 +106,6 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
 
   return (
     <div className="audio-recorder">
-      <h2>Audio Recorder</h2>
       
       <div className="controls">
         {!isRecording && recordingStatus !== 'recorded' && (
@@ -123,14 +123,14 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
             onClick={stopRecording} 
             className="btn"
           >
-            <Image src="/reshot-icon-stop.svg" alt="stop voice recorder"  width={100} height={100} />
+            <Image src="/reshot-icon-stop.svg" alt="stop voice recorder"  width={70} height={70} />
             
           </button>
         )}
         
         {recordingStatus === 'recording' && (
           <div className="recording-indicator ">
-                <Image src="/reshot-icon-blu-ray.svg" alt="recording" className='btn slow-spin' width={100} height={100} />
+            <Image src="/reshot-icon-blu-ray.svg" alt="recording" className='btn slow-spin' width={100} height={100} />
           </div>
         )}
         
@@ -139,27 +139,14 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
             onClick={submitRecording} 
             className="submit-button"
           >
-            Отправить ответ
+            Submit
           </button>
         )}
-        
-        {/* {recordingStatus === 'submitting' && (
-          <div className="submitting-indicator">
-            Submitting recording...
-          </div>
-        )}
-        
-        {recordingStatus === 'submitted' && (
-          <div className="success-message">
-            Recording submitted successfully!
+        {/* {audioUrl && (
+          <div className="audio-preview">
+            <audio controls src={audioUrl} />
           </div>
         )} */}
-        
-        {error && (
-          <div className="error-message">
-            Error: {error}
-          </div>
-        )}
       </div>
     </div>
   );

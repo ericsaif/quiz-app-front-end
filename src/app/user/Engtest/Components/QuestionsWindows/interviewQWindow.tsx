@@ -1,18 +1,22 @@
+import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 import { InterviewQ, MethodArgs } from "./commonImports"
 
 const interviewQWindow = (props:{question: InterviewQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-        event.preventDefault()
-      }
+    const { question, submitAnswer } = props
     return(
-
-        <form onSubmit={handleSubmit}>
+        <div>
             <div>
-                <p>
-                    {props.question.questionBody}
+                <p style={{whiteSpace: 'pre-line', fontSize: 'larger'}}>
+                    {question.questionBody}
                 </p>
             </div>
-        </form>
+            <div>
+                <AudioRecorder 
+                QPOId={question.qpoId} 
+                SM={"SubmitVideoAAsync"} 
+                submitAnswer={submitAnswer} />
+            </div>
+        </div>
         
     )
 }

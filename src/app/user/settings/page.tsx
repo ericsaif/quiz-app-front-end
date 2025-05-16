@@ -7,17 +7,22 @@ import Image from "next/image"
 
 import "./components/css/user-settings.css"
 import ChangeUserDataModal from "./components/changeUserDataModal"
+import PopUp from "../../../../Components/Hooks/popup/popup"
 
 const Settings = ()=>{
 
     const [ LogoutModalOpen, setLogoutModalOpen ] = useState<boolean>(false)
     const [ ChangePasswordModalOpen, setChangePasswordModalOpen ] = useState<boolean>(false)
     const [ ChangeUserDataModalOpen, setChangeUserDataModalOpen ] = useState<boolean>(false)
+
+    const { triggerPopup, popup } = PopUp();
+    
     
     return (
 
         <React.Fragment key={`react-settings-fragment`}>
             <main className="container-fluid">
+                {popup}
                 <h1 className="row">
                     <p>
                         Настройки
@@ -39,15 +44,17 @@ const Settings = ()=>{
                         </button>
                     </div>
                 </div>
-                <LogoutModal 
+                <LogoutModal  
                     LogoutModalOpen={LogoutModalOpen} 
                     setLogoutModalOpen={setLogoutModalOpen}                    
                 />
-                <ChangePasswordModal 
+                <ChangePasswordModal   
+                    triggerPopup={triggerPopup}                   
                     ChangePasswordModalOpen={ChangePasswordModalOpen} 
                     setChangePasswordModalOpen={setChangePasswordModalOpen}
                 />
                 <ChangeUserDataModal 
+                    triggerPopup={triggerPopup}
                 ChangeUserDataModalOpen={ChangeUserDataModalOpen} 
                 setChangeUserDataModalOpen={setChangeUserDataModalOpen}                />
             </main>

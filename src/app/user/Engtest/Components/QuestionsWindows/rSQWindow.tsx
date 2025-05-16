@@ -9,7 +9,7 @@ const rSQWindow = (props:{question: RSQ, submitAnswer: (SM: string, args: Method
     return(
         <React.Fragment>
              <div>
-                <p style={{whiteSpace: 'pre-line'}}>
+                <p style={{whiteSpace: 'pre-line', fontSize: 'larger'}}>
                     {question.questionBody}
                 </p>
             </div>

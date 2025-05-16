@@ -11,6 +11,7 @@ import { Question,RACQ, DictationQ, RAQ, DescribePicQ, CTestQ, RSQ, WordExistsQ,
 import { BACKEND_BASE_URL } from "../../../../../constants/api";
 
 import './EngTestW.css'
+import './QuestionsWindows/QWindows.css'
 
 const EngTestWindow = (props: ETWP) => {
   const [windowContent, setWindow] = useState<ReactElement>();

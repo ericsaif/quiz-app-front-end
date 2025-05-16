@@ -51,6 +51,7 @@ input[type="number"]{
   width: 120px;
   height: auto;
   padding: .25rem;
+  
 }
 
 input[type="password"],

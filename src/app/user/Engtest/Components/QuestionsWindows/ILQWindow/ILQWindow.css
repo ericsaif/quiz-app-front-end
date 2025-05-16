@@ -50,14 +50,6 @@
     z-index: 1005;
     border-color:black ;
 }
-.AUDIO_LINE_PLAYING{
-    transform: translateY(0.5rem);
-}
-
-.AUDIO_BUTTON{
-    border: none;
-    background-color: transparent;
-}
 
 .ILQ_USER_SELECT{
     width: 15rem;

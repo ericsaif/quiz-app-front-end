@@ -11,7 +11,6 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault()
-        console.log(`Essay - ${essay} Topic = ${Topic} QPOId = ${QPOId}`)
 
         const newM : MethodArgs = {
             "Essay": essay,
@@ -28,7 +27,7 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
     return(
         <>
             <div >
-                <p>
+                <p style={{whiteSpace: 'pre-line', fontSize: 'larger'}}>
                     {Topic}
                 </p>
             

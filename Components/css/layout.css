@@ -23,6 +23,7 @@
 }
 
 .sidebar-expanded-overlap{
+    width: 60% !important;
     background-color: white;
     height: 100%;
     position: absolute;

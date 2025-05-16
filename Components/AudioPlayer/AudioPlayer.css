@@ -1,0 +1,40 @@
+.AUDIO_LINE{
+    height: 10%;
+    width: 80%;
+    border: 2px solid;
+    border-radius: 2px;
+    position: absolute;
+    top: 1.65rem;
+    /* left: -3rem; */
+}
+
+.AUDIO_NOT_LISTENED{
+    z-index: 999;
+    border-color: gray;
+}
+
+.AUDIO_LINE_LISTENED{
+    z-index: 1005;
+    border-color:black ;
+
+}
+.AUDIO_BUTTON{
+    left: -1rem;
+    position: absolute;
+    border: none;
+    background-color: transparent;
+}
+.AUDIO_ANSWER{
+    position: relative;
+    width: 20rem;
+    height: 2.2em;
+    border: 2px solid gray;
+    border-radius: 5px;
+    padding: 2px;
+    margin-bottom: 1rem;
+    justify-self: left;
+
+    display: flex;
+    justify-items: left;
+    align-items: center;
+}

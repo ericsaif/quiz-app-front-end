@@ -1,20 +1,28 @@
+import React from "react"
+import AudioPlayer from "../../../../../../Components/AudioPlayer/AudioPlayer"
 import { LASQ, MethodArgs } from "./commonImports"
+import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 
 
 const lASQWindow = (props:{question: LASQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-        event.preventDefault()
-      }
+    const { question, submitAnswer } = props
+    
     return(
-
-        <form onSubmit={handleSubmit}>
-            <div>
-                <p>
-                    {props.question.questionBody}
-                </p>
+        <React.Fragment key={`LASQ-window-fragment`}>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+                <AudioPlayer
+                    keyName={question.s3PathToAudioFile} 
+                    maxListenTries={question.listenTries}
+                />
             </div>
-        </form>
-        
+            <div>
+                <AudioRecorder 
+                    QPOId={question.qpoId} 
+                    SM={"SubmitLASAsync"} 
+                    submitAnswer={ submitAnswer }                
+                />
+            </div>
+        </React.Fragment>
     )
 }
 

@@ -1,35 +1,57 @@
 import Image from "next/image"
 import { DescribePicWAudioQ, MethodArgs } from "./commonImports"
-import { Button } from "@headlessui/react"
+import React, { useEffect, useState } from "react"
+import { BACKEND_BASE_URL } from "../../../../../../constants/api"
+import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 
 
-const describePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-        const pic_link = props.question.s3PathToPic ?? ""
-        const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-            event.preventDefault()
-            const newM: MethodArgs = {
-                "AudioData": AudioData,
-                "QPOId":props.question.qpoId
+const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    
+    const { question, submitAnswer } = props
+
+    const keyName = question.s3PathToPic ?? ""
+    const [ pic_link, setpic_link ] = useState<string>("") 
+
+    useEffect(()=>{
+        async function fetchPic(){
+            const response = await fetch(`${BACKEND_BASE_URL}/api/user/engtest/file?keyName=${keyName}`,{
+                method: "GET",
+                credentials: 'include'
+            })
+            if(response.ok){
+                const responseData = await response.text()
+                setpic_link(responseData)
             }
-            props.submitAnswer("SubmitPicDescriptionAsync",  newM)
-          }
-        const OnStartRecording = (event:  React.MouseEvent<HTMLButtonElement>) =>{
-                
-            const { value } = event.currentTarget
-            alert(value)
         }
-        return(
-            
-            <>
-                <Image src={pic_link} alt="" className="describe_pic"/>
-                <form onSubmit={handleSubmit}>
-                    <Button type="button" onClick={OnStartRecording}></Button>
+        fetchPic()
+    })
 
-                    <Button type="submit"></Button>
-                </form>
-            </>
-            
-        )
+    return(
+        
+        <React.Fragment key={`describe-picture-with-audio-fragment`}>
+            <div className="col describe-pic-container">
+                {
+                    pic_link != "" &&
+                    <div className="describe_pic">
+                        <Image 
+                            className="img-fluid"
+                            src={pic_link}
+                            alt={`${keyName}`} 
+                            fill 
+                        />
+                    </div>
+                }
+                <div >
+                    <AudioRecorder
+                        QPOId={question.qpoId} 
+                        SM={"SubmitAudioPicDescriptionAsync"} 
+                        submitAnswer={submitAnswer} 
+                    />
+                </div>
+            </div>
+        </React.Fragment>
+        
+    )
 }
 
-export default describePicWAudioQWindow
+export default DescribePicWAudioQWindow

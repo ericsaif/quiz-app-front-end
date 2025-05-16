@@ -4,11 +4,11 @@ import { Button } from "@headlessui/react"
 import Options from "./GivenDOptions/Options"
 
 import { CiPlay1 } from "react-icons/ci";
-import { BACKEND_BASE_URL } from "../../../../../../../constants/api";
 import GetOptions from "./GivenDOptions/getOptions";
 
 import "./ILQWindow.css"
 import Image from "next/image";
+import AudioPlayer from "../../../../../../../Components/AudioPlayer/AudioPlayer";
 
 const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
 
@@ -32,7 +32,6 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
 
 
     useEffect(()=>{
-        let audioLineInterval: ReturnType<typeof setInterval>
         
         const HandleOptionsSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
             const value = event.target.value
@@ -90,51 +89,6 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
             
         }
 
-        function StartLineWidth(width: number){
-            audioLineInterval = setInterval(() => {
-                    ChangeListenLine(width);
-                }, 500)
-        }
-
-        function StopListening() {
-            clearInterval(audioLineInterval);
-        }
-
-        const ChangeListenLine = (width: number) =>{ setaudioLineWidth( prev => {
-                let newWidth = prev + width;
-                 if (newWidth >= 80) {
-                    newWidth = 80
-                    StopListening();
-                }
-                return newWidth;
-            } )
-        }
-        
-        const PlayAudio = async (audiolink: string) =>{
-            if(listenTries == 0){
-                const response = await fetch(`${BACKEND_BASE_URL}/api/user/engtest/file?keyName=${audiolink}`,{
-                    method: "GET",
-                    credentials: 'include'
-                })
-                if (response.ok){
-                    
-                    if (audioRef.current) {
-                        const audio = audioRef.current;
-                        const responseData: string = await response.text();
-                        audio.src = responseData;
-                        audio.onloadedmetadata = () => {
-                            const duration = audio.duration;
-                            StartLineWidth(80 / duration / 2);
-                            audio.play();
-                        };
-                        
-                    }
-                    
-                }
-                setlistenTries(1)
-                
-            }
-        }
         
         const ChangeCurrentOptions = () =>{
             setCurrentOptions(
@@ -146,13 +100,10 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
 
         const ChangeCurrentAudio = () =>{
             setCurrentAudio(
-                <div className="AUDIO_ANSWER">
-                    <Button className="AUDIO_BUTTON " onClick={()=>{PlayAudio(s3pathsToAudioAnswers[currentILQ])}}>
-                        <CiPlay1 size={23} />
-                    </Button>
-                    <div className="AUDIO_LINE AUDIO_NOT_LISTENED" />
-                    <div className="AUDIO_LINE AUDIO_LISTENED AUDIO_LINE_PLAYING" style={{display: `${audioLineWidth != 0 ? 'block' : 'none'}`, width: `${audioLineWidth}%`}} />
-                </div>
+                <AudioPlayer 
+                    keyName={`${s3pathsToAudioAnswers[currentILQ]}`} 
+                    maxListenTries={1} 
+                />
             )
         }
 

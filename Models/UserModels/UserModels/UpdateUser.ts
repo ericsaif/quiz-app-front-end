@@ -1,4 +1,4 @@
 export interface UpdateUser {
-    userName: string;
+    UserName: string;
     password: string;
 }

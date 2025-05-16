@@ -4,16 +4,17 @@ import { Button } from "@headlessui/react"
 
 
 const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+    const { question, submitAnswer } = props
+
     const [blankValues, setBlanks] = useState<Record<string, string>>({})
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault()
         const newM: MethodArgs= {
-            QId: props.question.id,
-            blankValues:blankValues,
-            "QPOId":props.question.qpoId
-
+            'QId': question.id,
+            'blankValues':blankValues
         }
-        props.submitAnswer("SubmitCtestAttemptAsync", newM)
+        submitAnswer("SubmitCtestAttemptAsync", newM)
     }
     const handleInputChange = (event:  React.ChangeEvent<HTMLInputElement>, blankIndex: number, letterIndex: number) =>{
         
@@ -24,8 +25,14 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
         }))
     }
 
-    const displayedText = props.question.questionBody
-    const separatorRegex = /^\[BLANK:(\d+)\]$/;
+    let displayedText = question.questionBody
+    // const separatorRegex = /^\[BLANK:(\d+)\]$/;
+
+    const replaceRegex = /(\(\d+\))/g
+    const separatorRegex =  /(\[BLANK:\d+\])/g;
+    const diditRegex = /(\d+)/g
+
+    displayedText = displayedText?.replaceAll(replaceRegex, "") || displayedText
     const parts = displayedText?.split(separatorRegex)
 
     let blankCounter =0
@@ -36,7 +43,8 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
                 {parts?.map((part, index) =>{
                     const match = part.match(separatorRegex)
                     if(match){
-                        const blankLength = parseInt(match[1])
+                        const digit = match[0].match(diditRegex) || ''
+                        const blankLength = parseInt(digit[0], 10)
                         const inputs = [];
                     for (let i = 0; i < blankLength; i++) {
                         inputs.push(
@@ -53,11 +61,11 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
                     blankCounter++;
                     return <React.Fragment key={`blank-container-${index}`}>{inputs}</React.Fragment>;
                     } else {
-                    return <span key={`text-${index}`}>{part}</span>;
+                        return <span className="" key={`text-${index}`}>{part}</span>;
                     }
                 })}
             </div>
-            <Button type="submit"></Button>
+            <Button className="submit-btn" type="submit">Submit</Button>
             
         </form>
         
