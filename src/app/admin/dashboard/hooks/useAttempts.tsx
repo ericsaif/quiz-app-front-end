@@ -35,7 +35,6 @@ const useAttempts = () => {
     }, [])
 
     useEffect(() => {
-        if (!AttemptsLoading) {
             if (finished_attempts_data && finished_attempts_data.length > 0) {
                 
                 const filtered_attempts_data: FilteredAttempt[] = finished_attempts_data
@@ -60,8 +59,7 @@ const useAttempts = () => {
                 set_AC(
                     <LineChart
                         // The new MUI X-Charts API expects series.data for Y values, not dataset
-                        width={500}
-                        height={300}
+                        
                         series={[
                             {
                                 data: attemptValues,  // This is the array of Y values
@@ -80,19 +78,14 @@ const useAttempts = () => {
                         }]}
                     />
                 );
-            } else {
-                // No data or empty data array
-                set_AC(<div><p>No Data Available</p></div>);
-            }
-        } else {
-            // Still loading
-            set_AC(<div><p>Loading Attempts...</p></div>);
-        }
-    }, [finished_attempts_data, AttemptsLoading]);
+            } 
+    }, [finished_attempts_data]);
 
     return (
         <>
-            {attempts_chart}
+            {!AttemptsLoading && (finished_attempts_data.length != 0 ?  <div><p>No Data Available</p></div>: attempts_chart)
+            }
+            {AttemptsLoading && <div><p>Loading Attempts...</p></div>}
             
             <div id="error">
                 {error}

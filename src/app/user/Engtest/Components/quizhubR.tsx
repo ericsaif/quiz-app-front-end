@@ -14,16 +14,13 @@ const useQuizHubR = (
     
     const { connection, isConnected, startConnection } = useSignalR(hubUrl);
 
-    // --- Function to Send a Message ---
     const submitAnswer = useCallback(async (SM: string, args: MethodArgs) => { // SM - server method name
         if (connection && isConnected) {
             try {
-                // Replace "SendMessage" with the actual Hub method name on your server
                 await connection.invoke(SM, args);
                 console.log("User Answer submitted:", ...Object.values(args));
             } catch (err) {
                 console.error("Error sending the answer:", err);
-                // Handle send error (e.g., show a notification)
             }
         } else {
             console.warn("Cannot send message. Connection not established or message is empty.");

@@ -12,6 +12,7 @@ import { BACKEND_BASE_URL } from "../../../../../constants/api";
 
 import './EngTestW.css'
 import './QuestionsWindows/QWindows.css'
+import Timer from "../../../../../Components/Timer/Timer";
 
 const EngTestWindow = (props: ETWP) => {
   const [windowContent, setWindow] = useState<ReactElement>();
@@ -72,18 +73,20 @@ const EngTestWindow = (props: ETWP) => {
 
   return (
     <React.Fragment key={`react-engTest-window-fragment`}>
-      <form className="border border-gray p-3" onSubmit={TempHandleSubmit}>
+      {/* <form className="border border-gray p-3" onSubmit={TempHandleSubmit}>
           <input type="number" placeholder=" " value={tempQId} onChange={(e) => settempQId(parseInt(e.target.value, 10))}></input>
           <input type="number" placeholder=" " value={tempQPOId} onChange={(e) => settempQPOId(parseInt(e.target.value, 10))}></input>
           <button type="submit">get</button>
-      </form>
+      </form> */}
       {displaySW && StartingW}
       {loading && <p>Загрузка ... </p>}
       {
         CurrentQ &&
           <div className={`container-fluid text-center QWindow`}>
             <div className="row">
-              <h1>Time Left: {CurrentQ.timer}</h1>
+              <Timer 
+                timer={CurrentQ.timer}
+              />
             </div>
             <div className="row"  style={{height: "100%"}}>
               {windowContent}

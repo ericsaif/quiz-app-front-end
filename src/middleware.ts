@@ -12,7 +12,6 @@ export async function middleware(request: NextRequest) {
   const loginUrl = new URL('/auth/login', request.url);
 
   const authCookie = request.cookies.get('QuizAppCookie'); 
-  console.log('Auth cookie found:', !!authCookie);
 
   if (protectedRoutes.some((route) => pathname.startsWith(route))) {
     if (!authCookie) {

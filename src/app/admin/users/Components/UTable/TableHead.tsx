@@ -32,6 +32,7 @@ const TableHead = (props:{
                 <th scope="col"> Новый Тест </th>
                 <th scope="col">  </th>
                 <th scope="col">  </th>
+                <th scope="col">  </th>
             </tr>
         </thead>
     )

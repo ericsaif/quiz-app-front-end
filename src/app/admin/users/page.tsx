@@ -10,6 +10,7 @@ import Link from "next/link";
 import { IoAddCircle } from "react-icons/io5";
 import UserTable from "./Components/UTable/UTable";
 import Image from "next/image";
+// import { useLayout } from "../contexts/LayoutContext";
 
  const UsersInner = () => {
     const [totalCount, settotalCount] = useState<number>(0)
@@ -27,6 +28,9 @@ import Image from "next/image";
     const baseURl = `${BACKEND_BASE_URL}/api/admin/users`
 
     const fetchRef = useRef(()=>{})
+
+    // const { setFormType } = useLayout()
+    // setFormType("12")
 
     useEffect(() =>{
         async function fetchUsers(){

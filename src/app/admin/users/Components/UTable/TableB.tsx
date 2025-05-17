@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ReadUser } from "../../../../../../Models/AdminModels/UserModels/ReadUser";
 import Image from "next/image";
 import { Button } from "@headlessui/react";
+import { BACKEND_BASE_URL } from "../../../../../../constants/api";
 
 const TableB = (props:{
     UsersData: ReadUser[]
@@ -9,6 +10,18 @@ const TableB = (props:{
     HandleGenEngTestModal: (id: string, userName: string | null) => void
 }) =>{
     const { UsersData, HandleDeleteModal, HandleGenEngTestModal } = props
+
+    const ClearPrevIds = async (UserId: string) =>{
+        const response = await fetch(`${BACKEND_BASE_URL}/api/admin/users/cleanPrevIds?UserId=${UserId}`,{
+            method: "POST",
+            credentials: 'include'
+        })
+        if(response.ok){
+            alert("Previous Ids were cleared successfully")
+        }else{
+            alert("fail")
+        }
+    }
 
     return UsersData.map((user: ReadUser) => (
         <tr key={`row-in-an-admin-users-table-${user.id}`}>
@@ -20,6 +33,11 @@ const TableB = (props:{
             <td className={``}> 
                 <Button className={`btn pt-0`} onClick={() => HandleGenEngTestModal(user.id, user.userName)}>
                     <Image width={30} height={30} src={`/reshot-icon-add.svg`} alt="engTestGen"/>
+                </Button>
+            </td>
+            <td className={``}> 
+                <Button className={`btn pt-0`} onClick={() => ClearPrevIds(user.id)}>
+                    Clear Ids
                 </Button>
             </td>
             <td >

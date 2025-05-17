@@ -20,6 +20,10 @@
     border-radius: 3px;
 }
 
+.questionBody{
+    font-size: larger;
+}
+
 .describe_pic{
     /* width: 70vw !important;
     height: calc(50vw / 2) !important;
