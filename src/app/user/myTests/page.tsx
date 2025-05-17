@@ -38,7 +38,7 @@ const BoughtTests = ()=>{
             <div>
                 <h1>
                     Мои Тесты 
-                    <Link className='btn ms-2' style={{backgroundColor: 'purple', color: 'white'}} href={`/user/buy`} > КУПИТЬ ЕЩЕ</Link>
+                    <Link className='btn ms-2 page-button' style={{backgroundColor: 'purple', color: 'white'}} href={`/user/buy`} > КУПИТЬ ЕЩЕ</Link>
                 </h1>
                 {loading && <p><i>Загрузка ...</i></p>}
                 {error && <p style={{color:'red'}}>{error}</p>}

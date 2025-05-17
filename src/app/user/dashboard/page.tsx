@@ -53,8 +53,8 @@ const UserDashboard =() =>{
                                 {error}
                             </p>
                         }
-                            <Link className="btn mt-2" style={{width:'9rem', height:'2.5rem', color: 'white', backgroundColor: 'purple'}} href={`/user/buy`}>КУПИТЬ ТЕСТЫ</Link>
-                            <Link className="btn mt-2" style={{width:'9rem', height:'2.5rem', color: 'white', backgroundColor: 'purple'}} href={`/user/myTests`}>МОИ ТЕСТЫ</Link>
+                            <Link className="btn mt-2" style={{width:'9rem', height:'2.5rem', color: 'white', backgroundColor: '#5669BB'}} href={`/user/buy`}>КУПИТЬ ТЕСТЫ</Link>
+                            <Link className="btn mt-2" style={{width:'9rem', height:'2.5rem', color: 'white', backgroundColor: '#5669BB'}} href={`/user/myTests`}>МОИ ТЕСТЫ</Link>
                         {
                             loading &&
                             <p>

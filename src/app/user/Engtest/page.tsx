@@ -1,7 +1,7 @@
 "use client";
 
 import EngTestWindow from "./Components/EngTestComponent";
-import { QUIZ_HUB_ROUTE } from "../../../../constants/api";
+// import { QUIZ_HUB_ROUTE } from "../../../../constants/api";
 import { BACKEND_BASE_URL } from "../../../../constants/api";
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -15,7 +15,9 @@ const EngTestInner = () =>{
     useEffect(() => {
         const EngTestId = queryParams.get('engTestId');
 
-        sethubURL(`${ BACKEND_BASE_URL }${ QUIZ_HUB_ROUTE }?EngTestId=${EngTestId}`)
+        // sethubURL(`${ BACKEND_BASE_URL }${ QUIZ_HUB_ROUTE }?EngTestId=${EngTestId}`)
+        sethubURL(`${ BACKEND_BASE_URL }/englishtest?EngTestId=${EngTestId}`)
+        // sethubURL(`${ BACKEND_BASE_URL }${ QUIZ_HUB_ROUTE }`)
     }, [queryParams]);
 
     return (

@@ -25,7 +25,6 @@ const useSignalR = (hubUrl: string): SignalRHookResult => {
 
     // --- Function to Start the Connection ---
     const startConnection = useCallback(async () => {
-        // Use the ref to ensure we have the latest connection object
         const currentConnection = connectionRef.current;
         if (!currentConnection) {
             console.error("SignalR connection object not initialized.");
@@ -42,7 +41,9 @@ const useSignalR = (hubUrl: string): SignalRHookResult => {
         console.log("Attempting to start SignalR connection...");
         setError(null); // Clear previous errors before trying again
         try {
+            console.log("current connection - ", currentConnection)
             await currentConnection.start();
+            
             console.log("SignalR Connected. Connection ID:", currentConnection.connectionId);
             
             setIsConnected(true);
@@ -58,20 +59,20 @@ const useSignalR = (hubUrl: string): SignalRHookResult => {
 
     // --- Function to Stop the Connection (Optional but good practice) ---
     const stopConnection = useCallback(async () => {
-    const currentConnection = connectionRef.current;
-    if (currentConnection && currentConnection.state === signalR.HubConnectionState.Connected) {
-        console.log("Attempting to stop SignalR connection manually...");
-        try {
-            await currentConnection.stop();
-            console.log("SignalR connection stopped manually.");
-            // State updates (isConnected=false, connectionId=null) are handled by the 'onclose' handler
-        } catch (err) {
-            console.error("Error stopping SignalR connection:", err);
-            setError(err instanceof Error ? err : new Error("Error stopping connection"));
+        const currentConnection = connectionRef.current;
+        if (currentConnection && currentConnection.state === signalR.HubConnectionState.Connected) {
+            console.log("Attempting to stop SignalR connection manually...");
+            try {
+                await currentConnection.stop();
+                console.log("SignalR connection stopped manually.");
+                // State updates (isConnected=false, connectionId=null) are handled by the 'onclose' handler
+            } catch (err) {
+                console.error("Error stopping SignalR connection:", err);
+                setError(err instanceof Error ? err : new Error("Error stopping connection"));
+            }
+        } else {
+            console.warn("SignalR connection is not connected or doesn't exist.");
         }
-    } else {
-        console.warn("SignalR connection is not connected or doesn't exist.");
-    }
     }, []); // No dependencies needed as it uses the ref
 
 
@@ -85,7 +86,13 @@ const useSignalR = (hubUrl: string): SignalRHookResult => {
 
         // Create the connection object only once
         const newConnection = new signalR.HubConnectionBuilder()
-            .withUrl(hubUrl)
+            .withHubProtocol(new signalR.JsonHubProtocol())
+            .configureLogging(signalR.LogLevel.Debug) 
+            .withUrl(hubUrl, {
+                withCredentials: true,
+                // skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
+            })
             .withAutomaticReconnect()
             .configureLogging(signalR.LogLevel.Information)
             .build();
@@ -126,9 +133,6 @@ const useSignalR = (hubUrl: string): SignalRHookResult => {
         newConnection.onreconnecting(handleReconnecting);
         newConnection.onreconnected(handleReconnected);
         newConnection.onclose(handleClose);
-
-        // --- IMPORTANT: Do NOT start the connection automatically here ---
-        // startConnection(); // REMOVED
 
         // --- Cleanup on component unmount ---
         return () => {
