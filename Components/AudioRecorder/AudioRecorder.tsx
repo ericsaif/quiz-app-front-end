@@ -89,7 +89,7 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
         try {
             const audioStream = audioBlob.stream()
         
-            submitAnswer(SM, {'AudioData': audioStream, 'QPOId': QPOId})
+            submitAnswer(SM, {AudioData: audioStream, QPOId: QPOId})
             setRecordingStatus('submitted');
             console.log("Recording submitted successfully:", audioUrl);
             

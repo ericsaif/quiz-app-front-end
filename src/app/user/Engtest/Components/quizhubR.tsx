@@ -17,7 +17,7 @@ const useQuizHubR = (
     const submitAnswer = useCallback(async (SM: string, args: MethodArgs) => { // SM - server method name
         if (connection && isConnected) {
             try {
-                await connection.invoke(SM, args);
+                await connection.invoke(SM, ...Object.values(args));
                 console.log("User Answer submitted:", ...Object.values(args));
             } catch (err) {
                 console.error("Error sending the answer:", err);
@@ -42,7 +42,10 @@ const useQuizHubR = (
 
         connection.on("StartQuiz", handleNextQuestion);
         connection.on("NextQuestion", handleNextQuestion);
-        connection.on("StopTimer", handleStopTimer);
+
+        // ("QTimerStarted", AttemptId, time)
+        // connection.on("QTimerStarted", handleNextQuestion);
+        connection.on("QuestionTimerStop", handleStopTimer);
 
         // --- Cleanup function for event handlers ---
         return () => {
@@ -51,7 +54,7 @@ const useQuizHubR = (
             console.log("Removing 'NextQuestion' || 'StartQuiz' || 'StopTimer' handler");
             connection.off("NextQuestion", handleNextQuestion);
             connection.off("StartQuiz", handleNextQuestion);
-            connection.off("StopTimer", handleStopTimer);
+            connection.off("QuestionTimerStop", handleStopTimer);
 
         };
 

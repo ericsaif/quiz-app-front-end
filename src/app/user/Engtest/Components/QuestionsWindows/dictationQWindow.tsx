@@ -10,7 +10,7 @@ const DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault()
-        submitAnswer("SubmitDictationAsnwerAsync", {"DictationA": answer, "QId": question.id})
+        submitAnswer("SubmitDictationAsnwerAsync", {DictationA: answer, QId: question.id})
     }
     
     return(

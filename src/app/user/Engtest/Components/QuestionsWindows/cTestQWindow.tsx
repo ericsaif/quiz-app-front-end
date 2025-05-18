@@ -38,8 +38,8 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
         event.preventDefault()
         const newM: MethodArgs= {
-            'QId': question.id,
-            'blankValues':blankValues
+            QId: question.id,
+            blankValues:blankValues
         }
         submitAnswer("SubmitCtestAttemptAsync", newM)
     }

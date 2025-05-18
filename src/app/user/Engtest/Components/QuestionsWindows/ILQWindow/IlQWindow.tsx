@@ -116,10 +116,10 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
         event.preventDefault()
 
         const newM: MethodArgs = {
-            "AId": AId,
-            "summary": summary,
-            "answer": correctDialogOptions,
-            "QPOId": question.qpoId,
+            AId: AId,
+            summary: summary,
+            answer: correctDialogOptions,
+            QPOId: question.qpoId,
         }
 
         submitAnswer("SubmitILQAAsync", newM)

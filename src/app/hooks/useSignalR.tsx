@@ -84,6 +84,12 @@ const useSignalR = (hubUrl: string): SignalRHookResult => {
             return;
         }
 
+        if (connectionRef.current) {
+            console.log("HubConnection already exists, skipping creation.");
+            return;
+        }
+
+        console.log("Creating new SignalR HubConnection...");
         // Create the connection object only once
         const newConnection = new signalR.HubConnectionBuilder()
             .withHubProtocol(new signalR.JsonHubProtocol())

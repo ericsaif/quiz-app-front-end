@@ -15,6 +15,18 @@ const EngTestInner = () =>{
     useEffect(() => {
         const EngTestId = queryParams.get('engTestId');
 
+        // async function getAttemptTest(){
+        //     const response = await fetch(`${BACKEND_BASE_URL}/api/user/testAttempt?EngTestId=${EngTestId}`, {
+        //         method: "GET", 
+        //         credentials: 'include'
+        //     })
+        //     if(response.ok){
+        //         const responseData = await response.json()
+        //         console.log("Attempt started = ", responseData)
+        //     }else
+        //         console.log("Attempt started = failure")
+        // } 
+        // getAttemptTest()
         // sethubURL(`${ BACKEND_BASE_URL }${ QUIZ_HUB_ROUTE }?EngTestId=${EngTestId}`)
         sethubURL(`${ BACKEND_BASE_URL }/englishtest?EngTestId=${EngTestId}`)
         // sethubURL(`${ BACKEND_BASE_URL }${ QUIZ_HUB_ROUTE }`)

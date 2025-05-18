@@ -8,7 +8,7 @@ import useQuizHubR from "./quizhubR";
 
 import * as QuestionsWindows from "./QuestionsWindows";
 import { Question,RACQ, DictationQ, RAQ, DescribePicQ, CTestQ, RSQ, WordExistsQ, DescribePicWAudioQ, LASQ, EssayQ, IRQ, ILQ, InterviewQ } from "../../../../../Models/QuestionsModels";
-import { BACKEND_BASE_URL } from "../../../../../constants/api";
+// import { BACKEND_BASE_URL } from "../../../../../constants/api";
 
 import './EngTestW.css'
 import './QuestionsWindows/QWindows.css'
@@ -31,20 +31,20 @@ const EngTestWindow = (props: ETWP) => {
   const [loading, setloading] = useState<boolean>(true);
 //
 
-  const [tempQId, settempQId] = useState<number>(0)
-  const [tempQPOId, settempQPOId] = useState<number>(0)
-  const TempHandleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) =>{
-    e.preventDefault()
-    const response = await fetch(`${BACKEND_BASE_URL}/api/admin/questions/${tempQId}?QPOId=${tempQPOId}`,{
-      method: 'GET',
-      credentials: 'include'
-    })
-    if(response.ok){
-      const question: Question = await response.json()
-      SetQ(question)
-    }else
-      alert('ошибка')
-  }
+  // const [tempQId, settempQId] = useState<number>(0)
+  // const [tempQPOId, settempQPOId] = useState<number>(0)
+  // const TempHandleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) =>{
+  //   e.preventDefault()
+  //   const response = await fetch(`${BACKEND_BASE_URL}/api/admin/questions/${tempQId}?QPOId=${tempQPOId}`,{
+  //     method: 'GET',
+  //     credentials: 'include'
+  //   })
+  //   if(response.ok){
+  //     const question: Question = await response.json()
+  //     SetQ(question)
+  //   }else
+  //     alert('ошибка')
+  // }
 //
   useEffect(() => {
       setloading(true)

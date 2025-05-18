@@ -13,9 +13,9 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
         event.preventDefault()
 
         const newM : MethodArgs = {
-            "Essay": essay,
-            "Topic": Topic,
-            "QPOId": QPOId
+            Essay: essay,
+            Topic: Topic,
+            QPOId: QPOId
         }
         props.submitAnswer("SubmitEssayAsync", newM)
     }

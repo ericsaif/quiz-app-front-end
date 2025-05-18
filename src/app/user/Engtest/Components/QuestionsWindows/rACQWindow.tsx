@@ -7,7 +7,7 @@ rACQWindow = (props:{question: RACQ, submitAnswer: (SM: string, args: MethodArgs
     const { question, submitAnswer } = props
 
     const HandleSubmit = () =>{
-        submitAnswer("SubmitRACAsync", {"FilledBlanks":"", "QId": ""})
+        submitAnswer("SubmitRACAsync", {FilledBlanks:"", QId: ""})
     }
     // const HandleInputChange = (index: number, character: string) =>{
 

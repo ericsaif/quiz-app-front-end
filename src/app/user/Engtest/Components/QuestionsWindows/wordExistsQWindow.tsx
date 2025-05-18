@@ -9,7 +9,7 @@ import { HiMiniXMark } from "react-icons/hi2"
 const WordExistsQWindow = (props:{question: WordExistsQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
     const { question, submitAnswer } = props
     const handleSubmit = (exists: boolean) =>{
-        submitAnswer("SubmitWordExistsAAsync", {"Answer": exists, "QId": question.id})
+        submitAnswer("SubmitWordExistsAAsync", {Answer: exists, QId: question.id})
     }
     return(
             <div className="container-fluid">
