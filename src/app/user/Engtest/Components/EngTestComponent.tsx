@@ -15,20 +15,20 @@ import './QuestionsWindows/QWindows.css'
 import Timer from "../../../../../Components/Timer/Timer";
 
 const EngTestWindow = (props: ETWP) => {
-  const [windowContent, setWindow] = useState<ReactElement>();
+  const [windowContent, setWindow] = useState<ReactElement | null>(null);
   const [CurrentQ, SetQ] = useState<Question | null>(null);
   const { startConnection, submitAnswer } = useQuizHubR(props.hubUrl, SetQ);
+
+  const [displaySW, setdisplaySW] = useState<boolean>(true);
+  const [loading, setloading] = useState<boolean>(true);
 
 
 
   const StartingW = React.useMemo(() => (
       <div>
-        <Button className="btn btn-primary" onClick={() => startConnection()}>Начать</Button>
+        <Button className="btn btn-primary" onClick={() => {startConnection(); setdisplaySW(false)}}>Начать</Button>
       </div>
   ), [startConnection]);
-
-  const [displaySW, setdisplaySW] = useState<boolean>(true);
-  const [loading, setloading] = useState<boolean>(true);
 //
 
   // const [tempQId, settempQId] = useState<number>(0)
@@ -47,12 +47,16 @@ const EngTestWindow = (props: ETWP) => {
   // }
 //
   useEffect(() => {
-      setloading(true)
-    if (CurrentQ === null)
+    console.info(`current Q is changed ${CurrentQ?.questionBody ?? 'null'}`)
+    setWindow(null)
+    if(displaySW){
       setloading(false)
+      return
+    }
+    if (CurrentQ === null)
+      setloading(true)
     else{
       setloading(false)
-      setdisplaySW(false)
       switch (CurrentQ.qpoId) {
         case 1:( setWindow(<QuestionsWindows.CTestWindow question={CurrentQ as CTestQ } submitAnswer={submitAnswer}/>) );break;
         case 2:( setWindow(<QuestionsWindows.DictationQWindow question={CurrentQ as DictationQ } submitAnswer={submitAnswer}/>) );break;
@@ -69,7 +73,7 @@ const EngTestWindow = (props: ETWP) => {
         case 14:( setWindow(<QuestionsWindows.InterviewQWindow question={CurrentQ as InterviewQ } submitAnswer={submitAnswer}/>) );break;
       }
     }
-  }, [CurrentQ, submitAnswer, startConnection, StartingW]);
+  }, [CurrentQ, submitAnswer, startConnection, StartingW, displaySW]);
 
   return (
     <React.Fragment key={`react-engTest-window-fragment`}>

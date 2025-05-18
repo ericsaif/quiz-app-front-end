@@ -33,11 +33,12 @@ const useQuizHubR = (
             return; // Don't register handlers until connected
         }
         const handleNextQuestion = (NextQ: Question) => {
+            console.warn("handling next question")
             setNexQuestion(NextQ)
         };
 
         const handleStopTimer = () => {
-            submitAnswer("test", {"test1": "test"})
+            // submitAnswer("test", {"test1": "test"})
         };
 
         connection.on("StartQuiz", handleNextQuestion);
@@ -58,7 +59,7 @@ const useQuizHubR = (
 
         };
 
-    }, [connection, isConnected, setNexQuestion, submitAnswer]); // Re-run when connection or its status changes
+    }, [connection, isConnected, setNexQuestion]); // Re-run when connection or its status changes
 
     
     return { submitAnswer, startConnection };
