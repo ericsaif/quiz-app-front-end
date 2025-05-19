@@ -1,7 +1,7 @@
 "use client";
 
 import useSignalR from "@/app/hooks/useSignalR"
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useState } from "react"
 import { Question } from "../../../../../Models/QuestionsModels/question";
 import { QuizHubHook } from "../../../../../Models/QuizHubModels/QuizHubHook";
 import { MethodArgs } from "../../../../../Models/QuizHubModels/MethodArgs";
@@ -13,6 +13,7 @@ const useQuizHubR = (
 ) : QuizHubHook => { 
     
     const { connection, isConnected, startConnection } = useSignalR(hubUrl);
+    const [TimeOut, setTimeOut] = useState<boolean>(false)
 
     const submitAnswer = useCallback(async (SM: string, args: MethodArgs) => { // SM - server method name
         if (connection && isConnected) {
@@ -34,27 +35,34 @@ const useQuizHubR = (
         }
         const handleNextQuestion = (NextQ: Question) => {
             console.warn("handling next question")
+            setTimeOut(false)
             setNexQuestion(NextQ)
         };
 
+        // const handleStarttimer(AttemptId: string, time: string){
+        //     startTimer()
+        // }
+
         const handleStopTimer = () => {
-            // submitAnswer("test", {"test1": "test"})
+            setTimeOut(true)
+            console.info("setting time out to true")
         };
 
-        connection.on("StartQuiz", handleNextQuestion);
         connection.on("NextQuestion", handleNextQuestion);
-
-        // ("QTimerStarted", AttemptId, time)
-        // connection.on("QTimerStarted", handleNextQuestion);
+        // connection.on("QTimerStarted", handleStarttimer);
         connection.on("QuestionTimerStop", handleStopTimer);
+
+        connection.onreconnecting(error => {
+            console.log("SignalR reconnecting due to:", error);
+        });
 
         // --- Cleanup function for event handlers ---
         return () => {
             // Important: Remove the handler when the component unmounts or connection changes
             // to prevent memory leaks and duplicate handlers.
-            console.log("Removing 'NextQuestion' || 'StartQuiz' || 'StopTimer' handler");
+            console.log("Removing 'NextQuestion' || 'QuestionTimerStop' || 'StopTimer' handler");
             connection.off("NextQuestion", handleNextQuestion);
-            connection.off("StartQuiz", handleNextQuestion);
+            connection.off("QuestionTimerStop", handleStopTimer);
             connection.off("QuestionTimerStop", handleStopTimer);
 
         };
@@ -62,7 +70,7 @@ const useQuizHubR = (
     }, [connection, isConnected, setNexQuestion]); // Re-run when connection or its status changes
 
     
-    return { submitAnswer, startConnection };
+    return { submitAnswer, startConnection, TimeOut };
 }
 
 export default useQuizHubR

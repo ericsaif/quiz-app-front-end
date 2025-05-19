@@ -3,4 +3,5 @@ export class Question {
     questionBody: string | null ='';
     qpoId: number =0;
     timer: string ='';
+    difficulty: string = "ANY";
 }

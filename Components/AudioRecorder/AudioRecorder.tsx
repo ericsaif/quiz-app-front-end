@@ -8,13 +8,20 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MethodArgs } from '../../Models/QuizHubModels/MethodArgs';
 
 
-export default function AudioRecorder(props: {QPOId:number, SM:string, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) {
-    const { SM, submitAnswer, QPOId } = props
+export default function AudioRecorder(props: {
+  QPOId:number, 
+  SM:string, 
+  Topic?: string, 
+  submitAnswer: (SM: string, args: MethodArgs) => Promise<void>
+}) {
+    const { SM, submitAnswer, QPOId, Topic = "" } = props
     const [isRecording, setIsRecording] = useState(false);
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [recordingStatus, setRecordingStatus] = useState('idle');
     const [error, setError] = useState<string | null>(null);
+
+    const CHUNK_SIZE = 20 * 1024;
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
@@ -27,6 +34,50 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
         }
         };
     }, [isRecording]);
+
+    async function sendAudioInChunks() {
+      const arrayBuffer = await audioBlob!.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      const totalChunks = Math.ceil(uint8Array.length / CHUNK_SIZE);
+      
+      // First send metadata about the upcoming chunks
+      console.info("- BeginAudioUpload - ")
+
+      await submitAnswer("BeginAudioUpload", {
+          QPOId: QPOId,
+          TotalChunks: totalChunks,
+          TotalSize: uint8Array.length
+      });
+      
+      // Send each chunk
+      console.info("- Begin UploadAudioChunk before loop - ")
+
+      for (let i = 0; i < totalChunks; i++) {
+        console.info("- Begin UploadAudioChunk inside loop - ", i)
+
+          const start = i * CHUNK_SIZE;
+          const end = Math.min(start + CHUNK_SIZE, uint8Array.length);
+          const chunk = uint8Array.slice(start, end);
+          
+          // Convert chunk to base64
+          const base64Chunk = btoa(
+              Array.from(chunk)
+                  .map(byte => String.fromCharCode(byte))
+                  .join('')
+          );
+          
+        console.info("attempting to invoke UploadAudioChunk")
+
+        await submitAnswer("UploadAudioChunk", {
+            ChunkIndex: i,
+            ChunkData: base64Chunk,
+            QPOId: QPOId
+        });
+      }
+      
+      // Signal upload completion
+      await submitAnswer("CompleteAudioUpload", { QPOId: QPOId, SM: SM, Topic: Topic });
+  }
 
     const startRecording = async () => {
         audioChunksRef.current = [];
@@ -75,21 +126,21 @@ export default function AudioRecorder(props: {QPOId:number, SM:string, submitAns
     const stopRecording = () => {
         setIsRecording(false);
         if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.stop();
+          mediaRecorderRef.current.stop();
         }
     };
     const submitRecording = async () => {
         if (!audioBlob) {
-        setError("No recording to submit");
-        return;
+          setError("No recording to submit");
+          return;
         }
         
         setRecordingStatus('submitting');
         
         try {
-            const audioStream = audioBlob.stream()
-        
-            submitAnswer(SM, {AudioData: audioStream, QPOId: QPOId})
+            // Send the base64 string instead of the stream
+            sendAudioInChunks()
+
             setRecordingStatus('submitted');
             console.log("Recording submitted successfully:", audioUrl);
             

@@ -28,6 +28,8 @@ const I_R_Q = (props:{
         throw new Error('Нет необходимых данных, ошибка')
 
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
+
 
     const [allMiniE1Options, setallMiniE1Options] = useState<string[]>(Array(50).fill(''))
     
@@ -107,7 +109,8 @@ const I_R_Q = (props:{
             questionMiniE3, 
             questionMiniE4, 
             optionsMiniE5, 
-            optionsMiniE6
+            optionsMiniE6,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -148,6 +151,7 @@ const I_R_Q = (props:{
             timer: question?.timer || "",
             id: question?.id || 0,
             questionBody,
+            difficulty
         }
         PUT_Q = Question
     }
@@ -230,6 +234,7 @@ const I_R_Q = (props:{
             setcorrectHighlightMiniE4('')
             setcorrectOptionMiniE5(0)
             setcorrectOptionMiniE6(0)
+            setdifficulty('ANY')
         }
     }
     
@@ -241,7 +246,14 @@ const I_R_Q = (props:{
                         <div className="hstack">
                             <h1 className="mx-5">Interactive Reading Вопросы и текст </h1>
                             {modal}
-                        </div>                        
+                        </div>         
+                        <label htmlFor="select-difficulty">Difficulty</label>
+                        <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                            <option value="ANY">ANY</option>
+                            <option value="EASY">EASY</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="HARD">HARD</option>
+                        </select>               
                         <ShowIRQ 
                             setallMiniE1Options={setallMiniE1Options}
                             setOptionsMiniE2={setOptionsMiniE2}

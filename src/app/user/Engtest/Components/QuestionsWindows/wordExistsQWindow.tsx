@@ -6,10 +6,14 @@ import { Button } from "@headlessui/react"
 import { HiMiniXMark } from "react-icons/hi2"
 
 
-const WordExistsQWindow = (props:{question: WordExistsQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-    const { question, submitAnswer } = props
-    const handleSubmit = (exists: boolean) =>{
+const WordExistsQWindow = (props:{question: WordExistsQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+    const { question, submitAnswer, TimeOut } = props
+    const handleSubmit = (exists: boolean | null) =>{
         submitAnswer("SubmitWordExistsAAsync", {Answer: exists, QId: question.id})
+    }
+    if(TimeOut){
+        handleSubmit(null)
+        console.log("handling Time out = true ")
     }
     return(
             <div className="container-fluid">

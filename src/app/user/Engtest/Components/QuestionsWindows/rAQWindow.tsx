@@ -2,9 +2,12 @@ import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecor
 import { RAQ, MethodArgs } from "./commonImports"
 
 
-const rAQWindow = (props:{question: RAQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-    const { question, submitAnswer } = props
-    
+const rAQWindow = (props:{question: RAQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+    const { question, submitAnswer, TimeOut } = props
+    if(TimeOut){
+        // handleSubmit()
+        console.log("handling Time out = true ")
+    }
     return(
 
             <div>

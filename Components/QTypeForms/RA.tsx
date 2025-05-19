@@ -18,6 +18,7 @@ const RA = (props:{
         throw new Error('Нет необходимых данных, ошибка')
 
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
 
     
             
@@ -28,6 +29,7 @@ const RA = (props:{
         const Newquestion: CreateRA ={
             QPOId,
             questionBody,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -35,7 +37,8 @@ const RA = (props:{
             qpoId: QPOId,
             id: question?.id || 0,
             questionBody,
-            timer: question?.timer || ''
+            timer: question?.timer || '',
+            difficulty
         }
             
         PUT_Q = Question
@@ -64,8 +67,10 @@ const RA = (props:{
         
         triggerPost()
 
-        if(!IsEditMode)
+        if(!IsEditMode){
             setquestionBody("")
+            setdifficulty('ANY')
+        }
 
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
@@ -79,7 +84,13 @@ const RA = (props:{
             </div>
 
             <form className="q-container w-50 vstack gap-2 mx-2 align-self-center" onSubmit={HandleFormSubmit}>
-
+                <label htmlFor="select-difficulty">Difficulty</label>
+                <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                    <option value="ANY">ANY</option>
+                    <option value="EASY">EASY</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HARD">HARD</option>
+                </select>
                 <label htmlFor="RAText">ТЕКСТ: </label>
                 <textarea value={questionBody} required id="RAText" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea>           
 

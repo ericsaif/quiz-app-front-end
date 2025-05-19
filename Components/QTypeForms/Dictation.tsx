@@ -23,6 +23,7 @@ const Dictation = (props:{
 
     const [s3PathToAudio, setPathToAudio] = useState<string>(question?.s3PathToAudio || "")
     const [correctText, setCorrectText] = useState<string>(question?.dictationA?.correctText || "")
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
 
     
     let POST_Q: CreateDictation | undefined;
@@ -36,7 +37,8 @@ const Dictation = (props:{
             QPOId,
             s3PathToAudio,
             questionBody: "-",
-            createDictationA: newDictationA
+            createDictationA: newDictationA,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -53,7 +55,8 @@ const Dictation = (props:{
             id: question?.id || 0,
             timer: question?.timer || "",
             s3PathToAudio,
-            listenTries: question?.listenTries || 0
+            listenTries: question?.listenTries || 0,
+            difficulty
         }
         PUT_Q = Question
     }
@@ -86,6 +89,7 @@ const Dictation = (props:{
         if(!IsEditMode){
             setPathToAudio("")
             setCorrectText("")
+            setdifficulty('ANY')
         }
         
     }
@@ -105,6 +109,12 @@ const Dictation = (props:{
                     {modal}
                 </div>
                 <form className="q-container vstack gap-2 w-50 m-2 align-self-center" onSubmit={HandleFormSubmit}>
+                    <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                        <option value="ANY">ANY</option>
+                        <option value="EASY">EASY</option>
+                        <option value="MEDIUM">MEDIUM</option>
+                        <option value="HARD">HARD</option>
+                    </select>
                     <label  htmlFor="pathToAudio">Локация:</label>
                     <Input value={s3PathToAudio} required className="w-100" id="pathToAudio" type="text" onChange={HandleInputChange}></Input> 
                     

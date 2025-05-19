@@ -17,6 +17,8 @@ const Essay = (props:{
         throw new Error('Нет необходимых данных, ошибка')
 
     const [questionBody, setTopic] = useState<string>(question?.questionBody || "")
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
+
             
     let POST_Q: CreateEssay | undefined;
     let PUT_Q: EssayQ  | undefined;
@@ -25,6 +27,7 @@ const Essay = (props:{
         const Newquestion: CreateEssay ={
             QPOId,
             questionBody: questionBody,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -32,7 +35,9 @@ const Essay = (props:{
             qpoId: QPOId,
             id: question?.id || 0,
             questionBody,
-            timer: question?.timer || ''
+            timer: question?.timer || '',
+            difficulty
+
         }
             
         PUT_Q = Question
@@ -61,8 +66,10 @@ const Essay = (props:{
         
         triggerPost()
         
-        if(!IsEditMode)
+        if(!IsEditMode){
             setTopic("")
+            setdifficulty('ANY')
+        }
             
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
@@ -76,6 +83,12 @@ const Essay = (props:{
                 {modal}
             </div>
             <form className="q-container vstack gap-2 mx-2" style={{width: "40%", height: "400px"}} onSubmit={HandleFormSubmit}>
+                <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                    <option value="ANY">ANY</option>
+                    <option value="EASY">EASY</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HARD">HARD</option>
+                </select>
                 <label htmlFor="Topic">Тема:</label>
                 <textarea value={questionBody} required style={{width: "90%", height: "90%"}} id="Topic"  onChange={HandleInputChange}></textarea> 
                 

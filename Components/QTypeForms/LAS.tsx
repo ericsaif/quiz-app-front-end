@@ -20,7 +20,8 @@ const LAS = (props:{
 
     const [transcribedAudio, settranscribedAudio] = useState<string>(question?.transcribedAudio || "")
     const [s3PathToAudioFile, sets3PathToAudioFile] = useState<string>(question?.s3PathToAudioFile || "")
-            
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
+
     let POST_Q: CreateLAS | undefined;
     let PUT_Q: LASQ  | undefined;
 
@@ -29,7 +30,8 @@ const LAS = (props:{
             QPOId,
             questionBody: "-",
             s3PathToAudioFile,
-            transcribedAudio
+            transcribedAudio,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -40,7 +42,8 @@ const LAS = (props:{
             timer: question?.timer || '',
             s3PathToAudioFile,
             listenTries: question?.listenTries || 0,
-            transcribedAudio
+            transcribedAudio,
+            difficulty
         }
             
         PUT_Q = Question
@@ -72,6 +75,7 @@ const LAS = (props:{
         if(!IsEditMode){
             settranscribedAudio("")
             sets3PathToAudioFile("")
+            setdifficulty('ANY')
         }
         
     }
@@ -92,6 +96,13 @@ const LAS = (props:{
             </div>
 
             <form className="q-container w-50 vstack gap-2 mx-2 align-self-center" onSubmit={HandleFormSubmit}>
+                <label htmlFor="select-difficulty">Difficulty</label>
+                <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                    <option value="ANY">ANY</option>
+                    <option value="EASY">EASY</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HARD">HARD</option>
+                </select>
                 <label htmlFor="s3AudioPath">Вставьте локацию аудио файла в облачном хранилище:</label>
                 <Input value={s3PathToAudioFile} required id="s3AudioPath" style={{width: "300px"}} type="text" onChange={HandleInputChange}></Input> 
 

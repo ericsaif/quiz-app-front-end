@@ -22,7 +22,8 @@ const WordExists = (props:{
 
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
     const [exists, setexists] = useState<boolean>(question?.wordExistsA?.exists ?? true)
-                
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
+
     let POST_Q: CreateWordExists | undefined;
     let PUT_Q: WordExistsQ  | undefined;
 
@@ -33,7 +34,8 @@ const WordExists = (props:{
         const Newquestion: CreateWordExists ={
             QPOId,
             questionBody,
-            createWEA
+            createWEA,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -49,6 +51,7 @@ const WordExists = (props:{
             questionBody,
             timer: question?.timer || '',
             wordExistsA: QAnswer,
+            difficulty
         }
             
         PUT_Q = Question
@@ -80,8 +83,10 @@ const WordExists = (props:{
         
         triggerPost()
         
-        if(!IsEditMode)
+        if(!IsEditMode){
             setquestionBody("")
+            setdifficulty('ANY')
+        }
 
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -101,6 +106,13 @@ const WordExists = (props:{
             </div>
 
             <form className="q-container w-50 vstack gap-2 mx-2 align-self-center" onSubmit={HandleFormSubmit}>
+                <label htmlFor="select-difficulty">Difficulty</label>
+                <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                    <option value="ANY">ANY</option>
+                    <option value="EASY">EASY</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HARD">HARD</option>
+                </select>
 
                 <label htmlFor="RAText">СЛОВО:</label>
                 <Input value={questionBody} required style={{width: "30%"}} id="RAText" type="text" onChange={HandleInputChange}></Input>  

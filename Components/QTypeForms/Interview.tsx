@@ -14,6 +14,7 @@ const Interview = (props:{
     const { QPOId, question } = props
     
     const [questionBody, setTopic] = useState<string>(question?.questionBody || "")
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
 
     const IsEditMode = question ? true : false
 
@@ -27,6 +28,7 @@ const Interview = (props:{
         const Newquestion: CreateInterviewQ ={
             QPOId,
             questionBody,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -34,7 +36,8 @@ const Interview = (props:{
             qpoId: QPOId,
             id: question?.id || 0,
             questionBody,
-            timer: question?.timer || ''
+            timer: question?.timer || '',
+            difficulty
         }
             
         PUT_Q = Question
@@ -63,8 +66,10 @@ const Interview = (props:{
         
         triggerPost()
         
-        if(!IsEditMode)
+        if(!IsEditMode){
             setTopic('')
+            setdifficulty('ANY')
+        }
         
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{
@@ -80,6 +85,12 @@ const Interview = (props:{
             </div>
 
             <form className="q-container w-50 vstack gap-2 mx-2" onSubmit={HandleFormSubmit}>
+                <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                    <option value="ANY">ANY</option>
+                    <option value="EASY">EASY</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HARD">HARD</option>
+                </select>
                 <label htmlFor="interview">Тема Интервью:</label>
                 <textarea value={questionBody} id="interview" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea> 
                 

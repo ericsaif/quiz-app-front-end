@@ -21,6 +21,7 @@ const RAC = (props:{
     
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
     const [answer, setanswer] = useState<string>(question?.raca?.answer || "")
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
 
             
     let POST_Q: CreateRAC | undefined;
@@ -33,7 +34,8 @@ const RAC = (props:{
         const Newquestion: CreateRAC ={
             QPOId,
             questionBody,
-            CreateRACADTO:createRACA
+            CreateRACADTO:createRACA,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -48,7 +50,8 @@ const RAC = (props:{
             id: question?.id || 0,
             questionBody,
             timer: question?.timer || '',
-            raca: QAnswer
+            raca: QAnswer,
+            difficulty
         }
             
         PUT_Q = Question
@@ -93,6 +96,7 @@ const RAC = (props:{
         if(!IsEditMode){
             setquestionBody("")
             setanswer("")
+            setdifficulty('ANY')
         }
         
     }
@@ -113,6 +117,13 @@ const RAC = (props:{
             </div>
 
             <form className="q-container w-50 vstack gap-2 mx-2 align-self-center" onSubmit={HandleFormSubmit}>
+                <label htmlFor="select-difficulty">Difficulty</label>
+                <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                    <option value="ANY">ANY</option>
+                    <option value="EASY">EASY</option>
+                    <option value="MEDIUM">MEDIUM</option>
+                    <option value="HARD">HARD</option>
+                </select>
 
                 <label htmlFor="RACText">ТЕКСТ:</label>
                 <textarea value={questionBody} required id="RACText" style={{width: "300px", height: "200px"}} onChange={HandleInputChange}></textarea>    

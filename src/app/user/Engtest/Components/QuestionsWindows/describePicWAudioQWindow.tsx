@@ -5,9 +5,9 @@ import { BACKEND_BASE_URL } from "../../../../../../constants/api"
 import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 
 
-const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
     
-    const { question, submitAnswer } = props
+    const { question, submitAnswer, TimeOut } = props
 
     const keyName = question.s3PathToPic ?? ""
     const [ pic_link, setpic_link ] = useState<string>("") 
@@ -25,6 +25,11 @@ const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAns
         }
         fetchPic()
     })
+
+    if(TimeOut){
+        // handleSubmit()
+        console.log("handling Time out = true ")
+    }
 
     return(
         

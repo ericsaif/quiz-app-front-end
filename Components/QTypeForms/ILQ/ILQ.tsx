@@ -30,6 +30,7 @@ const I_L_Q = (props:{
 
     const [allOptions, setAlloptions] = useState<string[]>(Array(25).fill(''))
     const [s3pathsToAudioAnswers, sets3pathsToAudioAnswers] = useState<string[]>(question?.s3pathsToAudioAnswers || Array(5).fill('')) 
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
 
     const [correctOptions, setCorrectOptions] = useState<number[]>([])
 
@@ -80,7 +81,8 @@ const I_L_Q = (props:{
             s3pathsToAudioAnswers,
             questionBody: "-",
             GivenDialogoptionsDTO,
-            CorrectDialogOptionsDTO
+            CorrectDialogOptionsDTO,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -107,7 +109,8 @@ const I_L_Q = (props:{
             summaryTimer: question?.summaryTimer || "",
             id: question?.id || 0,
             questionBody: '-',
-            timer: question?.timer || ""
+            timer: question?.timer || "",
+            difficulty
         }
         PUT_Q = Question
     }
@@ -161,6 +164,7 @@ const I_L_Q = (props:{
             for(let y =0; y<5; y++){
                 correctOptions[y] = y*5
             }
+            setdifficulty('ANY')
         }
         
     }
@@ -172,6 +176,15 @@ const I_L_Q = (props:{
 
             <div className="row my-3 mx-2">
                 <div className="col">
+                    <label htmlFor="select-difficulty">Difficulty: </label>
+                    <br/> 
+                    <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                        <option value="ANY">ANY</option>
+                        <option value="EASY">EASY</option>
+                        <option value="MEDIUM">MEDIUM</option>
+                        <option value="HARD">HARD</option>
+                    </select>
+                    <br/>
                     <label className="border border-dark p-1" htmlFor="S3PathsInputs">Вставьте локацию аудио файлов в облачном хранилище: </label> <br/>
                     <div className="vstack" id="S3PathsInputs">
                         {ShowS3PathsInputs}

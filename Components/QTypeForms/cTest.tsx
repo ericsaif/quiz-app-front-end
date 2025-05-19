@@ -23,6 +23,8 @@ const CTest = (props:{
         throw new Error('Нет необходимых данных, ошибка')
 
     const [questionBody, setQBody] = useState<string>(question?.questionBody || '')
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
+
     const [num_words_w_blanks, setNumWords] = useState<number>(question?.cTestA?.rightAnswers.length || 0)
     const [rightAnswers, setRightAnswers] = useState<string[]>(question?.cTestA?.rightAnswers || (num_words_w_blanks >0 ? Array(num_words_w_blanks).fill('') : ['']))
     const [CTestAnswers, setCTestAnswers] = useState<React.ReactNode>()
@@ -39,7 +41,8 @@ const CTest = (props:{
         const Newquestion: CreateCTestQ = {
             QPOId,
             questionBody,
-            CreateCTestA
+            CreateCTestA,
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -54,7 +57,8 @@ const CTest = (props:{
             questionBody,
             cTestA,
             id: question?.id || 0,
-            timer: question?.timer || ""
+            timer: question?.timer || "",
+            difficulty
         }
         PUT_Q = CtestQ
     }
@@ -145,7 +149,7 @@ const CTest = (props:{
         if(!IsEditMode){
             setQBody('')
             setNumWords(0)
-
+            setdifficulty('ANY')
             setRightAnswers([''])
             setCTestAnswers([])
         }
@@ -172,6 +176,14 @@ const CTest = (props:{
                     
                         <div className="row" style={{width: "auto"}}>
                             <div className="col-6 vstack">
+                                <label htmlFor="select-difficulty">Difficulty</label>
+                                <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                                    <option value="ANY">ANY</option>
+                                    <option value="EASY">EASY</option>
+                                    <option value="MEDIUM">MEDIUM</option>
+                                    <option value="HARD">HARD</option>
+                                </select>
+
                                 <label htmlFor="questionBody">Текст:</label> 
                                 <textarea value={questionBody} required className="" style={{width: "600px", height: "400px"}} placeholder=" text" id="questionBody" onChange={HandleInputChange}></textarea> 
                                 <Button style={{width: "600px"}}  disabled={loading} className={`btn btn-primary mt-1`} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>

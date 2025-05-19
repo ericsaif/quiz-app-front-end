@@ -4,24 +4,28 @@ import React, { useState } from "react"
 import AudioPlayer from "../../../../../../Components/AudioPlayer/AudioPlayer"
 
 
-const DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-    const { question, submitAnswer } = props
+const DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+    const { question, submitAnswer, TimeOut } = props
     const [answer, setAnswer] = useState<string>("")
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-        event.preventDefault()
+    const handleSubmit = () =>{
         submitAnswer("SubmitDictationAsnwerAsync", {DictationA: answer, QId: question.id})
+    }
+
+    if(TimeOut){
+        // handleSubmit()
+        console.log("handling Time out = true ")
     }
     
     return(
         <React.Fragment key={`dictation-window-react-fragment`}>
-                <form onSubmit={handleSubmit}>
+                <form>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <AudioPlayer keyName={question.s3PathToAudio} maxListenTries={question.listenTries} />
                     </div>
                     <div className="vstack d-grid gap-2">
                         <Input type="text" value={answer} onChange={(e)=>setAnswer(e.target.value)}/>
-                        <Button className={`submit-btn`} type="submit">Submit</Button>
+                        <Button className={`submit-btn`} type="submit" onClick={handleSubmit}>Submit</Button>
                     </div>
 
                 </form>

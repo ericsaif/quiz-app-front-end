@@ -10,9 +10,9 @@ import "./ILQWindow.css"
 import Image from "next/image";
 import AudioPlayer from "../../../../../../../Components/AudioPlayer/AudioPlayer";
 
-const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
+const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
 
-    const { question, submitAnswer } = props
+    const { question, submitAnswer, TimeOut } = props
     const [currentILQ, setCurrentILQ] = useState<number>(0)
     const [AId, setAId] = useState<number[]>([])
     const [summary, setsummary] = useState<string>("")
@@ -112,8 +112,7 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
 
     }, [audioLineWidth, correctDialogOptions?.correctOptionsDialogOptions, currentILQ, givenDialogoptions, listenTries, options, s3pathsToAudioAnswers])
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-        event.preventDefault()
+    const handleSubmit = () =>{
 
         const newM: MethodArgs = {
             AId: AId,
@@ -125,10 +124,14 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
         submitAnswer("SubmitILQAAsync", newM)
     }
 
+    if(TimeOut){
+        handleSubmit()
+        console.log("handling Time out = true ")
+    }
 
     return(
 
-        <form className="container-fluid" onSubmit={handleSubmit}>
+        <form className="container-fluid" >
             {
                 !summaryWindow &&
                     <div className="dialog-container transitionClass">
@@ -161,7 +164,7 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
                 <div className="transitionClass row h-100">
                     <div className="vstack">
                         <textarea className="ILQ-SUMMARY mx-auto" name="ILQ-summary" id="ILQ-summary" value={summary} onChange={(e)=> setsummary(e.target.value)}></textarea>                
-                        <Button className={`submit-button`} type="submit">submit</Button>
+                        <Button className={`submit-button`} type="submit" onClick={handleSubmit}>submit</Button>
                     </div>
                 </div>
             }

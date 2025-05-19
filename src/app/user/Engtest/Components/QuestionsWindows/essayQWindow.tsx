@@ -4,20 +4,25 @@ import { Button } from "@headlessui/react"
 
 import "./QWindows.css"
 
-const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-    const [essay, setEssay] = useState<string>("")
-    const Topic = props.question.questionBody
-    const QPOId = props.question.qpoId
+const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-        event.preventDefault()
+    const {question, submitAnswer, TimeOut} = props
+    const [essay, setEssay] = useState<string>("")
+    const Topic = question.questionBody
+    const QPOId = question.qpoId
+
+    const handleSubmit = () =>{
 
         const newM : MethodArgs = {
             Essay: essay,
             Topic: Topic,
             QPOId: QPOId
         }
-        props.submitAnswer("SubmitEssayAsync", newM)
+        submitAnswer("SubmitEssayAsync", newM)
+    }
+    if(TimeOut){
+        // handleSubmit()
+        console.log("handling Time out = true ")
     }
 
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{
@@ -31,9 +36,9 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
                     {Topic}
                 </p>
             
-                <form className="" onSubmit={handleSubmit}  style={{height: "100%"}}>
+                <form className=""   style={{height: "100%"}}>
                     <textarea className="essay-textarea" name="user-essay" id="user-essay" onChange={HandleInputChange}/> <br/>
-                    <Button type="submit" className={`btn btn-primary p-3 py-2`} style={{fontWeight: 'bold'}}>Submit</Button>
+                    <Button onClick={handleSubmit} type="submit" className={`btn btn-primary p-3 py-2`} style={{fontWeight: 'bold'}}>Submit</Button>
                 </form>
             </div>
         </>

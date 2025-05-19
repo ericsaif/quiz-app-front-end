@@ -18,6 +18,7 @@ const DescribePic = (props:{
 
     const [waudio, setWAudio] = useState<boolean>((question?.qpoId == 4 ? false : true) || true)
     const [s3PathToPic, setPathToPic] = useState<string>(question?.s3PathToPic || "")
+    const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
 
     const[errorp, seterrorp] = useState<string | null>(null)
 
@@ -39,7 +40,8 @@ const DescribePic = (props:{
             QPOId: 4,
             s3PathToPic,
             waudio,
-            questionBody: "-"
+            questionBody: "-",
+            difficulty
         }
         POST_Q = Newquestion
     }else{
@@ -49,7 +51,9 @@ const DescribePic = (props:{
                 s3PathToPic,
                 id: question?.id,
                 questionBody: '-',
-                timer: question?.timer
+                timer: question?.timer,
+                difficulty
+
             }
             PUT_Q = Question
         }else if(question?.qpoId == 8){
@@ -58,7 +62,9 @@ const DescribePic = (props:{
                 s3PathToPic,
                 id: question?.id,
                 questionBody: '-',
-                timer: question?.timer
+                timer: question?.timer,
+                difficulty
+
             }
             PUT_Q = Question
         }
@@ -88,8 +94,10 @@ const DescribePic = (props:{
         event.preventDefault()
         triggerPost()
         
-        if(!IsEditMode)
+        if(!IsEditMode){
             setPathToPic("")
+            setdifficulty('ANY')
+        }
 
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
@@ -126,6 +134,12 @@ const DescribePic = (props:{
                     <div className="m-3">
                         {modal}
                     </div>
+                    <select name="select-difficulty" id="select-difficulty" value={difficulty} onChange={(e) => setdifficulty(e.target.value)}>
+                        <option value="ANY">ANY</option>
+                        <option value="EASY">EASY</option>
+                        <option value="MEDIUM">MEDIUM</option>
+                        <option value="HARD">HARD</option>
+                    </select>
                     <label htmlFor="pathToPic">Локация:</label>
                     <Input value={s3PathToPic} required style={{width: "250px"}} id="pathToPic" type="text" onChange={HandleInputChange}></Input> 
                     {

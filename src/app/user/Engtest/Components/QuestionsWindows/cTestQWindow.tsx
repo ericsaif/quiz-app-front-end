@@ -3,101 +3,127 @@ import { CTestQ, MethodArgs } from "./commonImports"
 import { Button } from "@headlessui/react"
 
 
-const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-    const { question, submitAnswer } = props
+const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+    const { question, submitAnswer, TimeOut } = props
 
-    let displayedText = question.questionBody
 
-    const replaceRegex = /(\(\d+\))/g
-    const separatorRegex =  /(\[BLANK:\d+\])/g;
-    const diditRegex = /(\d+)/g
-
-    displayedText = displayedText?.replaceAll(replaceRegex, "") || displayedText
-    const parts = displayedText?.split(separatorRegex)
-
-    let blankCounter =0
-    
     const [blankValues, setBlanks] = useState<string[]>([])
-
     
-    useEffect(() => {
-        const parts = question.questionBody?.split(separatorRegex) || [];
-        const newBlanks: string[] = [];
+    const[ form, setform ] = useState<React.ReactNode | null>(null)
+   
 
-        parts.forEach(part => {
-            if (separatorRegex.test(part)) {
-                const match = part.match(diditRegex);
-                const length = match ? parseInt(match[0], 10) : 1;
-                newBlanks.push('-'.repeat(length));
+    useEffect(()=>{
+        let prevBlanksLength = 0
+        let blankCounter = 0
+
+        const blankLengths: number[] = []
+        let displayedText = question.questionBody
+
+        const replaceRegex = /(\(\d+\))/g
+        const separatorRegex =  /(\[BLANK:\d+\])/g;
+        const diditRegex = /(\d+)/g
+
+        displayedText = displayedText?.replaceAll(replaceRegex, "") || displayedText
+        const parts = displayedText?.split(separatorRegex)
+        
+        const handleSubmit = () =>{
+            const newM: MethodArgs= {
+                QId: question.id,
+                blankValues:blankValues
             }
-        });
-
-        setBlanks(newBlanks);
-    }, [diditRegex, question, separatorRegex]);
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-        event.preventDefault()
-        const newM: MethodArgs= {
-            QId: question.id,
-            blankValues:blankValues
+            submitAnswer("SubmitCtestAttemptAsync", newM)
         }
-        submitAnswer("SubmitCtestAttemptAsync", newM)
-    }
-    const replaceAt = (index: number, str: string = '-', replacement: string) => {
-        return str.substring(0, index) + replacement + str.substring(index + replacement.length);
-    }
-    const handleInputChange = (letter: string, wordIndex: number, letterIndex: number) =>{
         
-        setBlanks(previousBlanks =>{
-            const newValues = [...previousBlanks]
-            
-            let userAnswer = newValues[wordIndex] ?? '-';
+        if(TimeOut){
+            handleSubmit()
+            console.log("handling Time out = true ")
+        }
 
-            if(userAnswer == null || userAnswer ==='' )
-                userAnswer = '-'
-            
-            userAnswer = replaceAt(letterIndex, userAnswer, letter)
+        const handleInputChange = (letter: string, wordIndex: number, letterIndex: number) =>{
+            console.info("word index - ", wordIndex, " letterIndex = ", letterIndex)
 
-            newValues[wordIndex] = userAnswer
+            setBlanks(previousBlanks =>{
+                const newValues = [...previousBlanks]
+                const prevBlanksLengths = wordIndex == 0 ? 0 : blankLengths.slice(0, wordIndex).reduce((acc, val)=> acc+val ,0)
+                
+                console.info("prevBlanksLengths = ", prevBlanksLengths)
 
-            return newValues
+
+                newValues[prevBlanksLengths + letterIndex] = letter;
+
+                return newValues
+            })
+        }
+        const displayedParts = parts?.map((part, index) =>{
+            const match = part.match(separatorRegex)
+            const currentWordIndex = blankCounter
+            let offset = 0
+
+            if(match){
+                const digit = match[0].match(diditRegex) || ''
+                const blankLength = parseInt(digit[0], 10)
+                const inputs = [];
+
+                blankValues.push(...new Array(blankLength).fill(''));
+                blankLengths.push(blankLength)
+
+                // const offset =  blankCounter == 0 ? -1 : PBL + blankLength
+                offset = currentWordIndex == 0 ? 0 : prevBlanksLength
+                console.log("offset = ", offset, "blankLength = ", blankLength, "prevBlanksLength = ", prevBlanksLength)
+
+            for (let i = 0; i < blankLength; i++) {
+                inputs.push(
+                <input
+                    key={`blank-${blankCounter}-${i}`}
+                    type="text"
+                    maxLength={1}
+                    className="letter-input"
+                    value={blankValues[offset + i] || ''}
+
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        handleInputChange(value, currentWordIndex, i);
+
+                        // Auto-focus next input
+                        if (value && e.target.nextElementSibling instanceof HTMLInputElement) {
+                            e.target.nextElementSibling.focus();
+                        }
+                    }}
+                    onKeyDown={(e) => {
+                        const isBackspace = e.key === 'Backspace';
+                        const currentIndex = offset + i;
+
+                        // If current is empty and user hits backspace, go back
+                        if (isBackspace && !blankValues[currentIndex]) {
+                        const prevInput = (e.target as HTMLInputElement).previousElementSibling;
+                        if (prevInput instanceof HTMLInputElement) {
+                            prevInput.focus();
+                        }
+                        }
+                    }}
+                />
+                );
+            }
+            prevBlanksLength = prevBlanksLength + blankLength
+
+            blankCounter ++;
+            return <React.Fragment key={`blank-container-${index}`}>{inputs}</React.Fragment>;
+            } else {
+                return <span className="questionBody" key={`text-${index}`}>{part}</span>;
+            }
         })
-    }
-    return(
 
-        <form onSubmit={handleSubmit}>
-            <div>
-                {parts?.map((part, index) =>{
-                    const match = part.match(separatorRegex)
-                    if(match){
-                        const digit = match[0].match(diditRegex) || ''
-                        const blankLength = parseInt(digit[0], 10)
-                        const inputs = [];
-                    for (let i = 0; i < blankLength; i++) {
-                        handleInputChange('-', blankCounter, i)
-                        inputs.push(
-                        <input
-                            key={`blank-${blankCounter}-${i}`}
-                            type="text"
-                            maxLength={1}
-                            className="letter-input"
-                            onChange={(e) => handleInputChange(e.target.value, blankCounter, i)}
-                            value={blankValues[blankCounter][i] || ''}
-                        />
-                        );
-                    }
-                    blankCounter++;
-                    return <React.Fragment key={`blank-container-${index}`}>{inputs}</React.Fragment>;
-                    } else {
-                        return <span className="questionBody" key={`text-${index}`}>{part}</span>;
-                    }
-                })}
-            </div>
-            <Button className="submit-btn mt-2" type="submit">Submit</Button>
-            
-        </form>
-        
-    )
+        setform(
+            <React.Fragment key="react-CTestQ-window-fragment">
+                    <div>
+                        {displayedParts}
+                    </div>
+                    <Button className="submit-btn mt-2" type="submit" onClick={handleSubmit}>Submit</Button>
+            </React.Fragment>
+        )
+    }, [TimeOut, blankValues, question.id, question.questionBody, submitAnswer])
+
+    return form
 }
 
 export default CTestQWindow

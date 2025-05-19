@@ -5,8 +5,8 @@ import { Button } from "@headlessui/react"
 import { BACKEND_BASE_URL } from "../../../../../../constants/api"
 
 
-const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>}) =>{
-    const { question, submitAnswer } = props
+const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+    const { question, submitAnswer, TimeOut } = props
     
     const keyName = question.s3PathToPic ?? ""
     const [ pic_link, setpic_link ] = useState<string>("") 
@@ -25,8 +25,7 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
         }
         fetchPic()
     })
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>{
-        event.preventDefault()
+    const handleSubmit = () =>{
         const newM: MethodArgs = {
             Description: picDescription,
             QId:props.question.id,
@@ -34,6 +33,11 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
         }
         submitAnswer("SubmitPicDescriptionAsync",  newM)
       }
+
+    if(TimeOut){
+        handleSubmit()
+        console.log("handling Time out = true ")
+    }
     return(
         
         <React.Fragment key={`react-describe-pic-fragment`}>
@@ -48,11 +52,11 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
                     />
                 </div>
             }
-            <form onSubmit={handleSubmit}>
+            <form>
                 <div>
                     <textarea className="essay-textarea" name="describe-pic-text-area" id="describe-pic-text-area" value={picDescription} onChange={(event) => setpicDescription(event.target.value)}></textarea>
                 </div>
-                <Button className={`submit-btn`} type="submit">Submit</Button>
+                <Button className={`submit-btn`} type="submit" onClick={handleSubmit}>Submit</Button>
 
             </form>
         </React.Fragment>
