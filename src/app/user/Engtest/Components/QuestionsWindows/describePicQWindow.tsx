@@ -52,13 +52,13 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
                     />
                 </div>
             }
-            <form>
+            <div>
                 <div>
                     <textarea className="essay-textarea" name="describe-pic-text-area" id="describe-pic-text-area" value={picDescription} onChange={(event) => setpicDescription(event.target.value)}></textarea>
                 </div>
                 <Button className={`submit-btn`} type="submit" onClick={handleSubmit}>Submit</Button>
 
-            </form>
+            </div>
         </React.Fragment>
         
     )

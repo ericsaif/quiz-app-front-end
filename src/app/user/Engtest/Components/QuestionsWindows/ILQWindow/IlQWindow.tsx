@@ -38,16 +38,14 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
             const valueParsed = parseInt(value,10)
 
             const correctOption =
-                correctDialogOptions?.correctOptionsDialogOptions?.[currentILQ] !== undefined
-                    ? correctDialogOptions.correctOptionsDialogOptions[currentILQ] % 5
+                correctDialogOptions?.CorrectOptionsDialogOptions?.[currentILQ] !== undefined
+                    ? correctDialogOptions.CorrectOptionsDialogOptions[currentILQ] % 5
                     : 0;
             
             let correct = false
 
-            setAId((prevAIds)=>({
-                ...(prevAIds || []),
-                valueParsed
-            }))
+            setAId((prevAIds) => [...prevAIds, valueParsed])
+            
             setaudioLineWidth(0)
             
             if (correctOption == valueParsed)
@@ -110,7 +108,7 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
         ChangeCurrentOptions()
         ChangeCurrentAudio()
 
-    }, [audioLineWidth, correctDialogOptions?.correctOptionsDialogOptions, currentILQ, givenDialogoptions, listenTries, options, s3pathsToAudioAnswers])
+    }, [audioLineWidth, correctDialogOptions?.CorrectOptionsDialogOptions, currentILQ, givenDialogoptions, listenTries, options, s3pathsToAudioAnswers])
 
     const handleSubmit = () =>{
 
@@ -131,7 +129,7 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
 
     return(
 
-        <form className="container-fluid" >
+        <div className="container-fluid" >
             {
                 !summaryWindow &&
                     <div className="dialog-container transitionClass">
@@ -168,7 +166,7 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
                     </div>
                 </div>
             }
-        </form>
+        </div>
         
     )
 }

@@ -10,7 +10,7 @@ import Link from "next/link";
 import { IoAddCircle } from "react-icons/io5";
 import UserTable from "./Components/UTable/UTable";
 import Image from "next/image";
-// import { useLayout } from "../contexts/LayoutContext";
+import { useLayout } from "../contexts/LayoutContext";
 
  const UsersInner = () => {
     const [totalCount, settotalCount] = useState<number>(0)
@@ -29,8 +29,11 @@ import Image from "next/image";
 
     const fetchRef = useRef(()=>{})
 
-    // const { setFormType } = useLayout()
-    // setFormType("12")
+    const { setFormType } = useLayout()
+    
+    useEffect(() => {
+        setFormType("12");
+    }, [setFormType]);
 
     useEffect(() =>{
         async function fetchUsers(){

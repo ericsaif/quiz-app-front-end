@@ -34,7 +34,7 @@ const I_L_Q = (props:{
 
     const [correctOptions, setCorrectOptions] = useState<number[]>([])
 
-    const [Dialog, setDialog] = useState<string>(correctDialogOptions?.dialog || "")
+    const [Dialog, setDialog] = useState<string>(correctDialogOptions?.Dialog || "")
 
     useEffect(()=>{
         const setCO = () => {
@@ -52,8 +52,8 @@ const I_L_Q = (props:{
                 ...givenDialogoptions.optionsDialogContinuation4,
             ]
             setAlloptions(arrays)
-            setCorrectOptions(correctDialogOptions.correctOptionsDialogOptions)
-            setDialog(correctDialogOptions.dialog)
+            setCorrectOptions(correctDialogOptions.CorrectOptionsDialogOptions)
+            setDialog(correctDialogOptions.Dialog)
         }
         if(!IsEditMode)
             setCO()
@@ -96,10 +96,10 @@ const I_L_Q = (props:{
             iLQId: question?.id || 0
         }
         const correctDialogOptions: CorrectDialogOptions = {
-            dialog: Dialog,
+            Dialog: Dialog,
             iLQ: null,
-            iLQId: question?.id || 0,
-            correctOptionsDialogOptions: correctOptions
+            ILQId: question?.id || 0,
+            CorrectOptionsDialogOptions: correctOptions
         }
         const Question: ILQ = {
             qpoId: QPOId,

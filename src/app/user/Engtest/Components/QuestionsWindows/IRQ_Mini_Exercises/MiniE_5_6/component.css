@@ -1,0 +1,66 @@
+*{
+    box-sizing: border-box;
+}
+
+.passage{
+    top: 0;
+    position: absolute;
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+}
+.openedPassage{
+    display: block;
+}
+.closedPassage{
+    display: none;
+}
+
+.passage-btn{
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1000;
+}
+
+input[type="checkbox"]{
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+.inputs-container{
+    width: 100%;
+
+    display: grid;
+    gap: 5px;
+
+    height: fit-content;    
+}
+
+.input-label{
+    border: 2px solid gray;
+    cursor: pointer;
+    /* min-width: fit-content ; */
+    min-width: 10rem !important;
+    height: fit-content;
+    padding: 15px;
+    font-size: large;
+    font-weight: 500;
+
+    display: block;
+    justify-items: start;   
+
+    transition: background-color 0.3s ease;
+}
+.input-label:hover{
+    border:  blueviolet;
+    background-color: teal;
+    color: white;
+}
+.input-label-checked{
+    border:  blueviolet;
+    background-color: teal;
+    color: white;
+}

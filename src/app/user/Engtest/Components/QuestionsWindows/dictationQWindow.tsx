@@ -19,7 +19,7 @@ const DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string
     
     return(
         <React.Fragment key={`dictation-window-react-fragment`}>
-                <form>
+                <div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <AudioPlayer keyName={question.s3PathToAudio} maxListenTries={question.listenTries} />
                     </div>
@@ -28,7 +28,7 @@ const DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string
                         <Button className={`submit-btn`} type="submit" onClick={handleSubmit}>Submit</Button>
                     </div>
 
-                </form>
+                </div>
         </React.Fragment>
     )
 }

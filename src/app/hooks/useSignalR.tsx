@@ -94,12 +94,8 @@ const useSignalR = (hubUrl: string): SignalRHookResult => {
         const newConnection = new signalR.HubConnectionBuilder()
             .withHubProtocol(new signalR.JsonHubProtocol())
             .configureLogging(signalR.LogLevel.Debug) 
-            .withUrl(hubUrl, {
-                withCredentials: true,
-                // skipNegotiation: true,
-                transport: signalR.HttpTransportType.WebSockets
-            })
-            .withAutomaticReconnect()
+            .withUrl(hubUrl)
+            // .withAutomaticReconnect()
             .configureLogging(signalR.LogLevel.Information)
             .build();
 

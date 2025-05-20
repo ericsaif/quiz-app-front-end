@@ -1,0 +1,8 @@
+.highlightedText{
+    border: 2px solid blueviolet;
+    border-radius: 5px;
+    width: 50%;
+    justify-self: center;
+    min-height: 3rem;
+    height: fit-content;
+}

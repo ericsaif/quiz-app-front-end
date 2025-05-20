@@ -10,7 +10,11 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
     const [blankValues, setBlanks] = useState<string[]>([])
     
     const[ form, setform ] = useState<React.ReactNode | null>(null)
-   
+    
+    useEffect(()=>{
+        setBlanks([])
+
+    },[question])
 
     useEffect(()=>{
         let prevBlanksLength = 0
@@ -113,12 +117,12 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
             }
         })
 
-        setform(
+        setform( 
             <React.Fragment key="react-CTestQ-window-fragment">
                     <div>
                         {displayedParts}
                     </div>
-                    <Button className="submit-btn mt-2" type="submit" onClick={handleSubmit}>Submit</Button>
+                    <Button style={{width: 'fit-content', display: 'flex', justifyContent: 'center'}} className="submit-btn mt-2" type="submit" onClick={handleSubmit}>Submit</Button>
             </React.Fragment>
         )
     }, [TimeOut, blankValues, question.id, question.questionBody, submitAnswer])

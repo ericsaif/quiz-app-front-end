@@ -12,7 +12,7 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
     const QPOId = question.qpoId
 
     const handleSubmit = () =>{
-
+        alert("submitting")
         const newM : MethodArgs = {
             Essay: essay,
             Topic: Topic,
@@ -21,7 +21,7 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
         submitAnswer("SubmitEssayAsync", newM)
     }
     if(TimeOut){
-        // handleSubmit()
+        handleSubmit()
         console.log("handling Time out = true ")
     }
 
@@ -36,10 +36,10 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
                     {Topic}
                 </p>
             
-                <form className=""   style={{height: "100%"}}>
+                <div className=""   style={{height: "100%"}}>
                     <textarea className="essay-textarea" name="user-essay" id="user-essay" onChange={HandleInputChange}/> <br/>
                     <Button onClick={handleSubmit} type="submit" className={`btn btn-primary p-3 py-2`} style={{fontWeight: 'bold'}}>Submit</Button>
-                </form>
+                </div>
             </div>
         </>
         
