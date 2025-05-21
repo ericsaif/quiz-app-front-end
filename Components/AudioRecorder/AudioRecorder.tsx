@@ -43,11 +43,13 @@ export default function AudioRecorder(props: {
       // First send metadata about the upcoming chunks
       console.info("- BeginAudioUpload - ")
 
-      await submitAnswer("BeginAudioUpload", {
-          QPOId: QPOId,
-          TotalChunks: totalChunks,
-          TotalSize: uint8Array.length
-      });
+      const beginUploadMargs: MethodArgs ={
+        QPOId: QPOId,
+        TotalChunks: totalChunks,
+        TotalSize: uint8Array.length
+      }
+
+      await submitAnswer("BeginAudioUpload", beginUploadMargs);
       
       // Send each chunk
       console.info("- Begin UploadAudioChunk before loop - ")
@@ -68,15 +70,19 @@ export default function AudioRecorder(props: {
           
         console.info("attempting to invoke UploadAudioChunk")
 
-        await submitAnswer("UploadAudioChunk", {
+        const UploadAudioChunkMargs: MethodArgs = {
             ChunkIndex: i,
             ChunkData: base64Chunk,
             QPOId: QPOId
-        });
+        }
+
+        await submitAnswer("UploadAudioChunk", UploadAudioChunkMargs);
       }
+
+      const CompleteAudioUploadMargs: MethodArgs = { QPOId: QPOId, SM: SM, Topic: Topic }
       
       // Signal upload completion
-      await submitAnswer("CompleteAudioUpload", { QPOId: QPOId, SM: SM, Topic: Topic });
+      await submitAnswer("CompleteAudioUpload", CompleteAudioUploadMargs);
   }
 
     const startRecording = async () => {

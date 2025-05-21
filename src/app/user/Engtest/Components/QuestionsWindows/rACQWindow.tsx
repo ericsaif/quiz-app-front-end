@@ -6,21 +6,44 @@ const  RACQWindow = (props:{question: RACQ, submitAnswer: (SM: string, args: Met
     const { question, submitAnswer, TimeOut } = props
 
     const [blankValues, setBlanks] = useState<string[]>([])
+    const [blankLengths, setblankLengths] = useState<number[]>([])
+    
         
     const[ form, setform ] = useState<React.ReactNode | null>(null)
 
     // if creating a component for displaying text with input fields instead of blanks
     // the variables that need to be passed there: replaceRegex, separatorRegex, displayedText, blankValues, setBlanks, SM ... 
     useEffect(()=>{
-        setBlanks([])
-
-    },[question])
+            setBlanks([])
+            setblankLengths([])
+            let displayedText = question.questionBody
+    
+            const replaceRegex = /(\(\d+\))/g
+            const separatorRegex =  /(\[BLANK:\d+\])/g;
+            const diditRegex = /(\d+)/g
+    
+            displayedText = displayedText?.replaceAll(replaceRegex, "") || displayedText
+            const parts = displayedText?.split(separatorRegex)
+    
+            parts?.map((part) =>{
+                const match = part.match(separatorRegex)
+    
+                if(match){
+                    const digit = match[0].match(diditRegex) || ''
+                    const blankLength = parseInt(digit[0], 10)
+                    setBlanks(prevBlanks =>{
+                        return [...(prevBlanks || []), ...new Array(blankLength).fill('')]
+                    })
+                    setblankLengths(prevLengths =>{
+                        return [...(prevLengths || []), blankLength ]
+                    })
+                }
+        })},[question])
 
     useEffect(()=>{
             let prevBlanksLength = 0
             let blankCounter = 0
     
-            const blankLengths: number[] = []
             let displayedText = question.questionBody
     
             const replaceRegex = /(\(\d+\))/g
@@ -44,11 +67,14 @@ const  RACQWindow = (props:{question: RACQ, submitAnswer: (SM: string, args: Met
                     const newValues = [...previousBlanks]
                     const prevBlanksLengths = wordIndex == 0 ? 0 : blankLengths.slice(0, wordIndex).reduce((acc, val)=> acc+val ,0)
                     
-                    console.info("prevBlanksLengths = ", prevBlanksLengths)
+                    // console.info("prevBlanksLengths = ", prevBlanksLengths)
     
-    
+                    console.log(`blankValues length: ${blankValues.length} blankValues before adding a new letter: ${newValues} `)
+
                     newValues[prevBlanksLengths + letterIndex] = letter;
-    
+
+                    console.log(`blankValues length: ${blankValues.length} blankValues after adding a new letter - ${newValues}`)
+
                     return newValues
                 })
             }
@@ -62,12 +88,9 @@ const  RACQWindow = (props:{question: RACQ, submitAnswer: (SM: string, args: Met
                     const blankLength = parseInt(digit[0], 10)
                     const inputs = [];
     
-                    blankValues.push(...new Array(blankLength).fill(''));
-                    blankLengths.push(blankLength)
-    
                     // const offset =  blankCounter == 0 ? -1 : PBL + blankLength
                     offset = currentWordIndex == 0 ? 0 : prevBlanksLength
-                    console.log("offset = ", offset, "blankLength = ", blankLength, "prevBlanksLength = ", prevBlanksLength)
+                    // console.log("offset = ", offset, "blankLength = ", blankLength, "prevBlanksLength = ", prevBlanksLength)
     
                 for (let i = 0; i < blankLength; i++) {
                     inputs.push(
@@ -119,7 +142,7 @@ const  RACQWindow = (props:{question: RACQ, submitAnswer: (SM: string, args: Met
                     <Button style={{width: 'fit-content', display: 'flex', justifyContent: 'center'}} className="submit-btn mt-2"  type="submit" onClick={handleSubmit}>Submit</Button>
                 </React.Fragment>
             )
-        }, [TimeOut, blankValues, question.id, question.questionBody, submitAnswer])
+        }, [TimeOut, blankLengths, blankValues, question.id, question.questionBody, submitAnswer])
     
         return form
 }

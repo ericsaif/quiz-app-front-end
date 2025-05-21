@@ -9,11 +9,13 @@ import Link from "next/link";
 
 
 const EngTestInner = () =>{
-    const [hubURL, sethubURL] = useState<string>("") 
+    const [hubURL, sethubURL] = useState<string>("")
+    const [engTestId, setengTestId] = useState<string>("") 
     const queryParams = useSearchParams()
     
     useEffect(() => {
-        const EngTestId = queryParams.get('engTestId');
+        const EngTestId = queryParams.get('engTestId') || "";
+        setengTestId(EngTestId)
 
         sethubURL(`${ BACKEND_BASE_URL }/englishtest?EngTestId=${EngTestId}`)
     }, [queryParams]);
@@ -23,6 +25,7 @@ const EngTestInner = () =>{
             {
                 hubURL !="" ? (
                     <EngTestWindow
+                        engTestId={engTestId}
                         hubUrl={hubURL}
                     />
                 ) : (

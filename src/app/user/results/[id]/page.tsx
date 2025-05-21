@@ -34,7 +34,7 @@ const ResultsDetailsWindow = () =>{
 
         }
         fetchResultDetails()
-    })
+    },[ResultId])
 
     return (
         <React.Fragment key={`react-fragment-user-result-details`}>

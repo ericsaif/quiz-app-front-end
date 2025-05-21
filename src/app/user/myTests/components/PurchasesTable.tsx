@@ -40,7 +40,7 @@ const BoughtTestsTable = (props:{TestsData : ReadEngTest[]}) =>{
                             Тест недоступен
                         </button>
                     ) : (
-                        <Link style={{color: 'white'}} href={`/user/Engtest/?engTestId=${test.id}`} className={`btn btn-primary`}>
+                        <Link href={`/user/Engtest/?engTestId=${test.id}`} className={`page-button btn`}>
                             Начать Тест
                         </Link>
                     )}

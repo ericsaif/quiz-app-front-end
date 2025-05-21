@@ -3,4 +3,5 @@
 
 export interface ETWP{
     hubUrl: string
+    engTestId: string
 }

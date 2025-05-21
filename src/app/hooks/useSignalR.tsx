@@ -3,15 +3,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import * as signalR from "@microsoft/signalr";
-
-interface SignalRHookResult {
-    connection: signalR.HubConnection | null;
-    connectionId: string | null;
-    error: Error | null;
-    isConnected: boolean;
-    startConnection: () => Promise<void>; // Function to initiate connection
-    stopConnection: () => Promise<void>; // Optional: Function to stop manually
-}
+import { SignalRHookResult } from './SignalRHookResult';
 
 const useSignalR = (hubUrl: string): SignalRHookResult => {
     // State remains mostly the same

@@ -15,9 +15,11 @@ import './QuestionsWindows/QWindows.css'
 import Timer from "../../../../../Components/Timer/Timer";
 
 const EngTestWindow = (props: ETWP) => {
+  const {engTestId, hubUrl} = props
+
   const [windowContent, setWindow] = useState<ReactElement | null>(null);
   const [CurrentQ, SetQ] = useState<Question | null>(null);
-  const { startConnection, submitAnswer, TimeOut } = useQuizHubR(props.hubUrl, SetQ);
+  const { startConnection, submitAnswer, TimeOut } = useQuizHubR(hubUrl, SetQ, engTestId);
 
   const [displaySW, setdisplaySW] = useState<boolean>(true);
   const [loading, setloading] = useState<boolean>(true);
@@ -48,6 +50,8 @@ const EngTestWindow = (props: ETWP) => {
   // }
 //
   useEffect(() => {
+    console.log('clearing question window')
+
     setWindow(null)
     if(displaySW){
       setloading(false)
@@ -56,6 +60,7 @@ const EngTestWindow = (props: ETWP) => {
     if (CurrentQ === null)
       setloading(true)
     else{
+      console.log('setting a new question window')
       setloading(false)
       switch (CurrentQ.qpoId) {
         case 1:( setWindow(<QuestionsWindows.CTestWindow question={CurrentQ as CTestQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
@@ -73,7 +78,7 @@ const EngTestWindow = (props: ETWP) => {
         case 14:( setWindow(<QuestionsWindows.InterviewQWindow question={CurrentQ as InterviewQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
       }
     }
-  }, [CurrentQ, submitAnswer, startConnection, StartingW, displaySW, TimeOut]);
+  }, [CurrentQ, submitAnswer, displaySW, TimeOut]);
 
   return (
     <React.Fragment key={`react-engTest-window-fragment`}>

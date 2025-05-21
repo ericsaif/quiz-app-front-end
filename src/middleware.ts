@@ -25,11 +25,13 @@ export async function middleware(request: NextRequest) {
     console.log(`authorization on protected route w cookie`)
     
     try {
-      console.log(`trying to send request to status route`)
+      console.log(`getting userRole cookie`)
 
       const userRole = request.cookies.get('userRole')?.value
       if(userRole){
+        console.log(`checking userRole`)
         if (pathname === '/auth/login' || pathname === '/auth/register') {
+          console.log(`Redirect to user dashboard`)
           return NextResponse.redirect(new URL(`/${userRole}/dashboard`, request.url)); // Redirect to user dashboard
         }
         

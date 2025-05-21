@@ -227,7 +227,16 @@ label{
 }
 
 .page-button{
-  background-color: #5669BB;
+  background-color: #5669BB !important;
+  min-width: 9rem !important;
+  min-height: 2.5rem !important;
+  
+  width: fit-content !important;
+  height: fit-content !important; 
+  
+  color: white !important;
+  margin-bottom: 5px;
+  border: 2px solid gray !important;
 }
 
 @media (prefers-color-scheme: dark) {

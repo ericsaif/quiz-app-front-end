@@ -44,7 +44,20 @@ const IrQWindow = (props:{question: IRQ, submitAnswer: (SM: string, args: Method
             }
             const handleSubmit = () =>{
                 console.log("submitting IRQ")
-                submitAnswer("SubmitIRQAAsync", {UserIRQAnswer: newIRQAnswer, QId: question.id})
+                console.log(`IRQ Answer - 
+                    ${newIRQAnswer.userOptionsMiniE1} 
+                    ${newIRQAnswer.userOptionMiniE2} 
+                    ${newIRQAnswer.userHighlightMiniE3}
+                    ${newIRQAnswer.userHighlightMiniE4} 
+                    ${newIRQAnswer.userOptionMiniE5} 
+                    ${newIRQAnswer.userOptionMiniE6}
+                `)
+
+                const newM: MethodArgs = {
+                            UserIRQAnswer: newIRQAnswer,
+                            QId: question.id,
+                        }
+                submitAnswer("SubmitIRQAAsync", newM)
             }
             if(TimeOut){
                 handleSubmit()
