@@ -1,7 +1,9 @@
 // import { ILQ } from "./IlQ";
 
+
 export interface CorrectDialogOptions {
-    ILQId: number;
-    CorrectOptionsDialogOptions: number[];
-    Dialog: string;
+    iLQId: number;
+    correctOptionsDialogOptions: number[];
+    dialog: string | null;
+    scenario: string | null;
 }

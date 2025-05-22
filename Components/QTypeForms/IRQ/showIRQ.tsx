@@ -64,7 +64,7 @@ const ShowIRQ = (props: {
                 <div className="row  pr-4">
                     <div className="col-6 align-self-start vstack">
 
-                        <label htmlFor="questionBody">Текст:</label>
+                        <label htmlFor="questionBody">Текст с пробелами:</label>
                         <textarea value={questionBody} id="questionBody" style={{width: "600px", height: "200px"}} onChange={HandleInputChange}></textarea>
 
                         <label htmlFor="MiniE2Inputs">Впишите возможные ответы для mini excercise No 2: </label>

@@ -13,6 +13,7 @@ const  DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: strin
     useEffect(()=>{
         const handleSubmit = () =>{
             submitAnswer("SubmitDictationAsnwerAsync", {DictationA: answer, QId: question.id})
+            setAnswer("")
         }
 
         if(TimeOut){

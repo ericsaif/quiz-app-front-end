@@ -32,7 +32,8 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
             QPOId:props.question.qpoId
         }
         submitAnswer("SubmitPicDescriptionAsync",  newM)
-      }
+        setpicDescription("")
+    }
 
     if(TimeOut){
         handleSubmit()

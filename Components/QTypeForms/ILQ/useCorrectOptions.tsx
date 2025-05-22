@@ -2,12 +2,10 @@ import React, { SetStateAction } from "react";
 
 const useCorrectInputs = (props:{
     setCorrectOptions: React.Dispatch<SetStateAction<number[]>>,
-    correctOptions: number[],
-    Dialog: string, 
-    setDialog:React.Dispatch<SetStateAction<string>>
+    correctOptions: number[]
 }) =>{
 
-    const { setCorrectOptions, correctOptions, Dialog, setDialog } = props
+    const { setCorrectOptions, correctOptions } = props
 
     const HandleCorrectOptionschange = (value: string, index: number) =>{
         setCorrectOptions(prevOptions =>{
@@ -49,10 +47,6 @@ const useCorrectInputs = (props:{
         <React.Fragment key={`react-fragment-select-correct-options-and-Dialog-ILQ`}>
             <div>
                 {inputs}
-            </div>
-            <div className="vstack mt-3">
-                <label htmlFor="ILQ-Dialog">Диалог</label>
-                <textarea placeholder="correct-dailog" value={Dialog} style={{width: "500px", height: "300px"}} name="ILQ-Dialog" id="ILQ-Dialog" onChange={(e) =>setDialog(e.target.value)}></textarea>
             </div>
         </React.Fragment>
 

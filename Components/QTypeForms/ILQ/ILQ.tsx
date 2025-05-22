@@ -13,6 +13,9 @@ import useModal from "../../Hooks/useModal"
 import { ILQ } from "../../../Models/QuestionsModels"
 import { GivenDialogoptions } from "../../../Models/QuestionsModels/ILQ/givenDialogoptions"
 import { CorrectDialogOptions } from "../../../Models/QuestionsModels/ILQ/correctDialogOptions"
+import { CSSProperties } from "@mui/material"
+
+import { text } from "./text"
 
 const I_L_Q = (props:{
     QPOId: number,
@@ -34,7 +37,8 @@ const I_L_Q = (props:{
 
     const [correctOptions, setCorrectOptions] = useState<number[]>([])
 
-    const [Dialog, setDialog] = useState<string>(correctDialogOptions?.Dialog || "")
+    const [Dialog, setDialog] = useState<string>(correctDialogOptions?.dialog || "")
+    const [scenario, setscenario] = useState<string>(correctDialogOptions?.scenario || "")
 
     useEffect(()=>{
         const setCO = () => {
@@ -52,8 +56,8 @@ const I_L_Q = (props:{
                 ...givenDialogoptions.optionsDialogContinuation4,
             ]
             setAlloptions(arrays)
-            setCorrectOptions(correctDialogOptions.CorrectOptionsDialogOptions)
-            setDialog(correctDialogOptions.Dialog)
+            setCorrectOptions(correctDialogOptions.correctOptionsDialogOptions)
+            setDialog(correctDialogOptions?.dialog ?? "")
         }
         if(!IsEditMode)
             setCO()
@@ -74,7 +78,8 @@ const I_L_Q = (props:{
         }
         const CorrectDialogOptionsDTO: CorrectDialogOptions_Create ={
             correctOptions,
-            Dialog
+            Dialog, 
+            scenario
         }
         const Newquestion: CreateILQ ={
             QPOId,
@@ -96,10 +101,10 @@ const I_L_Q = (props:{
             iLQId: question?.id || 0
         }
         const correctDialogOptions: CorrectDialogOptions = {
-            Dialog: Dialog,
-            iLQ: null,
-            ILQId: question?.id || 0,
-            CorrectOptionsDialogOptions: correctOptions
+            dialog: Dialog,
+            iLQId: question?.id || 0,
+            scenario,
+            correctOptionsDialogOptions: correctOptions
         }
         const Question: ILQ = {
             qpoId: QPOId,
@@ -117,7 +122,7 @@ const I_L_Q = (props:{
 
     const ShowS3PathsInputs = useS3PathsInputs({sets3pathsToAudioAnswers, s3pathsToAudioAnswers})
     const ShowInputs = useInputs({setAlloptions, allOptions})
-    const ShowCorrectInputs = useCorrectInputs({setCorrectOptions, correctOptions, Dialog, setDialog})
+    const ShowCorrectInputs = useCorrectInputs({setCorrectOptions, correctOptions})
 
     const qtype = "Interactive listening"
 
@@ -126,25 +131,6 @@ const I_L_Q = (props:{
         qtype,
         IsEditMode ? PUT_Q : undefined,
         IsEditMode ? question?.id : undefined,
-    )
-
-    const text: React.ReactNode = (
-        <>
-            <span>
-                <p>1. Вставьте локацию аудиофайлов в облачном хранилище - </p>
-                <p>Сначала нужно будет сохранить аудиофайл в облачном хранилище </p>
-                <p>Далее скопировать его локацию и вставить по порядку в поля </p>
-
-                <p>2. Вставьте возможные ответы - </p>
-                <p>Вставляете ответы, которые пользователь можеть дать на вопрос в диалоге </p>
-
-                <p>3. Выберите номера правильных ответов для каждого вопроса </p>
-                <p>Выбираете из выпадающего листа - номер правильного ответа </p>
-
-                <p>4. Диалог </p>
-                <p>В поле Диалог впишите весь диалог текстом </p>
-            </span>
-        </>
     )
 
     const modal:React.ReactNode = useModal(
@@ -168,6 +154,7 @@ const I_L_Q = (props:{
         }
         
     }
+    const textareaStyle: CSSProperties = {width: "100%", height: "300px"}
 
     return(
         <React.Fragment key={`react-fragment-ILQ-form`}>
@@ -205,9 +192,24 @@ const I_L_Q = (props:{
                 </div>       
             </div>     
 
+            <div>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-6 vstack mt-3">
+                            <label htmlFor="ILQ-Dialog">Диалог</label>
+                            <textarea placeholder="correct-dailog" value={Dialog ?? ''} style={textareaStyle} name="ILQ-Dialog" id="ILQ-Dialog" onChange={(e) =>setDialog(e.target.value)}/>
+                        </div>
+                        <div className="col-6 vstack mt-3">
+                            <label htmlFor="ILQ-scenario">Сценарий / Контекст</label>
+                            <textarea placeholder="correct-dailog" value={scenario ?? ''} style={textareaStyle} name="ILQ-scenario" id="ILQ-scenario" onChange={(e) =>setscenario(e.target.value)} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div className="row items-justify-center">
                 <div className="col-5 align-self-center">
-                    <Button disabled={loading} className={`btn btn-primary`} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
+                    <Button disabled={loading} className={`btn btn-primary mt-3`} type="submit"> {loading ? 'Сохранение...' : 'Сохранить вопрос'} </Button>
                 </div>    
             </div>                
             <div className="row">

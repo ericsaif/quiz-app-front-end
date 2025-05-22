@@ -20,7 +20,7 @@ const IrQWindow = (props:{question: IRQ, submitAnswer: (SM: string, args: Method
         optionsMiniE6
     } = question
 
-    const [IRQform, setIRQform] = useState<React.ReactNode>()
+    const [IRQform, setIRQform] = useState<React.ReactNode | null>(null)
     const [userOptionsMiniE1, setuserOptionsMiniE1] = useState<number[]>(Array.from({ length: 10 }, (_, y) => y * 5))
     const [userOptionMiniE2, setuserOptionMiniE2] = useState<number>(0)
     const [userHighlightMiniE3, setuserHighlightMiniE3] = useState<string>('')
@@ -29,9 +29,20 @@ const IrQWindow = (props:{question: IRQ, submitAnswer: (SM: string, args: Method
     const [userOptionMiniE6, setuserOptionMiniE6] = useState<number>(0)
 
     const[currentEx, setNext] = useState<number>(0)
+
+    useEffect(()=>{
+        setNext(0)
+        setuserOptionsMiniE1(Array.from({ length: 10 }, (_, y) => y * 5))
+        setuserOptionMiniE2(0)
+        setuserHighlightMiniE3('')
+        setuserHighlightMiniE4('')
+        setuserOptionMiniE5(0)
+        setuserOptionMiniE6(0)
+    }, [question])
     
     useEffect(()=>{
         function constructIRQwindow(){
+            setIRQform(null)
             let Exercise
 
             const newIRQAnswer: IRQAnswer ={
@@ -83,7 +94,8 @@ const IrQWindow = (props:{question: IRQ, submitAnswer: (SM: string, args: Method
                         setuserOptionMiniE2={setuserOptionMiniE2 } 
                         setNext={setNext } 
                         questionBody={questionBody || ""} 
-                        userOptionsMiniE1={userOptionsMiniE1}                    
+                        userOptionsMiniE1={userOptionsMiniE1}   
+                        text2={question.textForMiniE2}                 
                     />
                 )
                 break
@@ -93,7 +105,7 @@ const IrQWindow = (props:{question: IRQ, submitAnswer: (SM: string, args: Method
                         question={questionMiniE3} 
                         userHighlight={userHighlightMiniE3} 
                         setuserHighlight={setuserHighlightMiniE3} 
-                        Text={"Test Text"} 
+                        Text={question.completeText ?? 'test text'} 
                         setNext={ setNext }                    
                     />
                 )
@@ -103,7 +115,7 @@ const IrQWindow = (props:{question: IRQ, submitAnswer: (SM: string, args: Method
                         question={questionMiniE4} 
                         userHighlight={userHighlightMiniE4} 
                         setuserHighlight={setuserHighlightMiniE4} 
-                        Text={"Test Text"} 
+                        Text={question.completeText ?? 'test text'} 
                         setNext={ setNext }                   
                     />
                 )
@@ -146,7 +158,7 @@ const IrQWindow = (props:{question: IRQ, submitAnswer: (SM: string, args: Method
         }
 
         constructIRQwindow()
-    }, [TimeOut, question.questionBody, question.id, submitAnswer, userOptionsMiniE1, userOptionMiniE2, userHighlightMiniE3, userHighlightMiniE4, userOptionMiniE5, userOptionMiniE6, currentEx, miniE1, questionBody, optionsMiniE2, question.questionMiniE3, question.questionMiniE4, questionMiniE3, questionMiniE4, optionsMiniE5, optionsMiniE6])
+    }, [TimeOut, question.questionBody, question.id, submitAnswer, userOptionsMiniE1, userOptionMiniE2, userHighlightMiniE3, userHighlightMiniE4, userOptionMiniE5, userOptionMiniE6, currentEx, miniE1, questionBody, optionsMiniE2, question.questionMiniE3, question.questionMiniE4, questionMiniE3, questionMiniE4, optionsMiniE5, optionsMiniE6, question.textForMiniE2, question.completeText])
     return IRQform
 }
 

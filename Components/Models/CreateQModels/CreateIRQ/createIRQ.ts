@@ -9,5 +9,7 @@ export interface CreateIRQ extends CreateQuestion {
     questionMiniE4: string | null;
     optionsMiniE5: string[];
     optionsMiniE6: string[];
+    completeText: string | null;
+    textForMiniE2: string | null;
     createIRA: CreateIRA | null;
 }

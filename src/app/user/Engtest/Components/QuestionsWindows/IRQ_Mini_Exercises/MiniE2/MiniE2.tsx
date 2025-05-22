@@ -10,8 +10,9 @@ const MiniEx2 = (props: {
     setNext: React.Dispatch<React.SetStateAction<number>>
     questionBody: string
     userOptionsMiniE1: number[]
+    text2: string
 }) =>{
-    const { optionsMiniE2, userOptionMiniE2, setuserOptionMiniE2, setNext, questionBody, userOptionsMiniE1 } = props
+    const { optionsMiniE2, userOptionMiniE2, setuserOptionMiniE2, setNext, questionBody, userOptionsMiniE1, text2 ='test text' } = props
     const [displayedMiniE2, setdisplayedMiniE2] = useState<React.ReactNode>()
     
     useEffect(()=>{
@@ -55,11 +56,16 @@ const MiniEx2 = (props: {
                 >
                     {options}
                 </select>
+                <div>
+                    <p className="questionBody">
+                        {text2 !='' && text2 }
+                    </p>
+                </div>
                 <Button onClick={() => setNext(2)} className={`submit-btn mt-2`}>Next</Button>
             </React.Fragment>
         )
         
-    }, [questionBody, userOptionsMiniE1, setuserOptionMiniE2, setNext, optionsMiniE2, userOptionMiniE2])
+    }, [questionBody, userOptionsMiniE1, setuserOptionMiniE2, setNext, optionsMiniE2, userOptionMiniE2, text2])
 
     return displayedMiniE2
 }

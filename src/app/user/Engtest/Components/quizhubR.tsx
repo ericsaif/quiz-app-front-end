@@ -15,16 +15,20 @@ const useQuizHubR = (
     
     const { connection, isConnected, startConnection } = useSignalR(hubUrl);
     const [TimeOut, setTimeOut] = useState<boolean>(false)
+    const [isInvoking, setisEnvoking] = useState<boolean>(false)
 
     const router = useRouter()
 
     const submitAnswer = useCallback(async (SM: string, args: MethodArgs) => { // SM - server method name
         if (connection && isConnected) {
             try {
+                setisEnvoking(true)
                 await connection.invoke(SM, ...Object.values(args));
                 console.log("User Answer submitted:", ...Object.values(args));
             } catch (err) {
                 console.error("Error sending the answer:", err);
+            }finally{
+                setisEnvoking(false)
             }
         } else {
             console.warn("Cannot send message. Connection not established or message is empty.");
@@ -51,11 +55,18 @@ const useQuizHubR = (
             console.info("setting time out to true")
         };
 
-        const handleEndQuiz = (response: string) =>{
+        const handleEndQuiz = async (response: string) =>{
+            let waitMs = 0;
+            const maxWaitMs = 3000; // wait max 3 seconds
             console.log(response)
             console.log("Server requested disconnect");
-            connection.stop(); 
             router.push(`/user/Engtest/finish?engTestId=${engTestId}`)
+
+            while (isInvoking && waitMs < maxWaitMs) {
+                await new Promise(r => setTimeout(r, 100)); // small delay
+                waitMs += 100;
+            }
+            connection.stop(); 
         }
 
         connection.on("NextQuestion", handleNextQuestion);
@@ -73,13 +84,13 @@ const useQuizHubR = (
 
             connection.off("NextQuestion", handleNextQuestion);
             connection.off("QuestionTimerStop", handleStopTimer);
-            connection.off("EndQuiz", handleStopTimer);
+            connection.off("EndQuiz", handleEndQuiz);
             connection.off("QTimerStarted", handleStarttimer);
 
 
         };
 
-    }, [connection, engTestId, isConnected, router, setNexQuestion]); // Re-run when connection or its status changes
+    }, [connection, engTestId, isConnected, isInvoking, router, setNexQuestion]); // Re-run when connection or its status changes
 
     
     return { submitAnswer, startConnection, TimeOut };

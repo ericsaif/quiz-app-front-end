@@ -50,6 +50,8 @@ const AudioPlayer = (props: { keyName: string, maxListenTries: number}) =>{
             const audio = audioRef.current;
             audio.src = link;
             audio.onloadedmetadata = () => {
+                console.log("starting to play the audio on loaded meta data")
+
                 const duration = audio.duration;
                 StartLineWidth(0);
                 StartLineWidth(80 / duration / 2);
@@ -62,6 +64,7 @@ const AudioPlayer = (props: { keyName: string, maxListenTries: number}) =>{
     const PlayAudio = async (audiolink: string) =>{
         if(listenTries < maxListenTries){
             if(fetched){
+
                 StartPlaying()
             }else{
                 console.log('fetching data')

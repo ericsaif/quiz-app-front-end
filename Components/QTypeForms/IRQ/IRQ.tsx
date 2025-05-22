@@ -13,6 +13,10 @@ import { IRQ } from "../../../Models/QuestionsModels"
 import { IRA } from "../../../Models/AdminModels/AnswersEntities/IRA"
 import { MiniE1 } from "../../../Models/QuestionsModels/IRQ/miniE1"
 
+import "./IRQ.css"
+
+import { text1, text2 } from "./text"
+
 const I_R_Q = (props:{
     QPOId: number,
     question?: IRQ
@@ -30,6 +34,8 @@ const I_R_Q = (props:{
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
     const [difficulty, setdifficulty] = useState<string>(question?.difficulty || 'ANY')
 
+    const [completeText, setcompleteText] = useState<string>(question?.completeText || '')
+    const [textForMiniE2, settextForMiniE2] = useState<string>(question?.textForMiniE2 || '')
 
     const [allMiniE1Options, setallMiniE1Options] = useState<string[]>(Array(50).fill(''))
     
@@ -110,7 +116,9 @@ const I_R_Q = (props:{
             questionMiniE4, 
             optionsMiniE5, 
             optionsMiniE6,
-            difficulty
+            difficulty,
+            completeText,
+            textForMiniE2
         }
         POST_Q = Newquestion
     }else{
@@ -151,54 +159,12 @@ const I_R_Q = (props:{
             timer: question?.timer || "",
             id: question?.id || 0,
             questionBody,
-            difficulty
+            difficulty,
+            completeText,
+            textForMiniE2
         }
         PUT_Q = Question
     }
-
-
-    const text1: React.ReactNode =(
-        <>
-            <span>
-                <h6>1. Текст </h6>
-                <p>Впишите текст с пробелами, Вместо пробелов впишите - [BLANK] </p>
-
-                <h6>2. Впишите возможные ответы для mini excercise No 1: </h6>
-                <p> Вставляете ответы, которые пользователь можеть выбрать вместо пробелов для каждого пробела </p>
-
-                <h6>3. Впишите возможные ответы для mini excercise No 2: </h6>
-                <p> Вставляете ответы, которые пользователь можеть выбрать </p>
-
-                <h6>4. Впишите возможные ответы для mini excercise No 3: </h6>
-                <p> Впишите вопрос на который пользователь должен будет ответить с Highlight </p>
-
-                <h6>5. Впишите возможные ответы для mini excercise No 4: </h6>
-                <p> Впишите вопрос на который пользователь должен будет ответить с Highlight </p>
-
-                <h6>6. Впишите возможные ответы для mini excercise No 5: </h6>
-                <p> Вставляете ответы, которые пользователь можеть выбрать </p>
-
-                <h6>7. Впишите возможные ответы для mini excercise No 6: </h6>
-                <p> Вставляете ответы, которые пользователь можеть выбрать </p>
-            </span>
-        </>
-    )
-
-    const text2: React.ReactNode =(
-        <>
-            <span>
-                <h6>1. Mini Excercise No: 1 </h6>
-                <p> У каждого возможного выбора, который вы дали выше есть свой номер </p>
-                <p> Для каждого вопроса выберите номер правильного выбора </p>
-
-                <h6>2. С Mini Excercise No: 2, 5, 6 </h6>
-                <p> Сделайте то же самое что и с Mini Excercise No: 1 </p>
-
-                <h6>3. С Mini Excercise No: 3 и 4  </h6>
-                <p> Впишите Highlight, который пользователь должен был выбрать </p>
-            </span>
-        </>
-    )
 
     const qtype = "Interactive Reading"
     const modalidIRA = "Interactive Reading Answer"
@@ -235,6 +201,8 @@ const I_R_Q = (props:{
             setcorrectOptionMiniE5(0)
             setcorrectOptionMiniE6(0)
             setdifficulty('ANY')
+            setcompleteText('')
+            settextForMiniE2('')
         }
     }
     
@@ -253,7 +221,19 @@ const I_R_Q = (props:{
                             <option value="EASY">EASY</option>
                             <option value="MEDIUM">MEDIUM</option>
                             <option value="HARD">HARD</option>
-                        </select>               
+                        </select>         
+                        <div className="hstack">
+                            <div className="vstack">
+                                <label htmlFor="complete-text">Полный текст без пробелов: </label>
+                                <textarea className="tArea" value={completeText} name="complete-text" id="complete-text" onChange={(e) => setcompleteText(e.target.value)} /> 
+                            
+                            </div>
+                            <div className="vstack"> 
+                                <label htmlFor="textForMiniE2">Текст для Mini excercise 2: </label>
+                                <textarea className="tArea" value={textForMiniE2} name="textForMiniE2" id="textForMiniE2" onChange={(e) => settextForMiniE2(e.target.value)} /> 
+                            </div>
+                            
+                        </div>      
                         <ShowIRQ 
                             setallMiniE1Options={setallMiniE1Options}
                             setOptionsMiniE2={setOptionsMiniE2}
