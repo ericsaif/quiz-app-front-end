@@ -1,5 +1,6 @@
 import { Button } from "@headlessui/react";
 import useDeleteObject from "./hooks/useDeleteQ";
+import { getModalStyle } from "../../../../../Components/ReactStyles/ModalStyle";
 
 const DeleteModal = (props:{
     isDeleteModalOpen: boolean
@@ -15,22 +16,14 @@ const DeleteModal = (props:{
     const triggerdelete = useDeleteObject( {route, ObjectType} )
 
 
-    const DeleteModalStyle: React.CSSProperties = {
-        display: isDeleteModalOpen ? 'block' : 'none',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100vh',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        zIndex: 10050,
-        overflow: 'hidden',
-    };
+    const DeleteModalStyle = getModalStyle(isDeleteModalOpen)
 
     const HandleOnDelete = () =>{
         triggerdelete(DeleteObjectId)
         HandleCloseDeleteModal()
-        fetch()
+        setTimeout(()=>{    
+            fetch()
+        }, 2000)
     }
     
     const DeleteQModal = (
@@ -38,10 +31,11 @@ const DeleteModal = (props:{
             <div className="m-dialog">
                 <div className="m-content">
                 <div className="m-header">
-                    <h1 className="m-title fs-5" id="modalLabel">Вы действительно хотите удалить обьект типа - {ObjectType} No: {DeleteObjectId}?</h1>
+                    <h1 className="m-title fs-5" id="modalLabel">Вы действительно хотите удалить обьект типа - {ObjectType}  </h1>
                     <button type="button" className="btn-close" onClick={HandleCloseDeleteModal} aria-label="Close"></button>
                 </div>
                 <div className="m-body">
+                    <p> No: {DeleteObjectId} </p>
                     После того как вы удалите данный обьект, возможности восстановить его уже не будет
                 </div>
                 <div className="m-footer">

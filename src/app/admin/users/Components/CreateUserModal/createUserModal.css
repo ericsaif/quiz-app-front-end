@@ -1,0 +1,17 @@
+.create-user-input{
+    width: 100% !important;
+}
+.btn-close{
+    position: relative;
+    right: -45rem;
+    top: -2rem;
+}
+
+.m-dialog{
+    left: 20vw;
+}
+
+.input-container{
+    margin-left: auto;
+    margin-right: auto;
+}

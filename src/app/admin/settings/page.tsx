@@ -55,8 +55,8 @@ const Settings = ()=>{
                 />
                 <ChangeUserDataModal 
                     triggerPopup={triggerPopup}
-                ChangeUserDataModalOpen={ChangeUserDataModalOpen} 
-                setChangeUserDataModalOpen={setChangeUserDataModalOpen}                />
+                    ChangeUserDataModalOpen={ChangeUserDataModalOpen} 
+                    setChangeUserDataModalOpen={setChangeUserDataModalOpen}                />
             </main>
         </React.Fragment>
     )

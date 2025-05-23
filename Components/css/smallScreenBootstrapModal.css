@@ -3,7 +3,7 @@
     width: 90% !important;          /* grow to 90% of viewport */
     max-width: 600px;               /* optional cap */
     margin: 1rem auto;              /* center with reduced offset */
-    top: -10rem;                    /* bring it down into view */
+    /* top: -10rem;                    bring it down into view */
     left: 50%;
     transform: translateX(-50%);    /* keep it centered */
   }

@@ -7,8 +7,9 @@ const GenTestModal = (props:{
     HandleCloseGenTestModal: () => void
     GenTestUId: string | null
     userName: string | null
+    fetch: () => void
 }) =>{
-    const { isGenTestModalOpen, HandleCloseGenTestModal, GenTestUId, userName } = props
+    const { isGenTestModalOpen, HandleCloseGenTestModal, GenTestUId, userName, fetch } = props
     const triggerGen = useGenTest()
 
     const GenTestModalStyle = getModalStyle(isGenTestModalOpen)
@@ -16,6 +17,9 @@ const GenTestModal = (props:{
     const HandleOnGenTest = () =>{
         triggerGen(GenTestUId)
         HandleCloseGenTestModal()
+        setTimeout(()=>{    
+            fetch()
+        }, 2000)
     }
     
     const Modal = (

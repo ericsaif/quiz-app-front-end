@@ -6,11 +6,11 @@ import { ReadUser } from "../../../../Models/AdminModels/UserModels/ReadUser";
 import { UTable } from "../../../../Models/AdminModels/UserModels/UTable";
 import { Button, Input } from "@headlessui/react";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
-import Link from "next/link";
-import { IoAddCircle } from "react-icons/io5";
 import UserTable from "./Components/UTable/UTable";
 import Image from "next/image";
 import { useLayout } from "../contexts/LayoutContext";
+import PopUp from "../../../../Components/Hooks/popup/popup";
+import CreateUserModal from "./Components/CreateUserModal/CreateUserModal";
 
  const UsersInner = () => {
     const [totalCount, settotalCount] = useState<number>(0)
@@ -25,7 +25,10 @@ import { useLayout } from "../contexts/LayoutContext";
     const [descending, setdescending] = useState<boolean>(false)
     const [searchTerm, setsearchTerm] = useState<string>('')
 
-    const baseURl = `${BACKEND_BASE_URL}/api/admin/users`
+    const {popup, triggerPopup} = PopUp()
+
+    const [iscreateModalOpen, setiscreateModalOpen] = useState<boolean>(false)
+
 
     const fetchRef = useRef(()=>{})
 
@@ -38,6 +41,8 @@ import { useLayout } from "../contexts/LayoutContext";
     useEffect(() =>{
         async function fetchUsers(){
             setloading(true)
+
+            const baseURl = `${BACKEND_BASE_URL}/api/admin/users`
             const searchParams = new URLSearchParams
 
             searchParams.set('page', currentPage.toString())
@@ -68,7 +73,7 @@ import { useLayout } from "../contexts/LayoutContext";
         fetchRef.current = fetchUsers
 
         fetchUsers()
-    },[UperPage, baseURl, currentPage, descending, searchTerm])
+    },[UperPage, currentPage, descending, searchTerm])
 
     const HandleNextPage = () =>{
             setcurrentPage(prevPage => prevPage + 1)
@@ -86,21 +91,28 @@ import { useLayout } from "../contexts/LayoutContext";
             } else {
                 setsearchTerm('');
             }
-        }
+    }
     return (
         <React.Fragment key={`react-fragment-users-table`}>
+            <CreateUserModal 
+                iscreateModalOpen={iscreateModalOpen} 
+                setiscreateModalOpen={ setiscreateModalOpen } 
+                fetch={ fetchRef.current } 
+                triggerPopup={ triggerPopup } />
             <div className="container-fluid">
+                {popup}
+                
                 <div className="row">
-                    <h1>Пользователи: {
+                    <h1>Пользователи:{
                     UTableData && 
                     <>
                         {totalCount}
-                        <Link className="btn" href={`/admin/users/create`}>
-                            <IoAddCircle size={40} />
-                        </Link>
+                        <Button className="btn mb-3" onClick={() => setiscreateModalOpen(true)}>
+                            <Image src="/reshot-icon-create-user.svg" alt="create-user-icon" width={50} height={50}/>
+                        </Button>
                     
                     </>
-                    }</h1>
+                    } </h1>
                 </div>
                 <div className="row">
                     {loading && <p><i>Загрузка ... </i></p>}

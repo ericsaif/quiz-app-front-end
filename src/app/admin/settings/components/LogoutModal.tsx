@@ -40,9 +40,9 @@ const LogoutModal = (props:{
                 <div onClick={() => setLogoutModalOpen(false)} style={LogoutModalStyle} tabIndex={-1} aria-labelledby="modalLabel" aria-hidden="true"/>
                     <div className="m-dialog">
                         <div className="m-content">
-                        <button type="button" className="btn-close" onClick={() => setLogoutModalOpen(false)} aria-label="Close"></button>
                         <div className="m-header">
                             <h1 className="m-title fs-5" id="modalLabel">Вы действительно хотите выйти?</h1>
+                            <button type="button" className="btn-close" onClick={() => setLogoutModalOpen(false)} aria-label="Close"></button>
                         </div>
                         <div className="m-body">
                             После нажатия на кнопку Выйти - вас перекинет на страницу Домой

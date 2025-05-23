@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 const useQuizHubR = (
     hubUrl: string, 
     setNexQuestion: React.Dispatch<React.SetStateAction<Question | null>>,
+    startTimer: React.Dispatch<React.SetStateAction<string>>,
     engTestId: string
 ) : QuizHubHook => { 
     
@@ -47,7 +48,7 @@ const useQuizHubR = (
 
         const handleStarttimer = (AttemptId: string, time: string) =>{
             console.log(`Starting Timer, AttemptId = ${AttemptId}, time = ${time}`)
-            // startTimer()
+            startTimer(time)
         }
 
         const handleStopTimer = () => {
@@ -90,7 +91,7 @@ const useQuizHubR = (
 
         };
 
-    }, [connection, engTestId, isConnected, isInvoking, router, setNexQuestion]); // Re-run when connection or its status changes
+    }, [connection, engTestId, isConnected, isInvoking, router, setNexQuestion, startTimer]); // Re-run when connection or its status changes
 
     
     return { submitAnswer, startConnection, TimeOut };

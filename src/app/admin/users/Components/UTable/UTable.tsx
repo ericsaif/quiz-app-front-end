@@ -84,7 +84,7 @@ const UserTable = (props: {
                         </div>
                         <div>
                             <GenTestModal 
-                            
+                                fetch = {fetchUsers}
                                 isGenTestModalOpen={isGenTestModalOpen} 
                                 HandleCloseGenTestModal={HandleCloseGenTestModal} 
                                 GenTestUId={GenTestUId} 
