@@ -1,48 +1,84 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 
-const Timer = (props:{timer: string, TimeOut: boolean}) =>{
+const Timer = (props:{timer: string}) =>{
 
     const [totalSeconds, settotalSeconds] = useState<number>(0)
+    const [currentSeconds, setCurrentSeconds] = useState<number>(0)
+    const [Time, setTime] = useState<React.ReactNode | null>(null)
 
-    const [Timer, setTimer] = useState<React.ReactNode | null>(null)
+    const intervalRef = useRef<NodeJS.Timeout | null>(null)
+
+    const StopTimer = useCallback(() => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current)
+            intervalRef.current = null
+        }
+    }, [])
+    
+    const StartTimer = useCallback(() => {
+        // Clear any existing interval
+        StopTimer()
+        
+        // Set current seconds to total seconds when starting
+        setCurrentSeconds(totalSeconds)
+        
+        intervalRef.current = setInterval(() => {
+            setCurrentSeconds(prev => {
+                if (prev <= 1) {
+                    StopTimer()
+                    return 0
+                }
+                return prev - 1
+            })
+        }, 1000)
+    }, [totalSeconds, StopTimer])
 
     useEffect(()=>{
-        const { timer, TimeOut } = props
-
-        let timeLeft = 0
-        setTimer(null)
+        setTime(null)
         settotalSeconds(0)
 
+        const { timer } = props
+
         function parseTimeString(timeStr: string) {
-            const [hours, minutes, seconds] = timeStr.split(':').map(Number);
-            return {totalSeconds: hours * 3600 + minutes * 60 + seconds}
+            const [, minutes, seconds] = timeStr.split(':').map(Number);
+            return {totalSeconds: minutes * 60 + seconds}
         }
 
         const {totalSeconds} = parseTimeString(timer)
         settotalSeconds(totalSeconds)
+    }, [props])
 
-        function StartTimer(){
+    useEffect(()=>{
 
-        }
+        function ConstructTime(){
+            const seconds = currentSeconds % 60
+            const minutes = (currentSeconds - seconds) / 60
+            
+            const formatTime = (time: number) => time.toString().padStart(2, '0')
 
-        function StopTimer(){
+            return `${formatTime(minutes)}:${formatTime(seconds)}`
+        }       
 
-        }
-
-        setTimer(
-            <React.Fragment>
-                <h1>Time Left: {timeLeft}</h1>
+        setTime(
+            <React.Fragment key={`react-timer-fragment`}>
+                <h1>Time Left: {ConstructTime()}</h1>
             </React.Fragment>
         )
 
-        StartTimer()
+    }, [currentSeconds])
 
-    }, [props])
+    useEffect(() => {
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current)
+            }
+        }
+    }, [])
 
     return {
-        Timer
+        Time, StopTimer, StartTimer
     }
 }
 

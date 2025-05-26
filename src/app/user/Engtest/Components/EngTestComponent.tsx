@@ -8,7 +8,7 @@ import useQuizHubR from "./quizhubR";
 
 import * as QuestionsWindows from "./QuestionsWindows";
 import { Question,RACQ, DictationQ, RAQ, DescribePicQ, CTestQ, RSQ, WordExistsQ, DescribePicWAudioQ, LASQ, EssayQ, IRQ, ILQ, InterviewQ } from "../../../../../Models/QuestionsModels";
-import { BACKEND_BASE_URL } from "../../../../../constants/api";
+// import { BACKEND_BASE_URL } from "../../../../../constants/api";
 
 import './EngTestW.css'
 import './QuestionsWindows/QWindows.css'
@@ -26,6 +26,7 @@ const EngTestWindow = (props: ETWP) => {
   const [displaySW, setdisplaySW] = useState<boolean>(true);
   const [loading, setloading] = useState<boolean>(true);
 
+  const {Time, StartTimer, StopTimer} = Timer({timer})
 
 
   const StartingW = React.useMemo(() => (
@@ -35,24 +36,27 @@ const EngTestWindow = (props: ETWP) => {
   ), [startConnection]);
 //
 
-  const [tempQId, settempQId] = useState<number>(0)
-  const [tempQPOId, settempQPOId] = useState<number>(0)
-  const TempHandleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) =>{
-    e.preventDefault()
-    const response = await fetch(`${BACKEND_BASE_URL}/api/admin/questions/${tempQId}?QPOId=${tempQPOId}`,{
-      method: 'GET',
-      credentials: 'include'
-    })
-    if(response.ok){
-      const question: Question = await response.json()
-      setdisplaySW(false)
-      SetQ(question)
-    }else
-      alert('ошибка')
-  }
+  // const [tempQId, settempQId] = useState<number>(0)
+  // const [tempQPOId, settempQPOId] = useState<number>(0)
+  // const TempHandleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) =>{
+  //   e.preventDefault()
+  //   const response = await fetch(`${BACKEND_BASE_URL}/api/admin/questions/${tempQId}?QPOId=${tempQPOId}`,{
+  //     method: 'GET',
+  //     credentials: 'include'
+  //   })
+  //   if(response.ok){
+  //     const question: Question = await response.json()
+  //     setdisplaySW(false)
+  //     SetQ(question)
+  //   }else
+  //     alert('ошибка')
+  // }
 //
   useEffect(() => {
     console.log('clearing question window')
+
+    if(TimeOut)
+      StopTimer()
 
     setWindow(null)
     if(displaySW){
@@ -64,6 +68,7 @@ const EngTestWindow = (props: ETWP) => {
     else{
       console.log('setting a new question window')
       setloading(false)
+      StartTimer()
       switch (CurrentQ.qpoId) {
         case 1:( setWindow(<QuestionsWindows.CTestWindow question={CurrentQ as CTestQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
         case 2:( setWindow(<QuestionsWindows.DictationQWindow question={CurrentQ as DictationQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
@@ -80,25 +85,22 @@ const EngTestWindow = (props: ETWP) => {
         case 14:( setWindow(<QuestionsWindows.InterviewQWindow question={CurrentQ as InterviewQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
       }
     }
-  }, [CurrentQ, submitAnswer, displaySW, TimeOut]);
+  }, [CurrentQ, submitAnswer, displaySW, TimeOut, StopTimer, StartTimer]);
 
   return (
     <React.Fragment key={`react-engTest-window-fragment`}>
-      <form className="border border-gray p-3" onSubmit={TempHandleSubmit}>
+      {/* <form className="border border-gray p-3" onSubmit={TempHandleSubmit}>
           <input type="number" placeholder=" " value={tempQId} onChange={(e) => settempQId(parseInt(e.target.value, 10))}></input>
           <input type="number" placeholder=" " value={tempQPOId} onChange={(e) => settempQPOId(parseInt(e.target.value, 10))}></input>
           <button type="submit">get</button>
-      </form>
+      </form> */}
       {displaySW && StartingW}
       {loading && <p>Загрузка ... </p>}
       {
         CurrentQ &&
           <div className={`container-fluid text-center QWindow`}>
             <div className="row">
-              <Timer 
-                timer={timer}
-                TimeOut={TimeOut}
-              />
+              {Time}
             </div>
             <div className="row"  style={{height: "100%"}}>
               {windowContent}
