@@ -2,11 +2,8 @@ import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecor
 import { InterviewQ, MethodArgs } from "./commonImports"
 
 const interviewQWindow = (props:{question: InterviewQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
-    const { question, submitAnswer, TimeOut } = props
-    if(TimeOut){
-        // handleSubmit()
-        console.log("handling Time out = true ")
-    }
+    const { question } = props
+    
     return(
         <div>
             <div>
@@ -16,9 +13,10 @@ const interviewQWindow = (props:{question: InterviewQ, submitAnswer: (SM: string
             </div>
             <div>
                 <AudioRecorder 
+                    {...props}
+                    QId={question.id}
                     QPOId={question.qpoId} 
                     SM={"SubmitVideoAAsync"} 
-                    submitAnswer={submitAnswer} 
                     Topic={question.questionBody ?? ""}
                 />
             </div>

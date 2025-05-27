@@ -7,7 +7,7 @@ import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecor
 
 const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
     
-    const { question, submitAnswer, TimeOut } = props
+    const { question } = props
 
     const keyName = question.s3PathToPic ?? ""
     const [ pic_link, setpic_link ] = useState<string>("") 
@@ -26,11 +26,6 @@ const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAns
         fetchPic()
     })
 
-    if(TimeOut){
-        // handleSubmit()
-        console.log("handling Time out = true ")
-    }
-
     return(
         
         <React.Fragment key={`describe-picture-with-audio-fragment`}>
@@ -48,9 +43,10 @@ const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAns
                 }
                 <div >
                     <AudioRecorder
+                        {...props}
+                        QId={question.id}
                         QPOId={question.qpoId} 
-                        SM={"SubmitAudioPicDescriptionAsync"} 
-                        submitAnswer={submitAnswer} 
+                        SM={"SubmitAudioPicDescriptionAsync"}
                     />
                 </div>
             </div>

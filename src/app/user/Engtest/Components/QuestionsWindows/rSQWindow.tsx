@@ -4,11 +4,8 @@ import { RSQ, MethodArgs } from "./commonImports"
 
 
 const rSQWindow = (props:{question: RSQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
-    const { question, submitAnswer, TimeOut } = props
-    if(TimeOut){
-        // handleSubmit()
-        console.log("handling Time out = true ")
-    }
+    const { question } = props
+    
     return(
         <React.Fragment>
              <div>
@@ -17,7 +14,7 @@ const rSQWindow = (props:{question: RSQ, submitAnswer: (SM: string, args: Method
                 </p>
             </div>
             <div>
-                <AudioRecorder submitAnswer={submitAnswer} SM={"SubmitRSAsync"} QPOId={question.qpoId} />
+                <AudioRecorder {...props} SM={"SubmitRSAsync"} QPOId={question.qpoId} QId={question.id}/>
             </div>
         </React.Fragment>
         

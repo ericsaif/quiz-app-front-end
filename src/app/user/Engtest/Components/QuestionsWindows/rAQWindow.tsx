@@ -3,11 +3,7 @@ import { RAQ, MethodArgs } from "./commonImports"
 
 
 const rAQWindow = (props:{question: RAQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
-    const { question, submitAnswer, TimeOut } = props
-    if(TimeOut){
-        // handleSubmit()
-        console.log("handling Time out = true ")
-    }
+    const { question } = props
     return(
 
             <div>
@@ -18,9 +14,10 @@ const rAQWindow = (props:{question: RAQ, submitAnswer: (SM: string, args: Method
                 </div>
                 <div>
                     <AudioRecorder 
-                        QPOId={question.qpoId} 
+                        {...props}
+                        QPOId={question.qpoId}
+                        QId={question.id}
                         SM={"SubmitRAAsync"} 
-                        submitAnswer={ submitAnswer } 
                     />
                 </div>
             </div>

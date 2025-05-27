@@ -5,12 +5,7 @@ import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecor
 
 
 const lASQWindow = (props:{question: LASQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
-    const { question, submitAnswer, TimeOut } = props
-
-    if(TimeOut){
-        // handleSubmit()
-        console.log("handling Time out = true ")
-    }
+    const { question } = props
     
     return(
         <React.Fragment key={`LASQ-window-fragment`}>
@@ -22,9 +17,10 @@ const lASQWindow = (props:{question: LASQ, submitAnswer: (SM: string, args: Meth
             </div>
             <div>
                 <AudioRecorder 
+                    {...props}
+                    QId={question.id}
                     QPOId={question.qpoId} 
-                    SM={"SubmitLASAsync"} 
-                    submitAnswer={ submitAnswer }                
+                    SM={"SubmitLASAsync"}              
                 />
             </div>
         </React.Fragment>

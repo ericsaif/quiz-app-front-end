@@ -53,7 +53,7 @@ const AudioPlayer = (props: { keyName: string, maxListenTries: number}) =>{
                 console.log("starting to play the audio on loaded meta data")
 
                 const duration = audio.duration;
-                StartLineWidth(0);
+                
                 StartLineWidth(80 / duration / 2);
                 audio.play();
             };

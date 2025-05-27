@@ -1,18 +1,18 @@
 "use client";
 
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@mui/material";
 import { ETWP } from "../../../../../Models/EngTestWindowModels/ETWProps";
 
 import useQuizHubR from "./quizhubR";
-
-import * as QuestionsWindows from "./QuestionsWindows";
-import { Question,RACQ, DictationQ, RAQ, DescribePicQ, CTestQ, RSQ, WordExistsQ, DescribePicWAudioQ, LASQ, EssayQ, IRQ, ILQ, InterviewQ } from "../../../../../Models/QuestionsModels";
 // import { BACKEND_BASE_URL } from "../../../../../constants/api";
 
 import './EngTestW.css'
 import './QuestionsWindows/QWindows.css'
 import Timer from "../../../../../Components/Timer/Timer";
+import { createQuestionWindow } from "./CreateQWindow";
+import { Question } from "../../../../../Models/QuestionsModels";
+import { TimerRef } from "../../../../../Components/Timer/TimerRef_Props";
 
 const EngTestWindow = (props: ETWP) => {
   const {engTestId, hubUrl} = props
@@ -22,12 +22,11 @@ const EngTestWindow = (props: ETWP) => {
   const [timer, settimer] = useState<string>('');
 
   const { startConnection, submitAnswer, TimeOut } = useQuizHubR(hubUrl, SetQ, settimer, engTestId);
+  
+  const timerRef = useRef<TimerRef>(null);
 
   const [displaySW, setdisplaySW] = useState<boolean>(true);
   const [loading, setloading] = useState<boolean>(true);
-
-  const {Time, StartTimer, StopTimer} = Timer({timer})
-
 
   const StartingW = React.useMemo(() => (
       <div>
@@ -47,45 +46,42 @@ const EngTestWindow = (props: ETWP) => {
   //   if(response.ok){
   //     const question: Question = await response.json()
   //     setdisplaySW(false)
+  //     settimer("")
+  //     settimer(question.timer)
   //     SetQ(question)
   //   }else
   //     alert('ошибка')
   // }
 //
+
+  const window = useMemo(() => {
+        if (!CurrentQ) return null;
+        return createQuestionWindow(CurrentQ, submitAnswer, TimeOut);
+  }, [CurrentQ, submitAnswer, TimeOut]);
+
   useEffect(() => {
     console.log('clearing question window')
 
-    if(TimeOut)
-      StopTimer()
+    if(TimeOut) timerRef.current?.StopTimer()
 
     setWindow(null)
+
     if(displaySW){
       setloading(false)
       return
     }
+
     if (CurrentQ === null)
       setloading(true)
     else{
+      timerRef.current?.StartTimer()
+
       console.log('setting a new question window')
       setloading(false)
-      StartTimer()
-      switch (CurrentQ.qpoId) {
-        case 1:( setWindow(<QuestionsWindows.CTestWindow question={CurrentQ as CTestQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 2:( setWindow(<QuestionsWindows.DictationQWindow question={CurrentQ as DictationQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 3:( setWindow(<QuestionsWindows.RAQWindow question={CurrentQ as RAQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 4:( setWindow(<QuestionsWindows.DescribePicQWindow question={CurrentQ as DescribePicQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 5:( setWindow(<QuestionsWindows.RACQWindow question={CurrentQ as RACQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 6:( setWindow(<QuestionsWindows.RSQWindow question={CurrentQ as RSQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 7:( setWindow(<QuestionsWindows.WordExistsQWindow question={CurrentQ as WordExistsQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 8:( setWindow(<QuestionsWindows.DescribePicWAQWindow question={CurrentQ as DescribePicWAudioQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 9:( setWindow(<QuestionsWindows.LASQWindow question={CurrentQ as LASQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 11:( setWindow(<QuestionsWindows.EssayQWindow question={CurrentQ as EssayQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 12:( setWindow(<QuestionsWindows.IRQWindow question={CurrentQ as IRQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 13:( setWindow(<QuestionsWindows.ILQWindow question={CurrentQ as ILQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-        case 14:( setWindow(<QuestionsWindows.InterviewQWindow question={CurrentQ as InterviewQ } submitAnswer={submitAnswer} TimeOut={TimeOut}/>) );break;
-      }
+      
+      setWindow(window)
     }
-  }, [CurrentQ, submitAnswer, displaySW, TimeOut, StopTimer, StartTimer]);
+  }, [CurrentQ, submitAnswer, displaySW, TimeOut, window]);
 
   return (
     <React.Fragment key={`react-engTest-window-fragment`}>
@@ -94,19 +90,30 @@ const EngTestWindow = (props: ETWP) => {
           <input type="number" placeholder=" " value={tempQPOId} onChange={(e) => settempQPOId(parseInt(e.target.value, 10))}></input>
           <button type="submit">get</button>
       </form> */}
+      
+
       {displaySW && StartingW}
       {loading && <p>Загрузка ... </p>}
-      {
+      {/* {
         CurrentQ &&
           <div className={`container-fluid text-center QWindow`}>
-            <div className="row">
-              {Time}
+            <div className="row d-flex">
+              <Timer ref={timerRef} timer={timer} />
             </div>
             <div className="row"  style={{height: "100%"}}>
               {windowContent}
             </div>
         </div>
-      }
+      } */}
+      <div className={`container-fluid text-center QWindow`}>
+            <div className="row d-flex">
+              <Timer ref={timerRef} timer={timer} />
+            </div>
+            <div className="row">
+              <button onClick ={()=> {settimer("00:03:00"); console.log("timer is set")}}>set Timer</button>
+              <button onClick ={()=>{timerRef.current?.StartTimer(); console.log(`timer - ${timer}`)}}>Start Timer</button>
+            </div>
+        </div>
     </React.Fragment>
   );
 };

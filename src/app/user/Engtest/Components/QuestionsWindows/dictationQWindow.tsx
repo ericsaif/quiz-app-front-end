@@ -5,12 +5,13 @@ import AudioPlayer from "../../../../../../Components/AudioPlayer/AudioPlayer"
 
 
 const  DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
-    const { question, submitAnswer, TimeOut } = props
     const [answer, setAnswer] = useState<string>("")
 
     const [form, setform] = useState<React.ReactNode>()
 
     useEffect(()=>{
+        const { question, submitAnswer, TimeOut } = props
+
         const handleSubmit = () =>{
             submitAnswer("SubmitDictationAsnwerAsync", {DictationA: answer, QId: question.id})
             setAnswer("")
@@ -37,7 +38,7 @@ const  DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: strin
         )
 
         setform(form)
-    }, [TimeOut, question, answer, submitAnswer])
+    }, [answer, props])
     
     return form
 }
