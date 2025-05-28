@@ -24,8 +24,11 @@ export async function submitRecording(props: {
     submitAnswer: (SM: string, args: MethodArgs) => Promise<void>;
     audioBlob: Blob | null;
     CHUNK_SIZE: number;
+    setRecordingStatus: React.Dispatch<React.SetStateAction<string>>,
 }){    
     try {
+        const {setRecordingStatus} = props
+        setRecordingStatus("idle")
         sendAudioInChunks(props)
 
     } catch (err) {

@@ -38,7 +38,7 @@ export const AudioControls = (props: {
 
         if(TimeOut){
             stopRecording({setIsRecording, mediaRecorderRef})
-            submitRecording({...props, audioBlob, CHUNK_SIZE})
+            submitRecording({...props, audioBlob, CHUNK_SIZE, setRecordingStatus})
             return 
         }
 
@@ -75,7 +75,7 @@ export const AudioControls = (props: {
                     
                     {recordingStatus === 'recorded' && (
                     <button 
-                        onClick={()=>submitRecording({...props, audioBlob, CHUNK_SIZE})} 
+                        onClick={()=>submitRecording({...props, setRecordingStatus, audioBlob, CHUNK_SIZE})} 
                         className="submit-button"
                     >
                         Submit

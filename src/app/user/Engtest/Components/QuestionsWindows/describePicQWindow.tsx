@@ -28,8 +28,8 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
     const handleSubmit = () =>{
         const newM: MethodArgs = {
             Description: picDescription,
-            QId:props.question.id,
-            QPOId:props.question.qpoId
+            QId:question.id,
+            QPOId:question.qpoId
         }
         submitAnswer("SubmitPicDescriptionAsync",  newM)
         setpicDescription("")

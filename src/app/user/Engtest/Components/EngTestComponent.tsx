@@ -94,7 +94,7 @@ const EngTestWindow = (props: ETWP) => {
 
       {displaySW && StartingW}
       {loading && <p>Загрузка ... </p>}
-      {/* {
+      {
         CurrentQ &&
           <div className={`container-fluid text-center QWindow`}>
             <div className="row d-flex">
@@ -104,8 +104,8 @@ const EngTestWindow = (props: ETWP) => {
               {windowContent}
             </div>
         </div>
-      } */}
-      <div className={`container-fluid text-center QWindow`}>
+      }
+      {/* <div className={`container-fluid text-center QWindow`}>
             <div className="row d-flex">
               <Timer ref={timerRef} timer={timer} />
             </div>
@@ -113,7 +113,7 @@ const EngTestWindow = (props: ETWP) => {
               <button onClick ={()=> {settimer("00:03:00"); console.log("timer is set")}}>set Timer</button>
               <button onClick ={()=>{timerRef.current?.StartTimer(); console.log(`timer - ${timer}`)}}>Start Timer</button>
             </div>
-        </div>
+        </div> */}
     </React.Fragment>
   );
 };

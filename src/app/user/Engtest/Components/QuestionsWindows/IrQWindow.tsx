@@ -54,15 +54,6 @@ const IrQWindow = (props:{question: IRQ, submitAnswer: (SM: string, args: Method
                 userOptionMiniE6
             }
             const handleSubmit = () =>{
-                console.log("submitting IRQ")
-                console.log(`IRQ Answer - 
-                    ${newIRQAnswer.userOptionsMiniE1} 
-                    ${newIRQAnswer.userOptionMiniE2} 
-                    ${newIRQAnswer.userHighlightMiniE3}
-                    ${newIRQAnswer.userHighlightMiniE4} 
-                    ${newIRQAnswer.userOptionMiniE5} 
-                    ${newIRQAnswer.userOptionMiniE6}
-                `)
 
                 const newM: MethodArgs = {
                             UserIRQAnswer: newIRQAnswer,
