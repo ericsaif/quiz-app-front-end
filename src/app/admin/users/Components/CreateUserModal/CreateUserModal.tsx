@@ -28,7 +28,7 @@ const CreateUserModal = (props:{
         rememberMe: false
     }
     
-    const triggerPOST = useCreateUser( {createUserModel, triggerPopup} )
+    const triggerPOST = useCreateUser( {createUserModel, triggerPopup, fetchUsers: fetch} )
     
     const createModalStyle = getModalStyle(iscreateModalOpen)
 
@@ -41,10 +41,6 @@ const CreateUserModal = (props:{
         console.log("started handle create method")
         triggerPOST()
         ClearData()
-        // setiscreateModalOpen(false)
-        setTimeout(()=>{    
-            fetch()
-        }, 2000)
     }
         
         const CreateModal = (

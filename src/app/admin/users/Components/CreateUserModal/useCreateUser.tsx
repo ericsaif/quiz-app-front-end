@@ -5,9 +5,10 @@ import { RegisterUser } from "@/app/auth/Models/RegisterUserModel"
 const useCreateUser = (props:{
     createUserModel: RegisterUser
     triggerPopup: (bool: boolean, message?: string) => void
+    fetchUsers: () => void
 }) =>{
 
-    const {createUserModel, triggerPopup} = props
+    const {createUserModel, triggerPopup, fetchUsers} = props
 
     const route = "/api/admin/users"
 
@@ -23,11 +24,14 @@ const useCreateUser = (props:{
         })
         if(response.status == 204){
             triggerPopup(true, "Пользователь успешно создан")
+            setTimeout(()=>{    
+                fetchUsers()
+            }, 2000)
         }else{
-            const errorData = await response.json()
+            const errorData = await response.text()
             triggerPopup(false, errorData)
         }
-    },[triggerPopup, createUserModel])
+    },[createUserModel, triggerPopup, fetchUsers])
 
 }
 
