@@ -6,15 +6,16 @@ import { BACKEND_BASE_URL } from "../../../../../../constants/api"
 
 
 const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
-    const { question, submitAnswer, TimeOut } = props
     
-    const keyName = question.s3PathToPic ?? ""
+    const keyName = props.question.s3PathToPic ?? ""
     const [ pic_link, setpic_link ] = useState<string>("") 
     const [ picDescription, setpicDescription ] = useState<string>("")
+    const [picWindow, setpicWindow] = useState<React.ReactNode | null>(null)
 
     useEffect(()=>{
+        setpicWindow(null)
         async function fetchPic(){
-            const response = await fetch(`${BACKEND_BASE_URL}/api/user/engtest/file?keyName=${keyName}`,{
+            const response = await fetch(`${BACKEND_BASE_URL}/api/user/engtest/file?keyName=${props.question.s3PathToPic ?? ""}`,{
                 method: "GET",
                 credentials: 'include'
             })
@@ -24,24 +25,26 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
             }
         }
         fetchPic()
-    })
-    const handleSubmit = () =>{
-        const newM: MethodArgs = {
-            Description: picDescription,
-            QId:question.id,
-            QPOId:question.qpoId
-        }
-        submitAnswer("SubmitPicDescriptionAsync",  newM)
-        setpicDescription("")
-    }
+    }, [props.question.s3PathToPic])
+    useEffect(()=>{
+        const { question, submitAnswer, TimeOut } = props
 
-    if(TimeOut){
-        handleSubmit()
-        console.log("handling Time out = true ")
-    }
-    return(
-        
-        <React.Fragment key={`react-describe-pic-fragment`}>
+        const handleSubmit = () =>{
+            const newM: MethodArgs = {
+                Description: picDescription,
+                QId:question.id,
+                QPOId:question.qpoId
+            }
+            submitAnswer("SubmitPicDescriptionAsync",  newM)
+            setpicDescription("")
+        }
+
+        if(TimeOut){
+            handleSubmit()
+            console.log("handling Time out = true ")
+        }
+        const pic_window = (
+            <React.Fragment key={`react-describe-pic-fragment`}>
             {
                 pic_link != "" &&
                 <div className="describe_pic">
@@ -61,8 +64,11 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
 
             </div>
         </React.Fragment>
-        
-    )
+        )
+
+        setpicWindow(pic_window)
+    }, [pic_link, keyName, picDescription, props])
+    return picWindow
 }
 
 export default DescribePicQWindow
