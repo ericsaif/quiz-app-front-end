@@ -138,9 +138,9 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
     const handleSubmit = () =>{
         const newM: MethodArgs = {
             QId: question.id,
+            QPOId: question.qpoId,
             summary: summary,
             correctCount,
-            QPOId: question.qpoId,
         }
 
         console.log(`AId = ${AId} newM - ${newM}`)

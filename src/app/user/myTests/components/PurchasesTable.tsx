@@ -35,13 +35,13 @@ const BoughtTestsTable = (props:{TestsData : ReadEngTest[]}) =>{
                     <td scope="col">{ConstructDateTime(test.expirationDateTime)}</td>
                     <td scope="col">{test.expired ? "Да" : "Нет"}</td>
                     <td scope="col">
-                    {test.expired ? (
+                    {(test.expired || test.finished) ? (
                         <button className="btn btn-secondary" disabled>
                             Тест недоступен
                         </button>
                     ) : (
                         <Link href={`/user/Engtest/?engTestId=${test.id}`} className={`page-button btn`}>
-                            Начать Тест
+                            {test.started ?  "Продолжить" : "Начать" }
                         </Link>
                     )}
                     </td>

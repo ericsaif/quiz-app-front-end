@@ -3,6 +3,5 @@ export interface TimerProps {
 }
 
 export interface TimerRef {
-    StartTimer: () => void;
     StopTimer: () => void;
 }

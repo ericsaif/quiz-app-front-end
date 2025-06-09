@@ -10,7 +10,7 @@ export async function sendAudioInChunks(props: {
   audioBlob: Blob | null,
   CHUNK_SIZE: number
 }) {
-    const { SM, submitAnswer, QPOId, audioBlob, CHUNK_SIZE, Topic = "", QId=0 } = props
+    const { SM, submitAnswer, QPOId, audioBlob, QId, CHUNK_SIZE, Topic = "" } = props
 
 
     const arrayBuffer = await audioBlob!.arrayBuffer();

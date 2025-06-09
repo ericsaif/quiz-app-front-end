@@ -11,6 +11,7 @@ const useQuizHubR = (
     hubUrl: string, 
     setNexQuestion: React.Dispatch<React.SetStateAction<Question | null>>,
     startTimer: React.Dispatch<React.SetStateAction<string>>,
+    setexplanation: React.Dispatch<React.SetStateAction<React.ReactNode | null>>,
     engTestId: string
 ) : QuizHubHook => { 
     
@@ -46,6 +47,10 @@ const useQuizHubR = (
             setNexQuestion(NextQ)
         };
 
+        const handleExplanation = (QPOId: number, text: string) => {
+            
+        };
+
         const handleStarttimer = (AttemptId: string, time: string) =>{
             console.log(`Starting Timer, AttemptId = ${AttemptId}, time = ${time}`)
             startTimer(time)
@@ -71,7 +76,9 @@ const useQuizHubR = (
         }
 
         connection.on("NextQuestion", handleNextQuestion);
+        connection.on("Explanation", handleExplanation);
         connection.on("QTimerStarted", handleStarttimer);
+
         connection.on("QuestionTimerStop", handleStopTimer);
         connection.on("EndQuiz", handleEndQuiz);
 

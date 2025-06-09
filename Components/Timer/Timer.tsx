@@ -5,85 +5,109 @@ import { TimerProps, TimerRef } from "./TimerRef_Props";
 import { TimeLineRef } from "../TimeLine/TimeLine_Ref_Props";
 import TimeLine from "../TimeLine/TimeLine";
 
-
 const Timer = forwardRef<TimerRef, TimerProps>((props, ref) => {
-    const { timer } = props;
-
     const [totalSeconds, setTotalSeconds] = useState<number>(0);
     const [currentSeconds, setCurrentSeconds] = useState<number>(0);
 
-    const timeLineRef = useRef<TimeLineRef>(null)
-
+    const timeLineRef = useRef<TimeLineRef>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     
-    // Parse timer string and set total seconds
-    useEffect(() => {
-        function parseTimeString(timeStr: string) {
-            const [, minutes, seconds] = timeStr.split(':').map(Number);
-            return { totalSeconds: minutes * 60 + seconds };
-        }
+    // Use a ref to track if we've already started to prevent StrictMode double execution
+    const hasInitialized = useRef<boolean>(false);
 
-        const { totalSeconds } = parseTimeString(timer);
-        
-        setTotalSeconds(totalSeconds);
-
-        setCurrentSeconds(0); // Reset current seconds when timer prop changes
-    }, [timer]);
-
-    const StopTimer = useCallback(() => {
+    // Clear interval helper
+    const clearCurrentInterval = useCallback(() => {
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
         }
     }, []);
-    
-    const StartTimer = useCallback(() => {
-        // Clear any existing interval
-        console.log("starting timer")
-        StopTimer();
-        timeLineRef.current?.LaunchTimeLine()
-        // Set current seconds to total seconds when starting
-        setCurrentSeconds(totalSeconds);
+
+    // Parse timer string and initialize
+    useEffect(() => {
+        const timer = props.timer;
+        console.log(`timer time is ${timer}`);
+
+        function parseTimeString(timeStr: string) {
+            const [, minutes, seconds] = timeStr.split(':').map(Number);
+            return { tlSeconds: minutes * 60 + seconds };
+        }
+
+        const { tlSeconds } = parseTimeString(timer);
         
-        intervalRef.current = setInterval(() => {
-            setCurrentSeconds(prev => {
-                if (prev <= 1) {
-                    if (intervalRef.current) {
-                        clearInterval(intervalRef.current);
-                        intervalRef.current = null;
-                    }
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
-    }, [totalSeconds, StopTimer]);
+        // Reset everything when props change
+        clearCurrentInterval();
+        setTotalSeconds(tlSeconds);
+        setCurrentSeconds(tlSeconds);
+        hasInitialized.current = false;
+        
+    }, [props.timer, clearCurrentInterval]);
 
-    // Expose methods to parent component via ref
+    const StopTimer = useCallback(() => {
+        console.log("calling StopTimer");
+        clearCurrentInterval();
+        timeLineRef.current?.StopTimeLine();
+        hasInitialized.current = false;
+    }, [clearCurrentInterval]);
+
+    // Start timer effect - with StrictMode protection
+    useEffect(() => {
+        if (totalSeconds > 0 && !hasInitialized.current) {
+            hasInitialized.current = true;
+            
+            console.log("starting timer");
+            
+            // Use setTimeout to ensure timeline starts exactly when interval starts
+            const startTimer = () => {
+                timeLineRef.current?.LaunchTimeLine();
+                
+                intervalRef.current = setInterval(() => {
+                    setCurrentSeconds(prev => {
+                        const newValue = prev - 1;
+                        console.log(`timer interval time - ${newValue}`);
+                        
+                        if (newValue <= 0) {
+                            clearInterval(intervalRef.current!);
+                            intervalRef.current = null;
+                            hasInitialized.current = false;
+                            return 0;
+                        }
+                        return newValue;
+                    });
+                }, 1000);
+            };
+            startTimer()
+        }
+
+        // Cleanup function for StrictMode
+        return () => {
+            // Only cleanup if this effect created the interval
+            if (hasInitialized.current && intervalRef.current) {
+                clearCurrentInterval();
+                hasInitialized.current = false;
+            }
+        };
+    }, [totalSeconds, clearCurrentInterval]);
+
     useImperativeHandle(ref, () => ({
-        StartTimer,
         StopTimer
-    }), [StartTimer, StopTimer]);
+    }), [StopTimer]);
 
-    // Memoize formatted time to prevent unnecessary recalculations
+    // Memoized formatted time
     const formattedTime = useMemo(() => {
         const seconds = currentSeconds % 60;
         const minutes = Math.floor(currentSeconds / 60);
-        
         const formatTime = (time: number) => time.toString().padStart(2, '0');
-        
         return `${formatTime(minutes)}:${formatTime(seconds)}`;
-
     }, [currentSeconds]);
 
-    // Cleanup interval on unmount
+    // Final cleanup on unmount
     useEffect(() => {
         return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
+            clearCurrentInterval();
+            hasInitialized.current = false;
         };
-    }, []);
+    }, [clearCurrentInterval]);
 
     return (
         <React.Fragment key={`react-timer-fragment`}>

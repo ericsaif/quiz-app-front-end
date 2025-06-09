@@ -44,8 +44,8 @@ const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAns
                 <div >
                     <AudioRecorder
                         {...props}
-                        QId={question.id}
                         QPOId={question.qpoId} 
+                        QId={question.id}
                         SM={"SubmitAudioPicDescriptionAsync"}
                     />
                 </div>
