@@ -27,12 +27,8 @@ export async function sendAudioInChunks(props: {
     }
 
     await submitAnswer("BeginAudioUpload", beginUploadMargs);
-    
-    // Send each chunk
-    console.info("- Begin UploadAudioChunk before loop - ")
 
     for (let i = 0; i < totalChunks; i++) {
-      console.info("- Begin UploadAudioChunk inside loop - ", i)
 
         const start = i * CHUNK_SIZE;
         const end = Math.min(start + CHUNK_SIZE, uint8Array.length);
@@ -44,8 +40,7 @@ export async function sendAudioInChunks(props: {
                 .map(byte => String.fromCharCode(byte))
                 .join('')
         );
-        
-      console.info("attempting to invoke UploadAudioChunk")
+      
 
       const UploadAudioChunkMargs: MethodArgs = {
           ChunkIndex: i,

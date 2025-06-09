@@ -35,7 +35,7 @@ const EngTestWindow = (props: ETWP) => {
         <Button className="btn btn-primary" onClick={() => {startConnection(); setdisplaySW(false)}}>Начать</Button>
       </div>
   ), [startConnection]);
-// //
+// // //
 //   const [tempQId, settempQId] = useState<number>(0)
 //   const [tempQPOId, settempQPOId] = useState<number>(0)
  
@@ -72,7 +72,7 @@ const EngTestWindow = (props: ETWP) => {
     if(displaySW)
       setloading(false)
 
-    if (CurrentQ === null)
+    if (CurrentQ === null && !displaySW)
       setloading(true)
     else{
       console.log('setting a new question window')

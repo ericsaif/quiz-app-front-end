@@ -52,11 +52,8 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
         const parts = displayedText?.split(separatorRegex)
         
         const handleSubmit = () =>{
-            console.log(`Ctest blankValues = ${blankValues}`)
 
             const replacedArray = blankValues.map(str => (str.trim() === '' ? '-' : str));
-
-            console.log(`Ctest replacedArray = ${replacedArray}`)
 
             const newM: MethodArgs= {
                 QId: question.id,
@@ -71,19 +68,13 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
         }
 
         const handleInputChange = (letter: string, wordIndex: number, letterIndex: number) =>{
-            // console.info("word index - ", wordIndex, " letterIndex = ", letterIndex)
 
             setBlanks(previousBlanks =>{
                 const newValues = [...previousBlanks]
                 const prevBlanksLengths = wordIndex == 0 ? 0 : blankLengths.slice(0, wordIndex).reduce((acc, val)=> acc+val ,0)
                 
-                // console.info("prevBlanksLengths = ", prevBlanksLengths)
-                
-                console.log(`blankValues length: ${blankValues.length} blankValues before adding a new letter: ${newValues} `)
 
                 newValues[prevBlanksLengths + letterIndex] = letter;
-
-                console.log(`blankValues length: ${blankValues.length} blankValues after adding a new letter - ${newValues}`)
 
                 return newValues
             })
@@ -97,11 +88,8 @@ const CTestQWindow = (props:{question: CTestQ, submitAnswer: (SM: string, args: 
                 const digit = match[0].match(diditRegex) || ''
                 const blankLength = parseInt(digit[0], 10)
                 const inputs = [];
-            
-
-                // const offset =  blankCounter == 0 ? -1 : PBL + blankLength
+        
                 offset = currentWordIndex == 0 ? 0 : prevBlanksLength
-                // console.log("offset = ", offset, "blankLength = ", blankLength, "prevBlanksLength = ", prevBlanksLength)
 
             for (let i = 0; i < blankLength; i++) {
                 inputs.push(

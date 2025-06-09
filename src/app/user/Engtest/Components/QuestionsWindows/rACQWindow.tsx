@@ -66,14 +66,8 @@ const  RACQWindow = (props:{question: RACQ, submitAnswer: (SM: string, args: Met
                 setBlanks(previousBlanks =>{
                     const newValues = [...previousBlanks]
                     const prevBlanksLengths = wordIndex == 0 ? 0 : blankLengths.slice(0, wordIndex).reduce((acc, val)=> acc+val ,0)
-                    
-                    // console.info("prevBlanksLengths = ", prevBlanksLengths)
-    
-                    console.log(`blankValues length: ${blankValues.length} blankValues before adding a new letter: ${newValues} `)
 
                     newValues[prevBlanksLengths + letterIndex] = letter;
-
-                    console.log(`blankValues length: ${blankValues.length} blankValues after adding a new letter - ${newValues}`)
 
                     return newValues
                 })
@@ -90,7 +84,6 @@ const  RACQWindow = (props:{question: RACQ, submitAnswer: (SM: string, args: Met
     
                     // const offset =  blankCounter == 0 ? -1 : PBL + blankLength
                     offset = currentWordIndex == 0 ? 0 : prevBlanksLength
-                    // console.log("offset = ", offset, "blankLength = ", blankLength, "prevBlanksLength = ", prevBlanksLength)
     
                 for (let i = 0; i < blankLength; i++) {
                     inputs.push(

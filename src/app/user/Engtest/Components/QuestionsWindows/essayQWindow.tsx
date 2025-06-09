@@ -12,7 +12,6 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
     const QPOId = question.qpoId
 
     const handleSubmit = () =>{
-        console.log(`submitting essay - ${essay}`)
         const newM : MethodArgs = {
             Essay: essay,
             Topic: Topic,

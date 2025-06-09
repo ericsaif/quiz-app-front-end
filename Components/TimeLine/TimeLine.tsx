@@ -68,8 +68,8 @@
 
         return (
             <React.Fragment key={`react-time-line-fragment`}>
-                <div className="AUDIO_LINE AUDIO_NOT_LISTENED" style={{width: `${MAX_WIDTH}%`}} />
-                <div className="AUDIO_LINE AUDIO_LINE_LISTENED" style={{display: `${audioLineWidth != 0 ? 'block' : 'none'}`, width: `${audioLineWidth}%`}} />
+                <div className="TIME_LINE TIME_LINE_NOT_STARTED" style={{width: `${MAX_WIDTH}%`}} />
+                <div className="TIME_LINE TIME_LINE_STARTED" style={{display: `${audioLineWidth != 0 ? 'block' : 'none'}`, width: `${audioLineWidth}%`}} />
             </React.Fragment>
         )
     })

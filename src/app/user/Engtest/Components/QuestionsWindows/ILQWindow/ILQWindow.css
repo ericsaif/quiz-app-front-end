@@ -8,7 +8,8 @@
 
 .ILQ-SUMMARY{
     width: 90%;
-    height: 60%;
+    height: 60vh;
+    padding: 10px;
     border-radius: 5px;
 
 }
@@ -32,27 +33,11 @@
     margin-right: auto;
 }
 
-.AUDIO_LINE{
-    height: 10%;
-    width: 80%;
-    border: 2px solid;
-    border-radius: 2px;
-    margin-left: 2rem;
-    margin-top: -0.75rem;
-}
-
-.AUDIO_NOT_LISTENED{
-    z-index: 999;
-    border-color: gray;
-}
-
-.AUDIO_LINE_LISTENED{
-    z-index: 1005;
-    border-color:black ;
-}
 
 .ILQ_USER_SELECT{
+    /* min-height: fit-content; */
     width: 15rem;
+    white-space: pre-wrap;
 }
 
 .SPEAKER_AND_AUDIO{

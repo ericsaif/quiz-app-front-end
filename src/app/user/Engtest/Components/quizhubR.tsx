@@ -48,7 +48,7 @@ const useQuizHubR = (
         };
 
         const handleExplanation = (QPOId: number, text: string) => {
-            
+            console.log(`QPOId ${QPOId} text ${text}`)
         };
 
         const handleStarttimer = (AttemptId: string, time: string) =>{

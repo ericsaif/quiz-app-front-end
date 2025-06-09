@@ -1,23 +1,20 @@
-.AUDIO_LINE{
-    height: 2% !important;
+.TIME_LINE{
+    height: 2% ;
     position: absolute;
-    top: -0.25rem !important;
-    left: -2.1rem !important;
+    top: -0.25rem ;
     justify-self: start;
-    margin-left: auto;
-    margin-right: auto;
+    border: 2px solid black;
     /* top: 1.65rem; */
-    /* left: -3rem; */
+    left: 0rem;
 }
 
-.AUDIO_NOT_LISTENED{
+.TIME_LINE_NOT_STARTED{
     z-index: 999;
     background-color: transparent;
 }
 
-.AUDIO_LINE_LISTENED{
+.TIME_LINE_STARTED{
     z-index: 1005;
     background-color: lightsteelblue;
-    border-color:black ;
 
 }
