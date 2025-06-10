@@ -38,6 +38,7 @@ const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAns
                             src={pic_link}
                             alt={`${keyName}`} 
                             fill 
+                            priority
                         />
                     </div>
                 }

@@ -11,7 +11,7 @@ const useQuizHubR = (
     hubUrl: string, 
     setNexQuestion: React.Dispatch<React.SetStateAction<Question | null>>,
     startTimer: React.Dispatch<React.SetStateAction<string>>,
-    setexplanation: React.Dispatch<React.SetStateAction<React.ReactNode | null>>,
+    setexplanation: React.Dispatch<React.SetStateAction<number | null>>,
     engTestId: string
 ) : QuizHubHook => { 
     
@@ -44,11 +44,14 @@ const useQuizHubR = (
         }
         const handleNextQuestion = (NextQ: Question) => {
             setTimeOut(false)
+            setexplanation(null)
             setNexQuestion(NextQ)
         };
 
-        const handleExplanation = (QPOId: number, text: string) => {
-            console.log(`QPOId ${QPOId} text ${text}`)
+        const handleExplanation = (QPOId: number, time: string) => {
+            console.log(`QPOId ${QPOId} time ${time}`)
+            setexplanation(QPOId)
+            startTimer(time)
         };
 
         const handleStarttimer = (AttemptId: string, time: string) =>{
@@ -98,7 +101,7 @@ const useQuizHubR = (
 
         };
 
-    }, [connection, engTestId, isConnected, isInvoking, router, setNexQuestion, startTimer]); // Re-run when connection or its status changes
+    }, [connection, engTestId, isConnected, isInvoking, router, setNexQuestion, setexplanation, startTimer]); // Re-run when connection or its status changes
 
     
     return { submitAnswer, startConnection, TimeOut };

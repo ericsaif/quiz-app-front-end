@@ -37,6 +37,8 @@
 .ILQ_USER_SELECT{
     /* min-height: fit-content; */
     width: 15rem;
+    word-wrap: break-word;        /* Older browsers */
+    overflow-wrap: break-word;
     white-space: pre-wrap;
 }
 

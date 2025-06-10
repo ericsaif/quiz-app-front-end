@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactElement, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@mui/material";
 import { ETWP } from "../../../../../Models/EngTestWindowModels/ETWProps";
 
@@ -13,77 +13,79 @@ import Timer from "../../../../../Components/Timer/Timer";
 import { createQuestionWindow } from "./CreateQWindow";
 import { Question } from "../../../../../Models/QuestionsModels";
 import { TimerRef } from "../../../../../Components/Timer/TimerRef_Props";
+import GetExplanations from "./Explanations/Explanations";
 
 const EngTestWindow = (props: ETWP) => {
   const {engTestId, hubUrl} = props
 
-  const [windowContent, setWindow] = useState<ReactElement | null>(null);
+  // const [windowContent, setWindow] = useState<ReactElement | null>(null);
   const [CurrentQ, SetQ] = useState<Question | null>(null);
   const [timer, settimer] = useState<string>('');
   const [displaySW, setdisplaySW] = useState<boolean>(true);
   const [loading, setloading] = useState<boolean>(true);
-  const [End_Window, setEnd_Window] = useState<React.ReactNode | null>(null)
-  const [explanation, setexplanation] = useState<React.ReactNode | null>(null)
+  const [explanation, setexplanation] = useState<number | null>(null)
 
   const { startConnection, submitAnswer, TimeOut } = useQuizHubR(hubUrl, SetQ, settimer, setexplanation, engTestId);
   
 
   const timerRef = useRef<TimerRef>(null);
 
-  const StartingW = React.useMemo(() => (
+  const StartingW = useMemo(() => (
       <div>
         <Button className="btn btn-primary" onClick={() => {startConnection(); setdisplaySW(false)}}>Начать</Button>
       </div>
   ), [startConnection]);
-// // //
-//   const [tempQId, settempQId] = useState<number>(0)
-//   const [tempQPOId, settempQPOId] = useState<number>(0)
- 
-//
 
   const window = useMemo(() => {
         if (!CurrentQ) return null;
         return createQuestionWindow(CurrentQ, submitAnswer, TimeOut);
   }, [CurrentQ, submitAnswer, TimeOut]);
 
-  useEffect(() => {
-    console.log('clearing question window')
-
-  //   const TempHandleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) =>{
-  //   e.preventDefault()
-  //   const response = await fetch(`${BACKEND_BASE_URL}/api/admin/questions/${tempQId}?QPOId=${tempQPOId}`,{
-  //     method: 'GET',
-  //     credentials: 'include'
-  //   })
-  //   if(response.ok){
-  //     const question: Question = await response.json()
-  //     setdisplaySW(false)
-  //     settimer(question.timer)
-  //     SetQ(question)
-  //   }else
-  //     alert('ошибка')
-  //  }
-
-    setWindow(null)
-
-    if(TimeOut) timerRef.current?.StopTimer()
-
+  useEffect(()=>{
 
     if(displaySW)
       setloading(false)
+    
+  }, [CurrentQ, displaySW])
+
+  useEffect(() => {
+
+    setexplanation(null)
+
+    if(TimeOut) timerRef.current?.StopTimer()
 
     if (CurrentQ === null && !displaySW)
       setloading(true)
     else{
-      console.log('setting a new question window')
       setloading(false)
-
       setexplanation(null)
-      
-      setWindow(window)
     }
 
-    setEnd_Window(
+  }, [CurrentQ, TimeOut, displaySW]);
+
+  // // //
+    // const [tempQId, settempQId] = useState<number>(0)
+    // const [tempQPOId, settempQPOId] = useState<number>(0)
+  
+  //
+
+  const End_Window = useMemo(()=>{
+    // const TempHandleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) =>{
+    // e.preventDefault()
+    // const response = await fetch(`${BACKEND_BASE_URL}/api/admin/questions/${tempQId}?QPOId=${tempQPOId}`,{
+    //   method: 'GET',
+    //   credentials: 'include'
+    // })
+    // if(response.ok){
+    //   const question: Question = await response.json()
+    //   setdisplaySW(false)
+      
+    //   settimer(question.timer)
+    //   SetQ(question)
+    // }else
+    //   alert('ошибка')
+    // }
+    return(
       <React.Fragment key={`react-engTest-window-fragment`}>
 
         {/* <form className="border border-gray p-3" onSubmit={TempHandleSubmit}>
@@ -92,24 +94,30 @@ const EngTestWindow = (props: ETWP) => {
             <button type="submit">get</button>
         </form> */}
         
-
-        {displaySW && StartingW}
-        {explanation != null && explanation}
-        {loading && <p>Загрузка ... </p>}
-        {
-          CurrentQ &&
-            <div className={`container-fluid text-center QWindow`}>
-              <div className="row d-flex">
-                <Timer ref={timerRef} timer={timer} />
-              </div>
-              <div className="row"  style={{height: "100%"}}>
-                {windowContent}
-              </div>
+          
+        <div className={`container-fluid text-center QWindow`}>
+          {CurrentQ && 
+            <div className="row d-flex">
+              <Timer key={`${CurrentQ.id}`} ref={timerRef} timer={timer} />
+            </div>
+          }{
+            explanation && 
+            <div className="row d-flex">
+              <Timer key={`${explanation}`} ref={timerRef} timer={timer} />
+            </div>
+          }
+          
+          <div className="row"  style={{height: "100%"}}>
+            {loading && <p>Загрузка ... </p>}
+            {displaySW && StartingW}
+            {CurrentQ && window}
+            {explanation != null && GetExplanations(explanation)}
           </div>
-        }
+      </div>
+        
       </React.Fragment>
     )
-  }, [CurrentQ, submitAnswer, displaySW, TimeOut, window, StartingW, timer, windowContent, loading, explanation]);
+  },[CurrentQ, StartingW, displaySW, explanation, loading, timer, window])
 
   return End_Window
 };

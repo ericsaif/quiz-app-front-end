@@ -50,14 +50,12 @@ const Timer = forwardRef<TimerRef, TimerProps>((props, ref) => {
         hasInitialized.current = false;
     }, [clearCurrentInterval]);
 
-    // Start timer effect - with StrictMode protection
     useEffect(() => {
         if (totalSeconds > 0 && !hasInitialized.current) {
             hasInitialized.current = true;
             
             console.log("starting timer");
             
-            // Use setTimeout to ensure timeline starts exactly when interval starts
             const startTimer = () => {
                 timeLineRef.current?.LaunchTimeLine();
                 

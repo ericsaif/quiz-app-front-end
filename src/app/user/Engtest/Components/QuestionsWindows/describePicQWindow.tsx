@@ -53,6 +53,7 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
                         src={pic_link}
                         alt={`${keyName}`} 
                         fill 
+                        priority
                     />
                 </div>
             }
