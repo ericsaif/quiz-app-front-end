@@ -41,27 +41,20 @@ const EngTestWindow = (props: ETWP) => {
         return createQuestionWindow(CurrentQ, submitAnswer, TimeOut);
   }, [CurrentQ, submitAnswer, TimeOut]);
 
-  useEffect(()=>{
-
-    if(displaySW)
-      setloading(false)
-    
-  }, [CurrentQ, displaySW])
-
   useEffect(() => {
-
-    setexplanation(null)
+    console.log("setting loading to true")
+    setloading(true)
 
     if(TimeOut) timerRef.current?.StopTimer()
 
-    if (CurrentQ === null && !displaySW)
-      setloading(true)
-    else{
+    if (CurrentQ  || displaySW || explanation){
+      console.log("setting loading to false")
+
       setloading(false)
-      setexplanation(null)
+    
     }
 
-  }, [CurrentQ, TimeOut, displaySW]);
+  }, [CurrentQ, TimeOut, displaySW, explanation]);
 
   // // //
     // const [tempQId, settempQId] = useState<number>(0)
@@ -101,14 +94,14 @@ const EngTestWindow = (props: ETWP) => {
               <Timer key={`${CurrentQ.id}`} ref={timerRef} timer={timer} />
             </div>
           }{
-            (explanation != null && !CurrentQ ) && 
+            (explanation && !CurrentQ ) && 
             <div className="row d-flex">
               <Timer key={`${explanation}`} ref={timerRef} timer={timer} />
             </div>
           }
           
           <div className="row"  style={{height: "100%"}}>
-            {(loading && explanation == null) && <p>Загрузка ... </p>}
+            {(loading && !explanation) && <p>Загрузка ... </p>}
             {displaySW && StartingW}
             {CurrentQ && window}
             {

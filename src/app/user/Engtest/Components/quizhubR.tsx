@@ -28,7 +28,6 @@ const useQuizHubR = (
             try {
                 setisEnvoking(true)
                 await connection.invoke(SM, ...Object.values(args));
-                console.log("User Answer submitted:", ...Object.values(args));
             } catch (err) {
                 console.error("Error sending the answer:", err);
             }finally{
@@ -42,13 +41,14 @@ const useQuizHubR = (
     const GetAwaitingQuestion = useCallback(()=>{
         if (connection && isConnected){
             try{
+                console.log("calling GetAwaitingQuestion")
                 setisEnvoking(true)
                 
                 connection.invoke("GetAwaitingQuestion")
                 if(awaitingQTimeout.current){
-                        clearTimeout(awaitingQTimeout.current)
-                        awaitingQTimeout.current=null
-                    }
+                    clearTimeout(awaitingQTimeout.current)
+                }
+                awaitingQTimeout.current=null
             }catch(err){
                 console.error("error getting awaiting  question: ", err)
             }finally{
@@ -57,53 +57,51 @@ const useQuizHubR = (
         }
     },[connection, isConnected])
 
-    // --- Register SignalR Event Handlers ---
-    useEffect(() => {
-        if (!connection || !isConnected) {
-            return; // Don't register handlers until connected
-        }
-        const handleNextQuestion = (NextQ: Question) => {
+    const handleNextQuestion = useCallback((NextQ: Question) => {
             console.log(`setting the next question: `, NextQ)
             setTimeOut(false)
-            GetAwaitingQuestion()
             setexplanation(null)
             setNexQuestion(NextQ)
-        };
+    },[setNexQuestion, setexplanation]);
 
-        const handleExplanation = (QPOId: number, time: string) => {
-            console.log(`QPOId ${QPOId} time ${time}`)
-            setNexQuestion(null)
-            setexplanation(QPOId)
-            startTimer(time)
+    const handleExplanation = useCallback((QPOId: number, time: string) => {
+        console.log("setting the explanation")
+        setNexQuestion(null)
+        setexplanation(QPOId)
+        startTimer(time)
 
-            awaitingQTimeout.current = setTimeout(() => {
-                GetAwaitingQuestion()
-            }, 15000);
-        };
+        awaitingQTimeout.current = setTimeout(() => {
+            GetAwaitingQuestion()
+        }, 15000);
+    },[GetAwaitingQuestion, setNexQuestion, setexplanation, startTimer]);
 
-        const handleStarttimer = (AttemptId: string, time: string) =>{
-            console.log(`Starting Timer, AttemptId = ${AttemptId}, time = ${time}`)
-            startTimer(time)
+    const handleStarttimer = useCallback((AttemptId: string, time: string) =>{
+        startTimer(time)
+    },[startTimer])
+
+    const handleStopTimer = useCallback(() => {
+        setTimeOut(true)
+    },[])
+
+    const handleEndQuiz = useCallback(async (response: string) =>{
+        if(!connection) return
+
+        let waitMs = 0;
+        const maxWaitMs = 3000; // wait max 3 seconds
+        console.log(response)
+        console.log("Server requested disconnect");
+        router.push(`/user/Engtest/finish?engTestId=${engTestId}`)
+
+        while (isInvoking && waitMs < maxWaitMs) {
+            await new Promise(r => setTimeout(r, 100)); // small delay
+            waitMs += 100;
         }
+        connection.stop(); 
+    },[connection, engTestId, isInvoking, router])
 
-        const handleStopTimer = () => {
-            setTimeOut(true)
-            console.info("setting time out to true")
-        };
-
-        const handleEndQuiz = async (response: string) =>{
-            let waitMs = 0;
-            const maxWaitMs = 3000; // wait max 3 seconds
-            console.log(response)
-            console.log("Server requested disconnect");
-            router.push(`/user/Engtest/finish?engTestId=${engTestId}`)
-
-            while (isInvoking && waitMs < maxWaitMs) {
-                await new Promise(r => setTimeout(r, 100)); // small delay
-                waitMs += 100;
-            }
-            connection.stop(); 
-        }
+    // --- Register SignalR Event Handlers ---
+    useEffect(() => {
+        if (!connection || !isConnected) return;
 
         connection.on("NextQuestion", handleNextQuestion);
         connection.on("Explanation", handleExplanation);
@@ -116,7 +114,6 @@ const useQuizHubR = (
             console.log("SignalR reconnecting due to:", error);
         });
 
-        // --- Cleanup function for event handlers ---
         return () => {
             console.log("Removing 'NextQuestion' || 'QuestionTimerStop' || 'StopTimer' handler");
 
@@ -124,11 +121,10 @@ const useQuizHubR = (
             connection.off("QuestionTimerStop", handleStopTimer);
             connection.off("EndQuiz", handleEndQuiz);
             connection.off("QTimerStarted", handleStarttimer);
-
-
+            connection.off("Explanation", handleExplanation);
         };
 
-    }, [GetAwaitingQuestion, connection, engTestId, isConnected, isInvoking, router, setNexQuestion, setexplanation, startTimer]); // Re-run when connection or its status changes
+    }, [connection, handleEndQuiz, handleExplanation, handleNextQuestion, handleStarttimer, handleStopTimer, isConnected]); 
 
     
     return { submitAnswer, startConnection, TimeOut, GetAwaitingQuestion };
