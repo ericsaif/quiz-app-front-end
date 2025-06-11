@@ -25,7 +25,7 @@ const EngTestWindow = (props: ETWP) => {
   const [loading, setloading] = useState<boolean>(true);
   const [explanation, setexplanation] = useState<number | null>(null)
 
-  const { startConnection, submitAnswer, TimeOut } = useQuizHubR(hubUrl, SetQ, settimer, setexplanation, engTestId);
+  const { startConnection, submitAnswer, TimeOut, GetAwaitingQuestion } = useQuizHubR(hubUrl, SetQ, settimer, setexplanation, engTestId);
   
 
   const timerRef = useRef<TimerRef>(null);
@@ -101,23 +101,30 @@ const EngTestWindow = (props: ETWP) => {
               <Timer key={`${CurrentQ.id}`} ref={timerRef} timer={timer} />
             </div>
           }{
-            explanation && 
+            (explanation != null && !CurrentQ ) && 
             <div className="row d-flex">
               <Timer key={`${explanation}`} ref={timerRef} timer={timer} />
             </div>
           }
           
           <div className="row"  style={{height: "100%"}}>
-            {loading && <p>Загрузка ... </p>}
+            {(loading && explanation == null) && <p>Загрузка ... </p>}
             {displaySW && StartingW}
             {CurrentQ && window}
-            {explanation != null && GetExplanations(explanation)}
+            {
+            (explanation != null && !CurrentQ ) && 
+            
+              <>
+                {GetExplanations(explanation)}
+                <Button className="submit-btn" onClick={() => GetAwaitingQuestion()}>Continue</Button>
+              </>
+            }
           </div>
       </div>
         
       </React.Fragment>
     )
-  },[CurrentQ, StartingW, displaySW, explanation, loading, timer, window])
+  },[CurrentQ, StartingW, displaySW, explanation, loading, timer, window, GetAwaitingQuestion])
 
   return End_Window
 };

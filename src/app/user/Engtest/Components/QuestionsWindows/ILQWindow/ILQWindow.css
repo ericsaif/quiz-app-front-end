@@ -1,5 +1,5 @@
 .correct-selection{
-    color: #5bdd0f;
+    color: rgb(0, 187, 0);
 }
 .incorrect-selection{
     text-decoration: line-through;
@@ -19,32 +19,16 @@
     justify-content: right;
 }
 
-.submit-button{
-    font-weight: bold;
-    text-transform: uppercase;
-    color: white;
-    background-color: blueviolet;
-    padding: 5px;
-    text-align: center;
-    justify-content: center;
-    margin-top: 3%;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-
-.ILQ_USER_SELECT{
-    /* min-height: fit-content; */
-    width: 15rem;
-    word-wrap: break-word;        /* Older browsers */
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
+.AUDIO_AND_SELECT{
+    display: flex;
+    height: 100%;
 }
 
 .SPEAKER_AND_AUDIO{
     display: inline-flex;
-
+    height: 6rem;
+    justify-self: start;
+    margin-top: 2rem;
 }
 
 .DIALOG_AUDIO_ANSWER{
@@ -75,6 +59,8 @@
 }
 
 
+
+
 .transitionClass{
     transition: all 0.3s ease-in;
 }
@@ -82,12 +68,13 @@
 .dialog-container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 180px);
+    height: calc(100vh - 400px);
     position: relative;
     overflow: hidden;
 }
 
 .scrollable-content {
+    transition: all ease 0.3s;
     flex: 1;
     overflow-y: auto;
     padding: 20px;

@@ -1,7 +1,7 @@
 "use client";
 
 import useSignalR from "@/app/hooks/useSignalR"
-import { useEffect, useCallback, useState } from "react"
+import { useEffect, useCallback, useState, useRef } from "react"
 import { Question } from "../../../../../Models/QuestionsModels/question";
 import { QuizHubHook } from "../../../../../Models/QuizHubModels/QuizHubHook";
 import { MethodArgs } from "../../../../../Models/QuizHubModels/MethodArgs";
@@ -21,6 +21,8 @@ const useQuizHubR = (
 
     const router = useRouter()
 
+    const awaitingQTimeout = useRef<NodeJS.Timeout | null>(null);
+
     const submitAnswer = useCallback(async (SM: string, args: MethodArgs) => { // SM - server method name
         if (connection && isConnected) {
             try {
@@ -37,21 +39,46 @@ const useQuizHubR = (
         }
     }, [connection, isConnected]); // Dependencies for the send function
 
+    const GetAwaitingQuestion = useCallback(()=>{
+        if (connection && isConnected){
+            try{
+                setisEnvoking(true)
+                
+                connection.invoke("GetAwaitingQuestion")
+                if(awaitingQTimeout.current){
+                        clearTimeout(awaitingQTimeout.current)
+                        awaitingQTimeout.current=null
+                    }
+            }catch(err){
+                console.error("error getting awaiting  question: ", err)
+            }finally{
+                setisEnvoking(false)
+            }
+        }
+    },[connection, isConnected])
+
     // --- Register SignalR Event Handlers ---
     useEffect(() => {
         if (!connection || !isConnected) {
             return; // Don't register handlers until connected
         }
         const handleNextQuestion = (NextQ: Question) => {
+            console.log(`setting the next question: `, NextQ)
             setTimeOut(false)
+            GetAwaitingQuestion()
             setexplanation(null)
             setNexQuestion(NextQ)
         };
 
         const handleExplanation = (QPOId: number, time: string) => {
             console.log(`QPOId ${QPOId} time ${time}`)
+            setNexQuestion(null)
             setexplanation(QPOId)
             startTimer(time)
+
+            awaitingQTimeout.current = setTimeout(() => {
+                GetAwaitingQuestion()
+            }, 15000);
         };
 
         const handleStarttimer = (AttemptId: string, time: string) =>{
@@ -101,10 +128,10 @@ const useQuizHubR = (
 
         };
 
-    }, [connection, engTestId, isConnected, isInvoking, router, setNexQuestion, setexplanation, startTimer]); // Re-run when connection or its status changes
+    }, [GetAwaitingQuestion, connection, engTestId, isConnected, isInvoking, router, setNexQuestion, setexplanation, startTimer]); // Re-run when connection or its status changes
 
     
-    return { submitAnswer, startConnection, TimeOut };
+    return { submitAnswer, startConnection, TimeOut, GetAwaitingQuestion };
 }
 
 export default useQuizHubR

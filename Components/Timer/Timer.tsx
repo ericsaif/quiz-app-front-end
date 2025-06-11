@@ -26,7 +26,6 @@ const Timer = forwardRef<TimerRef, TimerProps>((props, ref) => {
     // Parse timer string and initialize
     useEffect(() => {
         const timer = props.timer;
-        console.log(`timer time is ${timer}`);
 
         function parseTimeString(timeStr: string) {
             const [, minutes, seconds] = timeStr.split(':').map(Number);
@@ -44,7 +43,6 @@ const Timer = forwardRef<TimerRef, TimerProps>((props, ref) => {
     }, [props.timer, clearCurrentInterval]);
 
     const StopTimer = useCallback(() => {
-        console.log("calling StopTimer");
         clearCurrentInterval();
         timeLineRef.current?.StopTimeLine();
         hasInitialized.current = false;
@@ -54,7 +52,6 @@ const Timer = forwardRef<TimerRef, TimerProps>((props, ref) => {
         if (totalSeconds > 0 && !hasInitialized.current) {
             hasInitialized.current = true;
             
-            console.log("starting timer");
             
             const startTimer = () => {
                 timeLineRef.current?.LaunchTimeLine();
@@ -62,7 +59,6 @@ const Timer = forwardRef<TimerRef, TimerProps>((props, ref) => {
                 intervalRef.current = setInterval(() => {
                     setCurrentSeconds(prev => {
                         const newValue = prev - 1;
-                        console.log(`timer interval time - ${newValue}`);
                         
                         if (newValue <= 0) {
                             clearInterval(intervalRef.current!);

@@ -16,7 +16,7 @@ const scenarioWindow = (props:{
             <p className="scenario-paragraph">
                 {scenario}
             </p>
-            <Button className={`submit-button`} type="button" onClick={()=>setcontextWindow(false)}>Start</Button>
+            <Button className={`submit-btn`} type="button" onClick={()=>setcontextWindow(false)}>Start</Button>
 
         </div>
     )

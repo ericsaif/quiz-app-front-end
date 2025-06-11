@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react"
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react"
 import { ILQ, MethodArgs } from "../commonImports"
 import { Button } from "@headlessui/react"
 import Options from "./GivenDOptions/Options"
@@ -17,15 +17,15 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
     const { question, submitAnswer, TimeOut } = props
     
     const [currentILQ, setCurrentILQ] = useState<number>(0)
-    // const [AId, setAId] = useState<number[]>([])
     const [summary, setsummary] = useState<string>("")
-    const [dialog, setDialog] = useState<React.ReactNode[]>([])
     const [correctCount, setcorrectCount] = useState<number>(0)
-    // const [audioLineWidth, setaudioLineWidth] = useState<number>(0)
-    // const [listenTries, setlistenTries] = useState<number>(0)
     const [summaryWindow, setSummaryWindow] = useState<boolean>(false)
     const [contextWindow, setcontextWindow] = useState<boolean>(true)
+
+    const [userSelections, setuserSelections] = useState<{value: number, correct: boolean}[]>([])
     
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
     const {s3pathsToAudioAnswers, givenDialogoptions, correctDialogOptions} = question || {}
 
     // Memoize expensive calculations
@@ -42,14 +42,19 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
     // Reset state when question changes
     useEffect(()=>{
         setsummary("")
-        setDialog([])
         setCurrentILQ(0)
-        // setlistenTries(0)
+        setuserSelections([])
         setSummaryWindow(false)
         setcontextWindow(true)
         setcorrectCount(0)
-        // setAId([])
     }, [question.id]); // Only depend on question.id, not entire question object
+
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            const { scrollHeight, clientHeight } = scrollContainerRef.current;
+            scrollContainerRef.current.scrollTop = scrollHeight - clientHeight;
+        }
+    }, [userSelections]);
 
     // Memoize submit handler
     const handleSubmit = useCallback(() => {
@@ -70,66 +75,68 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
         }
     }, [TimeOut, handleSubmit]);
 
-    // Memoize options select handler
-    const HandleOptionsSelect = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = event.target.value
-        const valueParsed = parseInt(value,10)
+    const HandleOptionsSelect = useCallback((value: number) => {
 
         const correctOption =
-            correctDialogOptions?.correctOptionsDialogOptions?.[currentILQ] !== undefined
+            correctDialogOptions?.correctOptionsDialogOptions[currentILQ] !== undefined
                 ? (correctDialogOptions.correctOptionsDialogOptions[currentILQ] % 5)
                 : 0;
         
-        let correct = false
-
         
-        if (correctOption == valueParsed){
-            correct = true
+        if (correctOption == value)
             setcorrectCount(prevcorrectCount => prevcorrectCount+1)
-        }
+
+        setuserSelections(prevSelections =>[...(prevSelections || []), {value, correct:correctOption == value }])
         
-        const CurrentDialog = (
-            <React.Fragment key={`currentDialog-${currentILQ}`}>
-                <div>
-                    <div className="DIALOG_AUDIO_ANSWER">
-                        <Image src="/reshot-icon-asian-young-man.svg" width={50} height={50} alt="AsianMan"/>
-                        <div className="AUDIO_ANSWER">
-                            <CiPlay1 size={23} />
-                            <div className="AUDIO_LINE AUDIO_LINE_LISTENED" />
+        
+        if(currentILQ < 4)
+            setCurrentILQ(currentILQ+1)
+        
+    }, [correctDialogOptions?.correctOptionsDialogOptions, currentILQ]);
+
+    const CurrentDialog = useMemo(()=>
+        userSelections.map(({value, correct}, index)=>{
+            const local_options = GetOptions({options: givenDialogoptions, currentILQ: index})
+            const correctOption =
+            correctDialogOptions?.correctOptionsDialogOptions[index] !== undefined
+                ? (correctDialogOptions.correctOptionsDialogOptions[index] % 5)
+                : 0;
+            return (
+            <div key={index}>
+                    <div>
+                        <div className="DIALOG_AUDIO_ANSWER">
+                            <Image src="/reshot-icon-asian-young-man.svg" width={50} height={50} alt="AsianMan"/>
+                            <div className="AUDIO_ANSWER">
+                                <CiPlay1 size={23} />
+                                <div className="AUDIO_LINE AUDIO_LINE_LISTENED" />
+                            </div>
+                        </div>
+                        <div style={{borderColor: `${correct? "green" : "red"}`}} className="USER_ANSWER">
+                            <p style={{ whiteSpace: 'pre-wrap'}} className={`${correct ? "correct-selection" : "incorrect-selection"}`}>
+                                {local_options[value]}
+                            </p>
+                            {
+                                !correct &&
+                                <p style={{color: 'red', textDecoration: 'none', whiteSpace: 'pre-wrap'}}>
+                                    <b>Best Answer: </b> <br/>
+                                    {local_options[correctOption]}
+                                </p>
+                            }
                         </div>
                     </div>
-                    <div style={{borderColor: `${correct? "green" : "red"}`}} className="USER_ANSWER">
-                        <p style={{ whiteSpace: 'pre-wrap'}} className={`${correct ? "correct-selection" : "incorrect-selection"}`}>
-                            {options[valueParsed]}
-                        </p>
-                        {
-                            !correct &&
-                            <p style={{color: 'red', textDecoration: 'none', whiteSpace: 'pre-wrap'}}>
-                                <b>Best Answer: </b> <br/>
-                                {options[correctOption]}
-                            </p>
-                        }
-                    </div>
                 </div>
-            </React.Fragment>
-        )
+        )})
         
-        setDialog((prevDialog) =>[
-            ...(prevDialog || []),
-            CurrentDialog
-        ])
         
-        if(currentILQ < 4){
-            // setlistenTries(0)
-            setCurrentILQ(currentILQ+1)
-        }
-    }, [currentILQ, correctDialogOptions?.correctOptionsDialogOptions, options]);
+    ,[correctDialogOptions?.correctOptionsDialogOptions, givenDialogoptions, userSelections])
 
     // Memoize current options component
     const CurrentOptions = useMemo(() => (
-        <select className="ILQ_USER_SELECT" name={currentILQ.toString()} id={currentILQ.toString()} key={currentILQ} onChange={HandleOptionsSelect}>
-            <Options newOptions={options}/>
-        </select>
+            <Options 
+            newOptions={options} 
+            currentILQ={currentILQ.toString()} 
+            HandleOptionsSelect={HandleOptionsSelect }
+            />
     ), [currentILQ, HandleOptionsSelect, options]);
 
     // Memoize current audio component
@@ -140,7 +147,6 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
         />
     ), [s3pathsToAudioAnswers, currentILQ]);
 
-    // Main render logic - no longer in useEffect
     const renderContent = () => {
         if (contextWindow) {
             return ScenW;
@@ -148,11 +154,11 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
 
         if (summaryWindow) {
             return (
-                <div className="transitionClass row h-100">
+                <div className="transitionClass row">
                     <div className="vstack">
                         <label htmlFor="ILQ-summary"><h3>Summarize the conversation you just had in 75 seconds</h3></label>
                         <textarea className="ILQ-SUMMARY mx-auto" name="ILQ-summary" id="ILQ-summary" value={summary} onChange={(e)=> setsummary(e.target.value)}></textarea>                
-                        <Button className={`submit-button`} type="submit" onClick={handleSubmit}>Submit</Button>
+                        <Button className={`submit-btn`} type="submit" onClick={handleSubmit}>Submit</Button>
                     </div>
                 </div>
             );
@@ -161,12 +167,13 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
         return (
             <>
                 <div className="dialog-container transitionClass">
-                    <div className="scrollable-content">
-                        {dialog}
+                    <div ref={scrollContainerRef} className="scrollable-content">
+                        {CurrentDialog}
                     </div>
+                </div>
                     {
                         currentILQ != 4 &&
-                        <>
+                        <div key={`${currentILQ}`} className="AUDIO_AND_SELECT">
                             <div className="SPEAKER_AND_AUDIO">
                                 <Image src="/reshot-icon-asian-young-man.svg" width={50} height={50} alt="AsianMan"/>
                                 {CurrentAudio}
@@ -174,19 +181,19 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
                             <div className="currentOptionsContent">
                                 {CurrentOptions}
                             </div>
-                        </>
+                        </div>
                     }
-                </div>
+                
                 {
                     (currentILQ == 4 && !summaryWindow) &&
-                    <Button className={`submit-button`} type="button" onClick={()=>setSummaryWindow(true)}>Next</Button>
+                    <Button className={`submit-btn`} type="button" onClick={()=>setSummaryWindow(true)}>Next</Button>
                 }
             </>
         );
     };
 
     return (
-        <div className="container-fluid" key={`ILQ_END_WINDOW_FRAGMENT`}>
+        <div className="container-fluid h-100" key={`ILQ_END_WINDOW_FRAGMENT`}>
             {renderContent()}
         </div>
     );
