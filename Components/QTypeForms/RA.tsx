@@ -4,6 +4,7 @@ import usePOST_PUT_Question from "../Hooks/postQuestion"
 import { CreateRA } from "../Models/CreateQModels/createRA"
 import useModal from "../Hooks/useModal"
 import { RAQ } from "../../Models/QuestionsModels"
+import { RA_text } from "./forms_texts/form_texts"
 
 const RA = (props:{
     QPOId: number,
@@ -43,16 +44,9 @@ const RA = (props:{
             
         PUT_Q = Question
     }
-
-    const text: React.ReactNode = (
-            <span>
-                <p>Введите в поле ТЕКСТ - текст, который нужно произнести вслух:</p>
-            </span>
-        )
-
     const qtype = "Read Aloud"
 
-    const modal = useModal({text, id: qtype})
+    const modal = useModal({text: RA_text, id: qtype})
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
             !IsEditMode ? POST_Q : undefined,

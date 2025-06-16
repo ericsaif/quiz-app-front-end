@@ -6,6 +6,7 @@ import { Button, Input } from "@headlessui/react"
 import useModal from "../Hooks/useModal"
 import { WordExistsQ } from "../../Models/QuestionsModels"
 import { WordExistsA } from "../../Models/AdminModels/AnswersEntities/wordExistsA"
+import { WE_text } from "./forms_texts/form_texts"
 
 const WordExists = (props:{
     QPOId: number,
@@ -55,20 +56,10 @@ const WordExists = (props:{
         }
             
         PUT_Q = Question
-    }
-
-    const text: React.ReactNode = (
-        <span>
-
-            <p>Введите слово в поле - СЛОВО</p> 
-            <p>Далее выберите существует ли данное слово в выпадающем листе - СУЩЕСТВУЕТ ?</p> 
-            
-        </span>
-    )
-    
+    }    
     const qtype = "Word Exists"
 
-    const modal = useModal({text, id: qtype})
+    const modal = useModal({text: WE_text, id: qtype})
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
                     !IsEditMode ? POST_Q : undefined,

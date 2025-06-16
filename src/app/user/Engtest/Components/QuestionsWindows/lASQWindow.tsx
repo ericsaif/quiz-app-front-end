@@ -1,14 +1,14 @@
-import React from "react"
+import React, { useMemo } from "react"
 import AudioPlayer from "../../../../../../Components/AudioPlayer/AudioPlayer"
 import { LASQ, MethodArgs } from "./commonImports"
 import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 
 
-const lASQWindow = (props:{question: LASQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+const LASQWindow = (props:{question: LASQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
     const { question } = props
     
-    return(
-        <React.Fragment key={`LASQ-window-fragment`}>
+    return useMemo(()=>(
+        <React.Fragment key={`${question.id}`}>
             <div style={{display: 'flex', justifyContent: 'center'}}>
                 <AudioPlayer
                     keyName={question.s3PathToAudioFile} 
@@ -24,7 +24,7 @@ const lASQWindow = (props:{question: LASQ, submitAnswer: (SM: string, args: Meth
                 />
             </div>
         </React.Fragment>
-    )
+    ),[props, question.id, question.listenTries, question.qpoId, question.s3PathToAudioFile])
 }
 
-export default lASQWindow
+export default LASQWindow

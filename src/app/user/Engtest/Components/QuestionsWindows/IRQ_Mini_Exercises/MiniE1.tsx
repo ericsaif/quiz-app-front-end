@@ -1,25 +1,18 @@
-import React, { useEffect, useState } from "react"
-import { MiniE1 } from "../../../../../../../Models/QuestionsModels/IRQ/miniE1"
+import React, { useMemo } from "react"
 import GenSelect from "./minie1options"
 import { Button } from "@headlessui/react"
 
 import "./miniE1.css"
+import { useIRQ } from "../IrQWindow"
 
-const MiniEex1 = (props: { 
-    minie1: MiniE1 | null, 
-    questionBody: string, 
-    userOptionsMiniE1: number[],
-    setuserOptionsMiniE1: React.Dispatch<React.SetStateAction<number[]>>
-    setNext: React.Dispatch<React.SetStateAction<number>>
-}) =>{
-    const { minie1, questionBody, setuserOptionsMiniE1, userOptionsMiniE1, setNext } = props
-    const [displayedMinie1, setdisplayedMinie1] = useState<React.ReactNode>()
+const MiniEex1 = () =>{
+    const {question, setNext, userOptionsMiniE1, setuserOptionsMiniE1} = useIRQ()
     
-    useEffect(()=>{
+    const displayedMinie1 = useMemo(()=>{
         const separatorRegex =  /(\.\.\.)/g;
         let blankCounter = -1
 
-        const parts = questionBody?.split(separatorRegex)
+        const parts = question.questionBody?.split(separatorRegex)
 
         const displayedParts = parts?.map((part, index) =>{
             const match = part.match(separatorRegex)
@@ -29,7 +22,7 @@ const MiniEex1 = (props: {
                 return (
                 <React.Fragment key={`minie1-container-${blankCounter}`}>
                      <GenSelect 
-                        minie1={minie1}
+                        minie1={question.miniE1}
                         blankIndex={blankCounter} 
                         chosenvalue={userOptionsMiniE1[blankCounter]} 
                         setuserOptionsMiniE1={setuserOptionsMiniE1} 
@@ -42,14 +35,14 @@ const MiniEex1 = (props: {
             
         })
 
-        setdisplayedMinie1(
+        return(
             <React.Fragment>
                 {displayedParts}
                 <Button onClick={() => setNext(1)} className={`submit-btn mt-2`}>Next</Button>
             </React.Fragment>
         )
         
-    }, [questionBody, minie1, userOptionsMiniE1, setuserOptionsMiniE1, setNext])
+    }, [question.miniE1, question.questionBody, setNext, setuserOptionsMiniE1, userOptionsMiniE1])
 
     return displayedMinie1
 }

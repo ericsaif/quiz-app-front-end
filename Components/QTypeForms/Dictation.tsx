@@ -8,6 +8,7 @@ import { CreateDictationA } from "../Models/CreateQModels/CreateDictationQ/creat
 import useModal from "../Hooks/useModal"
 import { DictationQ } from "../../Models/QuestionsModels"
 import { DictationA } from "../../Models/AdminModels/AnswersEntities/dictationA"
+import { dict_text } from "./forms_texts/form_texts"
 
 
 const Dictation = (props:{
@@ -61,16 +62,9 @@ const Dictation = (props:{
         PUT_Q = Question
     }
 
-    const text:React.ReactNode = (
-            <span>
-                <p>Вставьте локацию аудио с облачного хранилища</p>
-                <p>Далее запишите правильный ответ</p>
-            </span>
-    )
-
     const qtype = "Dictation"
 
-    const modal = useModal({text, id: qtype})
+    const modal = useModal({text: dict_text, id: qtype})
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
             !IsEditMode ? POST_Q : undefined,

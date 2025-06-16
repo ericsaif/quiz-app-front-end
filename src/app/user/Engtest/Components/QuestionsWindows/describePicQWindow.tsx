@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { DescribePicQ, MethodArgs } from "./commonImports"
 import Image from "next/image"
 import { Button } from "@headlessui/react"
@@ -6,14 +6,13 @@ import { BACKEND_BASE_URL } from "../../../../../../constants/api"
 
 
 const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+    const { question, submitAnswer, TimeOut } = props
     
     const keyName = props.question.s3PathToPic ?? ""
     const [ pic_link, setpic_link ] = useState<string>("") 
     const [ picDescription, setpicDescription ] = useState<string>("")
-    const [picWindow, setpicWindow] = useState<React.ReactNode | null>(null)
 
     useEffect(()=>{
-        setpicWindow(null)
         async function fetchPic(){
             const response = await fetch(`${BACKEND_BASE_URL}/api/user/engtest/file?keyName=${props.question.s3PathToPic ?? ""}`,{
                 method: "GET",
@@ -26,24 +25,28 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
         }
         fetchPic()
     }, [props.question.s3PathToPic])
-    useEffect(()=>{
-        const { question, submitAnswer, TimeOut } = props
 
-        const handleSubmit = () =>{
-            const newM: MethodArgs = {
-                Description: picDescription,
-                QId:question.id,
-                QPOId:question.qpoId
-            }
-            submitAnswer("SubmitPicDescriptionAsync",  newM)
-            setpicDescription("")
+    const handleSubmit = useCallback(() =>{
+
+        const newM: MethodArgs = {
+            Description: picDescription,
+            QId:question.id,
+            QPOId:question.qpoId
         }
 
         if(TimeOut){
-            handleSubmit()
+            submitAnswer("SubmitPicDescriptionAsync",  newM)
+            setpicDescription("")
             console.log("handling Time out = true ")
+            return
         }
-        const pic_window = (
+        submitAnswer("SubmitPicDescriptionAsync",  newM)
+        setpicDescription("")
+
+    },[TimeOut, picDescription, question.id, question.qpoId, submitAnswer])
+
+    return useMemo(()=>
+         (
             <React.Fragment key={`react-describe-pic-fragment`}>
             {
                 pic_link != "" &&
@@ -66,10 +69,7 @@ const DescribePicQWindow = (props:{question: DescribePicQ, submitAnswer: (SM: st
             </div>
         </React.Fragment>
         )
-
-        setpicWindow(pic_window)
-    }, [pic_link, keyName, picDescription, props])
-    return picWindow
+    , [pic_link, keyName, picDescription, handleSubmit])
 }
 
 export default DescribePicQWindow

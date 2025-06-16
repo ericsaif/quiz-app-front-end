@@ -6,6 +6,7 @@ import { CreateRACA } from "../Models/CreateQModels/CreateRAC/createRACA"
 import useModal from "../Hooks/useModal"
 import { RACQ } from "../../Models/QuestionsModels"
 import { RACA } from "../../Models/AdminModels/AnswersEntities/rACA"
+import { RAC_text } from "./forms_texts/form_texts"
 
 const RAC = (props:{
     QPOId: number
@@ -17,7 +18,7 @@ const RAC = (props:{
     const IsEditMode = question ? true : false
 
     if(IsEditMode && (!question || !question.raca))
-        throw new Error('Нет необходимых данных, ошибка')
+        alert('Нет необходимых данных, ошибка')
     
     const [questionBody, setquestionBody] = useState<string>(question?.questionBody || "")
     const [answer, setanswer] = useState<string>(question?.raca?.answer || "")
@@ -56,29 +57,9 @@ const RAC = (props:{
             
         PUT_Q = Question
     }
-    const text: React.ReactNode = (
-        <span>
-
-            <p>Впишите текст с пробелами в поле - ТЕКСТ</p> 
-            <p>Введите вместо пробелов впишите - [BLANK:N]</p> 
-            <p>Вместо N вставьте количество пропущенных букв в слове</p>
-
-            <h6>Пример:</h6> 
-            <p style={{color: "red"}}>He was standing in front of the tab _ _</p>
-            <p style={{color: "green"}}>He was standing in front of the tab[BLANK:2]</p>
-            <p>Обьяснение - вместо двух пробелов _ _ ставите [BLANK:2]</p>  
-            <p>2 - количество пробелов в слове</p>
-
-            Далее впишите правильные буквы в поле ОТВЕТ<br/>
-
-            Пример:<br/>
-            <b>le</b>
-        </span>
-    )
-
     const qtype = "Read And Complete"
 
-    const modal = useModal({text, id: qtype, btn_color: "dark"})
+    const modal = useModal({text: RAC_text, id: qtype, btn_color: "dark"})
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
             !IsEditMode ? POST_Q : undefined,

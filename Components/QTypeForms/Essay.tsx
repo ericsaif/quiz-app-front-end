@@ -4,6 +4,7 @@ import usePOST_PUT_Question from "../Hooks/postQuestion"
 import { CreateEssay } from "../Models/CreateQModels/createEssay"
 import useModal from "../Hooks/useModal"
 import { EssayQ } from "../../Models/QuestionsModels"
+import { essay_text } from "./forms_texts/form_texts"
 
 const Essay = (props:{
     QPOId: number
@@ -43,15 +44,9 @@ const Essay = (props:{
         PUT_Q = Question
     }
 
-    const text: React.ReactNode = (
-        <span>
-            Впишите тему эссе в поле - Тема
-        </span>
-    )
-
     const qtype = "Essay"
 
-    const modal = useModal({text, id: qtype})
+    const modal = useModal({text: essay_text, id: qtype})
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
         !IsEditMode ? POST_Q : undefined,

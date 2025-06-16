@@ -55,13 +55,12 @@ function GetRAQ(){
 }
 function GetDescribePicQ(){
     return( 
-    <div key={`This_is_a_DescribePicQ_question`}>
-        <h3>Speak about the Image</h3>
-        <p>
-            For each question you will see an image.
-            You will need to record yourself speaking about that image.
-        </p>
-    </div>
+        <div key={`This_is_a_DescribePicWAQ_question`}>
+            <h3>Write About the Photo</h3>
+            <p>
+                For each question, you will see a picture, which you will need to describe.
+            </p>
+        </div>
     )
 }
 function GetRACQ(){
@@ -99,12 +98,14 @@ function GetWordExistsQ(){
 }
 function GetDescribePicWAQ(){
     return( 
-    <div key={`This_is_a_DescribePicWAQ_question`}>
-        <h3>Write About the Photo</h3>
-        <p>
-            For each question, you will see a picture, which you will need to describe.
-        </p>
-    </div>
+        <div key={`This_is_a_DescribePicQ_question`}>
+            <h3>Speak about the Image</h3>
+            <p>
+                For each question you will see an image.
+                You will need to record yourself speaking about that image.
+            </p>
+        </div>
+    
     )
 }
 function GetLASQ(){
@@ -135,7 +136,7 @@ function GetEssayQ(){
 function GetIRQ(){
     return( 
     <div key={`This_is_a_IRQ_question`}>
-        <h3>Interctive Reading</h3>
+        <h3>Interactive Reading</h3>
         <p>
             This section will have 1 reading passage. 
             You will have 7 or 8 minutes to answer 6 questions.

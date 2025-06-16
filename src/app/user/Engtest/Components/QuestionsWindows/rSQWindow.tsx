@@ -1,13 +1,13 @@
-import React from "react"
+import React, { useMemo } from "react"
 import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 import { RSQ, MethodArgs } from "./commonImports"
 
 
-const rSQWindow = (props:{question: RSQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+const RSQWindow = (props:{question: RSQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
     const { question } = props
     
-    return(
-        <React.Fragment>
+    return useMemo(()=>(
+        <React.Fragment key={`${question.id}`}>
              <div>
                 <p style={{whiteSpace: 'pre-line', fontSize: 'larger'}}>
                     {question.questionBody}
@@ -18,7 +18,7 @@ const rSQWindow = (props:{question: RSQ, submitAnswer: (SM: string, args: Method
             </div>
         </React.Fragment>
         
-    )
+    ),[props, question.id, question.qpoId, question.questionBody])
 }
 
-export default rSQWindow
+export default RSQWindow

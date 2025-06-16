@@ -1,29 +1,29 @@
 import { Button, Input } from "@headlessui/react"
 import { DictationQ, MethodArgs } from "./commonImports"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import AudioPlayer from "../../../../../../Components/AudioPlayer/AudioPlayer"
 
 
 const  DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+    const { question, submitAnswer, TimeOut } = props
+
     const [answer, setAnswer] = useState<string>("")
 
-    const [form, setform] = useState<React.ReactNode>()
-
-    useEffect(()=>{
-        const { question, submitAnswer, TimeOut } = props
-
-        const handleSubmit = () =>{
+    const handleSubmit = useCallback(() =>{
+        if(TimeOut){
             submitAnswer("SubmitDictationAsnwerAsync", {DictationA: answer, QId: question.id})
             setAnswer("")
-        }
-
-        if(TimeOut){
-            handleSubmit()
             console.log("handling Time out = true ")
+            return
         }
+        submitAnswer("SubmitDictationAsnwerAsync", {DictationA: answer, QId: question.id})
+        setAnswer("")
+    },[TimeOut,answer, question.id, submitAnswer])
 
-        const form = (
-            <React.Fragment key={`dictation-window-react-fragment`}>
+    return useMemo(()=>{
+
+        return (
+            <React.Fragment key={`${question.s3PathToAudio}`}>
                 <div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <AudioPlayer keyName={question.s3PathToAudio} maxListenTries={question.listenTries} />
@@ -37,10 +37,8 @@ const  DictationQWindow = (props:{question: DictationQ, submitAnswer: (SM: strin
         </React.Fragment>
         )
 
-        setform(form)
-    }, [answer, props])
-    
-    return form
+    }, [answer, handleSubmit, question.listenTries, question.s3PathToAudio])
+
 }
 
 export default DictationQWindow

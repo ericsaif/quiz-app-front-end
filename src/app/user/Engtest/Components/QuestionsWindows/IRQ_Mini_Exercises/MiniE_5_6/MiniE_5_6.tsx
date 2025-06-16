@@ -1,24 +1,23 @@
 import { Button, Input } from "@headlessui/react"
-import React, { useEffect, useState } from "react"
+import React, { useMemo, useState } from "react"
 import { IoIosArrowUp, IoIosArrowDown  } from "react-icons/io";
 
 import "./component.css"
+import { useIRQ } from "../../IrQWindow";
 
-const MiniE_5_6 = (props:{
-    options: string[]
-    idea: boolean
-    passage: string
-    userOption: number
-    setuserOption: React.Dispatch<React.SetStateAction<number>>
-    setNext: React.Dispatch<React.SetStateAction<number>>
-    handleSubmit: () => void | null
+const MiniE_5_6 = () =>{
+    const {question, setNext, handleSubmit, currentEx, setuserOptionMiniE5, setuserOptionMiniE6, userOptionMiniE5, userOptionMiniE6} = useIRQ()
 
-}) =>{
-    const {options, idea, userOption, setuserOption, passage, setNext, handleSubmit} = props
-    const [ExWindow, setExWindow] = useState<React.ReactNode>()
     const [passageOpened, setpassageOpened] = useState<boolean>()
 
-    useEffect(()=>{
+    return  useMemo(()=>{
+        const idea = currentEx == 5 
+
+        const options = idea ? question.optionsMiniE5 : question.optionsMiniE6
+        const setuserOption = idea ? setuserOptionMiniE5 : setuserOptionMiniE6
+        const userOption = idea ? userOptionMiniE5 : userOptionMiniE6
+
+
         const displayedOptions = options.map((option, index)=>(
             <label key={`${index}-${option}`} className={`input-label ${ userOption == index ? 'input-label-checked' : ''}`} style={{display: option == '-' ? 'none' : 'block', minHeight: `${idea ? '6rem' : '4rem'}`}} htmlFor={`${index}-${option}`}>
                 <Input onChange={() => setuserOption(index)} checked={userOption == index} type="checkbox" name="minie" id={`${index}-${option}`}></Input>
@@ -28,7 +27,7 @@ const MiniE_5_6 = (props:{
 
         const Header = idea ? 'Select the idea expressed in the passage' : 'Select the best suiting title for the passage'
 
-        setExWindow(
+        return(
             <React.Fragment key={`React-${idea ? 'idea' : 'title'}-select-fragment`}>
                 <h2>{Header}</h2>
                 <div className="inputs-container">
@@ -56,15 +55,15 @@ const MiniE_5_6 = (props:{
                             }
                         </Button>
                         <p>
-                            {passage}
+                            {question.completeText}
                         </p>
                     </div>
                 </div>
             </React.Fragment>
         )
-    }, [options, idea, passage, passageOpened, userOption, setuserOption, setNext, handleSubmit])
+    }, [currentEx, question.optionsMiniE5, question.optionsMiniE6, question.completeText, setuserOptionMiniE5, setuserOptionMiniE6, userOptionMiniE5, userOptionMiniE6, handleSubmit, passageOpened, setNext])
 
-    return ExWindow
+    
 }
 
 export default MiniE_5_6

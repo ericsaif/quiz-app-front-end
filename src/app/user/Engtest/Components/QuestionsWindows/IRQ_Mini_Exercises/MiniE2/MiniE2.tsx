@@ -2,24 +2,18 @@ import React, { useEffect, useState } from "react"
 import { Button } from "@headlessui/react"
 
 import "./component.css"
+import { useIRQ } from "../../IrQWindow"
 
-const MiniEx2 = (props: { 
-    optionsMiniE2: string[]
-    userOptionMiniE2: number
-    setuserOptionMiniE2: React.Dispatch<React.SetStateAction<number>>
-    setNext: React.Dispatch<React.SetStateAction<number>>
-    questionBody: string
-    userOptionsMiniE1: number[]
-    text2: string
-}) =>{
-    const { optionsMiniE2, userOptionMiniE2, setuserOptionMiniE2, setNext, questionBody, userOptionsMiniE1, text2 ='test text' } = props
+const MiniEx2 = () =>{
+    const { question, userOptionMiniE2, setuserOptionMiniE2, setNext, userOptionsMiniE1 } = useIRQ()
+
     const [displayedMiniE2, setdisplayedMiniE2] = useState<React.ReactNode>()
     
     useEffect(()=>{
         const separatorRegex =  /(\.\.\.)/g;
         let blankCounter = -1
 
-        const parts = questionBody?.split(separatorRegex)
+        const parts = question.questionBody?.split(separatorRegex)
 
         const displayedParts = parts?.map((part, index) =>{
             const match = part.match(separatorRegex)
@@ -33,7 +27,7 @@ const MiniEx2 = (props: {
             
         })
 
-        const options = optionsMiniE2.map((option, index)=>(
+        const options = question.optionsMiniE2.map((option, index)=>(
             <option value={index} key={`${index}-${option}`}>
                 {option}
             </option>
@@ -58,14 +52,14 @@ const MiniEx2 = (props: {
                 </select>
                 <div>
                     <p className="questionBody">
-                        {text2 !='' && text2 }
+                        {question.textForMiniE2 !='' ? question.textForMiniE2 : 'test text' }
                     </p>
                 </div>
                 <Button onClick={() => setNext(2)} className={`submit-btn mt-2`}>Next</Button>
             </React.Fragment>
         )
         
-    }, [questionBody, userOptionsMiniE1, setuserOptionMiniE2, setNext, optionsMiniE2, userOptionMiniE2, text2])
+    }, [userOptionsMiniE1, setuserOptionMiniE2, setNext, userOptionMiniE2, question.questionBody, question.textForMiniE2, question.optionsMiniE2])
 
     return displayedMiniE2
 }

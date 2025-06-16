@@ -5,6 +5,7 @@ import { CreateLAS } from "../Models/CreateQModels/createLAS"
 
 import useModal from "../Hooks/useModal"
 import { LASQ } from "../../Models/QuestionsModels"
+import { LAS_text } from "./forms_texts/form_texts"
 
 
 const LAS = (props:{
@@ -48,16 +49,10 @@ const LAS = (props:{
             
         PUT_Q = Question
     }
-    const text: React.ReactNode = (
-        <span>
-            <p>Вставьте локацию аудиофайла с облачного хранилища</p>
-            <p>Далее впишите транскрипцию текста с аудио</p>
-        </span>
-    )
 
     const qtype = "Listen and Speak"
 
-    const modal = useModal({text, id:qtype})
+    const modal = useModal({text: LAS_text, id:qtype})
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
             !IsEditMode ? POST_Q : undefined,

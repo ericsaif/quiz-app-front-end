@@ -5,6 +5,7 @@ import usePOST_PUT_Question from "../Hooks/postQuestion"
 import useModal from "../Hooks/useModal"
 import { DescribePicQ, DescribePicWAudioQ } from "../../Models/QuestionsModels"
 import Image from "next/image"
+import { describe_pic_text } from "./forms_texts/form_texts"
 
 const DescribePic = (props:{
     question? : DescribePicQ | DescribePicWAudioQ 
@@ -72,15 +73,9 @@ const DescribePic = (props:{
         
     }
 
-    const text: React.ReactNode = (
-        <span>
-            <p>Вставьте локацию картинки с облачного хранилища</p>
-            <p>Далее выберите - нужно ли описывать картинку с аудио или текстом</p>
-        </span>
-    )
     const qtype = "Describe picture"
 
-    const modal = useModal({text, id: qtype})
+    const modal = useModal({text: describe_pic_text, id: qtype})
 
         
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(

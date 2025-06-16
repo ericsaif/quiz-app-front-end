@@ -1,19 +1,20 @@
 import { Button } from "@headlessui/react"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef } from "react"
 
 import "./highlight.css"
+import { useIRQ } from "../../IrQWindow"
 
-const HighLightEx = (props:{
-    question: string
-    userHighlight: string
-    setuserHighlight: React.Dispatch<React.SetStateAction<string>>
-    Text: string
-    setNext: React.Dispatch<React.SetStateAction<number>>
-    
-}) =>{  
-    const { question, userHighlight,  setuserHighlight, Text  = "In 1969, the computer network that ... became known as the Internet was built by the Advanced Research Projects Agency (ARPA) of the U.S. Department of Defense. Today, the Internet is a vast collection of computer networks around the world and can be ... via the user's computer or cell ... . The cornerstone technology that enables it to function is known as TCP/IP (Transmission Control Protocol/Internet Protocol). The Internet is a ...  important part of communications today because it allows ... to exchange information anywhere in the world using email. One of the ... popular applications for email is ... as instant messaging, which allows individuals to exchange information in real time ... sending each other messages on their computers from anywhere in the ... .",
-    setNext } = props
-    const [HighLightexWindow, setHighLightexWindow] = useState<React.ReactNode>()
+const HighLightEx = () =>{  
+    const { 
+        question, 
+        userHighlightMiniE3, 
+        userHighlightMiniE4,  
+        setuserHighlightMiniE3, 
+        setuserHighlightMiniE4, 
+        setNext, 
+        currentEx
+    } = useIRQ()
+
    
     const textRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +26,10 @@ const HighLightEx = (props:{
             const selectedText = selection.toString();
             const range = selection.getRangeAt(0);
             if (textRef.current && textRef.current.contains(range.commonAncestorContainer)) {
-                setuserHighlight(selectedText);
+                if(currentEx == 2)
+                    setuserHighlightMiniE3(selectedText);
+                else if(currentEx == 3)
+                    setuserHighlightMiniE4(selectedText);
             }
         };
 
@@ -33,15 +37,18 @@ const HighLightEx = (props:{
         return () => {
             document.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [setuserHighlight]);
+    }, [currentEx, setuserHighlightMiniE3, setuserHighlightMiniE4]);
 
-    useEffect(()=>{
-        const Window = (
+    const Window =  useMemo(()=>{
+        const userHighlight = currentEx == 2 ? userHighlightMiniE3 : userHighlightMiniE4
+        return (
             <div className="container-fluid">
                 <div className="row">
                     <div className="">
                         <p>
-                            {question}
+                            {
+                                currentEx == 2 ? question.questionMiniE3 : question.questionMiniE4
+                            }
                         </p>
                     </div>
                     <div ref={textRef} className="">
@@ -51,18 +58,16 @@ const HighLightEx = (props:{
                             </p>
                         </div>
                         <p>
-                            {Text}
+                            {question.completeText}
                         </p>
                     </div>
                 </div>
                 <Button className={`submit-btn`} onClick={()=>setNext(prevNext => prevNext + 1)}>Next</Button>
             </div>
         )
+    }, [currentEx, question.completeText, question.questionMiniE3, question.questionMiniE4, setNext, userHighlightMiniE3, userHighlightMiniE4])
 
-        setHighLightexWindow(Window)
-    }, [question, Text, setNext, userHighlight])
-
-    return HighLightexWindow
+    return Window
 }   
 
 export default HighLightEx

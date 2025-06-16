@@ -4,6 +4,7 @@ import usePOST_PUT_Question from "../Hooks/postQuestion"
 import { CreateInterviewQ } from "../Models/CreateQModels/createInterviewQ"
 import useModal from "../Hooks/useModal"
 import { InterviewQ } from "../../Models/QuestionsModels"
+import { interview_text } from "./forms_texts/form_texts"
 
 const Interview = (props:{
     QPOId: number,
@@ -42,16 +43,9 @@ const Interview = (props:{
             
         PUT_Q = Question
     }
-
-    const text: React.ReactNode = (
-        <span>
-            Впишите тему Интервью в поле - Тема Интервью
-        </span>
-    )
-
     const qtype = "Interview"
 
-    const modal = useModal({text, id: qtype})
+    const modal = useModal({text: interview_text, id: qtype})
 
     const { triggerPost, loading, error, data } =  usePOST_PUT_Question(
         !IsEditMode ? POST_Q : undefined,

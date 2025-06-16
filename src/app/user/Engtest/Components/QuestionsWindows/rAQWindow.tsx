@@ -1,12 +1,12 @@
+import { useMemo } from "react"
 import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 import { RAQ, MethodArgs } from "./commonImports"
 
 
-const rAQWindow = (props:{question: RAQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+const RAQWindow = (props:{question: RAQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
     const { question } = props
-    return(
-
-            <div>
+    return useMemo(()=>(
+            <div key={`${question.id}`}>
                 <div>
                     <h3>
                         {question.questionBody}
@@ -21,8 +21,7 @@ const rAQWindow = (props:{question: RAQ, submitAnswer: (SM: string, args: Method
                     />
                 </div>
             </div>
-        
-    )
+    ),[props, question.id, question.qpoId, question.questionBody])
 }
 
-export default rAQWindow
+export default RAQWindow

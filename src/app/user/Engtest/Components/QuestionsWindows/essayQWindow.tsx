@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { EssayQ, MethodArgs } from "./commonImports"
 import { Button } from "@headlessui/react"
 
@@ -11,25 +11,31 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
     const Topic = question.questionBody
     const QPOId = question.qpoId
 
-    const handleSubmit = () =>{
+    const handleSubmit = useCallback(() =>{
+        
         const newM : MethodArgs = {
             Essay: essay,
             Topic: Topic,
             QId: question.id,
             QPOId: QPOId,
         }
-        submitAnswer("SubmitEssayAsync", newM)
-    }
-    if(TimeOut){
-        handleSubmit()
-        console.log("handling Time out = true ")
-    }
+        if(TimeOut){
+            submitAnswer("SubmitEssayAsync", newM)
+            console.log("handling Time out = true ")
+            return
+        }
 
-    const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>{
+        submitAnswer("SubmitEssayAsync", newM)
+        
+    },[QPOId, TimeOut, Topic, essay, question.id, submitAnswer])
+
+    const HandleInputChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) =>{
         const { value } = event.target
         setEssay(value)
-    }
-    return(
+    },[])
+    
+    return useMemo(()=>
+        (
         <>
             <div >
                 <p style={{whiteSpace: 'pre-line', fontSize: 'larger'}}>
@@ -43,7 +49,9 @@ const EssayQWindow = (props:{question: EssayQ, submitAnswer: (SM: string, args: 
             </div>
         </>
         
-    )
+    ),[HandleInputChange, Topic, handleSubmit])
+
+     
 }
 
 export default EssayQWindow

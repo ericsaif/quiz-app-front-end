@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useMemo, useState } from "react"
 import { Button, Input } from "@headlessui/react"
 import usePOST_PUT_Question from "../Hooks/postQuestion"
 import { CreateCTestQ } from "../Models/CreateQModels/CreateCtestQ/CreateCTestQ"
@@ -9,6 +9,7 @@ import useModal from "../Hooks/useModal"
 
 import { CTestQ } from "../../Models/QuestionsModels"
 import { CTestA } from "../../Models/AdminModels/AnswersEntities/cTestA"
+import { CTest_text } from "./forms_texts/form_texts"
 
 
 const CTest = (props:{
@@ -27,7 +28,6 @@ const CTest = (props:{
 
     const [num_words_w_blanks, setNumWords] = useState<number>(question?.cTestA?.rightAnswers.length || 0)
     const [rightAnswers, setRightAnswers] = useState<string[]>(question?.cTestA?.rightAnswers || (num_words_w_blanks >0 ? Array(num_words_w_blanks).fill('') : ['']))
-    const [CTestAnswers, setCTestAnswers] = useState<React.ReactNode>()
 
     const regex = /\[BLANK:\d+\]/g
 
@@ -70,33 +70,10 @@ const CTest = (props:{
         IsEditMode ? question?.id : undefined,
     )
 
-    const text: React.ReactNode =(
-        <>
-            <span>
-                <p>Запишите текст вопроса, вместо пропусков впишите текст как в примере.</p> 
-                <p>Пример:</p> 
-                <p style={{color: "red"}}>He was standing in front of the tab _ _</p>
-                <p style={{color: "green"}}>He was standing in front of the tab[BLANK:2]</p>
-                <p>Обьяснение - вместо двух пропусков _ _ ставите [BLANK:2]  </p>
-                <p>2 - количество пропусков в слове</p>
-
-                <p>
-                    Когда вы это сделаете выпадет список полей, 
-                </p>
-                <p>
-                    Впишите в них правильные буквы для каждого слова
-                </p>
-
-                Пример:<br/>
-                <b>le</b>
-            </span>
-        </>
-    )
-
     const qtype = "Interactive Reading"
-    const modal = useModal({text, id: qtype, btn_color: "dark"})
+    const modal = useModal({text: CTest_text, id: qtype, btn_color: "dark"})
 
-    useEffect(()=>{
+    const CTestAnswers = useMemo(()=>{
         const inputs:React.ReactNode[] =[]
         for(let i=0; i< num_words_w_blanks; i++){
             inputs.push(
@@ -115,7 +92,6 @@ const CTest = (props:{
                 </React.Fragment>
                             )
         }
-        setCTestAnswers(inputs)
         setRightAnswers(prevAnswers => {
             if (prevAnswers.length === num_words_w_blanks)
               return prevAnswers; 
@@ -128,6 +104,8 @@ const CTest = (props:{
             } else
               return prevAnswers.slice(0, num_words_w_blanks);
           })
+
+          return inputs
     },[num_words_w_blanks,rightAnswers])
 
     const HandleRightAnswersChange = (index:number, event:React.ChangeEvent<HTMLInputElement>) =>{
@@ -151,7 +129,6 @@ const CTest = (props:{
             setNumWords(0)
             setdifficulty('ANY')
             setRightAnswers([''])
-            setCTestAnswers([])
         }
     }
     const HandleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>)=>{

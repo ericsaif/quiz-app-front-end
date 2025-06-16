@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { DescribePicWAudioQ, MethodArgs } from "./commonImports"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { BACKEND_BASE_URL } from "../../../../../../constants/api"
 import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 
@@ -26,34 +26,35 @@ const DescribePicWAudioQWindow = (props:{question: DescribePicWAudioQ, submitAns
         fetchPic()
     })
 
-    return(
+    return useMemo(()=>(
         
-        <React.Fragment key={`describe-picture-with-audio-fragment`}>
-            <div className="col describe-pic-container">
-                {
-                    pic_link != "" &&
-                    <div className="describe_pic">
-                        <Image 
-                            className="img-fluid"
-                            src={pic_link}
-                            alt={`${keyName}`} 
-                            fill 
-                            priority
+            <React.Fragment key={`describe-picture-with-audio-fragment`}>
+                <div className="col describe-pic-container">
+                    {
+                        pic_link != "" &&
+                        <div className="describe_pic">
+                            <Image 
+                                className="img-fluid"
+                                src={pic_link}
+                                alt={`${keyName}`} 
+                                fill 
+                                priority
+                            />
+                        </div>
+                    }
+                    <div >
+                        <AudioRecorder
+                            {...props}
+                            QPOId={question.qpoId} 
+                            QId={question.id}
+                            SM={"SubmitAudioPicDescriptionAsync"}
                         />
                     </div>
-                }
-                <div >
-                    <AudioRecorder
-                        {...props}
-                        QPOId={question.qpoId} 
-                        QId={question.id}
-                        SM={"SubmitAudioPicDescriptionAsync"}
-                    />
                 </div>
-            </div>
-        </React.Fragment>
-        
-    )
+            </React.Fragment>
+            
+        )
+    ,[keyName, pic_link, props, question.id, question.qpoId])
 }
 
 export default DescribePicWAudioQWindow

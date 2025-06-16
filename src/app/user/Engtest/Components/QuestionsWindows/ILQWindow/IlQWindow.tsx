@@ -64,16 +64,14 @@ const IlQWindow = (props:{question: ILQ, submitAnswer: (SM: string, args: Method
             summary: summary,
             correctCount,
         }
-        submitAnswer("SubmitILQAAsync", newM)
-    }, [question.id, question.qpoId, summary, correctCount, submitAnswer]);
-
-    // Handle timeout separately
-    useEffect(() => {
         if (TimeOut) {
-            handleSubmit();
+            submitAnswer("SubmitILQAAsync", newM)
             console.log("handling Time out = true ");
+            return
         }
-    }, [TimeOut, handleSubmit]);
+        submitAnswer("SubmitILQAAsync", newM)
+    }, [TimeOut, question.id, question.qpoId, summary, correctCount, submitAnswer]);
+
 
     const HandleOptionsSelect = useCallback((value: number) => {
 

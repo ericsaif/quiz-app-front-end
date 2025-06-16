@@ -1,10 +1,12 @@
+import { useMemo } from "react"
 import AudioRecorder from "../../../../../../Components/AudioRecorder/AudioRecorder"
 import { InterviewQ, MethodArgs } from "./commonImports"
 
-const interviewQWindow = (props:{question: InterviewQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+const InterviewQWindow = (props:{question: InterviewQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
     const { question } = props
     
-    return(
+    return useMemo(()=>
+    (
         <div>
             <div>
                 <p style={{whiteSpace: 'pre-line', fontSize: 'larger'}}>
@@ -22,7 +24,7 @@ const interviewQWindow = (props:{question: InterviewQ, submitAnswer: (SM: string
             </div>
         </div>
         
-    )
+    ),[props, question.id, question.qpoId, question.questionBody])
 }
 
-export default interviewQWindow
+export default InterviewQWindow

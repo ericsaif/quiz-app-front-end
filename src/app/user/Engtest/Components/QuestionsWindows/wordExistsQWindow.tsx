@@ -4,25 +4,25 @@ import { IoIosCheckmark } from "react-icons/io"
 import { WordExistsQ, MethodArgs } from "./commonImports"
 import { Button } from "@headlessui/react"
 import { HiMiniXMark } from "react-icons/hi2"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useMemo } from "react"
 
 
 const WordExistsQWindow = (props:{question: WordExistsQ, submitAnswer: (SM: string, args: MethodArgs) => Promise<void>, TimeOut: boolean}) =>{
+    const { question, submitAnswer, TimeOut } = props
 
-    const [WEWindow, setWEWindow] = useState<React.ReactNode>()
-    
-    useEffect(()=>{
-        const { question, submitAnswer, TimeOut } = props
+    const handleSubmit = useCallback((exists: boolean | null) =>{
+    if(TimeOut){
+        submitAnswer("SubmitWordExistsAAsync", {Answer: exists, QId: question.id})
+        console.log("handling Time out = true ")
+        return
+    }
+    submitAnswer("SubmitWordExistsAAsync", {Answer: exists, QId: question.id})
 
-        const handleSubmit = (exists: boolean | null) =>{
-            submitAnswer("SubmitWordExistsAAsync", {Answer: exists, QId: question.id})
-        }
-        if(TimeOut){
-            handleSubmit(null)
-            console.log("handling Time out = true ")
-        }
+    }, [TimeOut, question.id, submitAnswer])
+
+    return useMemo(()=>
             
-        const WEWindow = (
+         (
             <div className="container-fluid">
                 <h2 style={{fontWeight: 'bold'}}>
                     {question.questionBody}
@@ -39,11 +39,8 @@ const WordExistsQWindow = (props:{question: WordExistsQ, submitAnswer: (SM: stri
                 </div>
             </div>
         )
-
-        setWEWindow(WEWindow)
-    }, [props])
+    , [handleSubmit, question.questionBody])
     
-    return WEWindow
 }
 
 export default WordExistsQWindow
